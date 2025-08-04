@@ -51,7 +51,7 @@
                   </td>
                   <td class="text-left">{{ row?.kpisCount || 0 }}</td>
                   <td class="text-left">
-                    <span class="fw-600">{{ row?.totalAchive || 0 }}%</span>
+                    <span class="fw-600">{{ (row?.totalAchive ? row.totalAchive.toFixed(2) : 0) }}%</span>
                   </td>
                 </tr>
                 <tr *ngIf="row.isExpand">
@@ -102,7 +102,7 @@
                               </div>
                             </div>
                           </td>
-                          <td class="text-left">{{ employee?.weight }}</td>
+                          <td class="text-left">{{ employee?.weight }} {{employee?.weight ? '%' : ''}}</td>
                           <td class="text-left">{{ employee?.target }}</td>
                           <td class="text-left">
                             <span [ngClass]="getAchievementColor(employee?.value || 0)">{{ employee?.value }}</span>
