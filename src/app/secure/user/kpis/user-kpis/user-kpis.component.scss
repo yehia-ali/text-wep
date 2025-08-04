@@ -1,0 +1,31 @@
+.kpis-user-dashboard{
+  height: calc(100vh - 65px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-inline-end: -2rem;
+  .dash-header-chart{
+    height: 100px;
+    margin-bottom: -35px;
+    margin-inline-end: -60px;
+  }
+}
+.kpi-status-1{
+  background-color: rgba($color: #CF4747, $alpha: 0.2);
+  color: #CF4747;
+}
+.kpi-status-2{
+  background-color: rgba($color: #FFA95C, $alpha: 0.2);
+  color: #FFA95C;
+}
+.kpi-status-3{
+  background-color: rgba($color: #7B55D3, $alpha: 0.2);
+  color: #7B55D3;
+}
+.kpi-status-4{
+  background-color: rgba($color: #29CC99, $alpha: 0.2);
+  color: #29CC99;
+}
+.kpi-status-5{
+  background-color: rgba($color: #606060, $alpha: 0.2);
+  color: #606060;
+}

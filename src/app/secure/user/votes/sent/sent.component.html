@@ -1,0 +1,88 @@
+<layout-with-filters (pageChange)="service.page.next($event); service.hasChanged.next(true)" [meta]="meta">
+  <ng-container filters>
+    <sent-filters/>
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': sent.length == 0 || loading}" class="table relative">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th>#</th>
+        <th class="text-left">{{'title' | translate}}</th>
+        <th>{{'assignees' | translate}}</th>
+        <th>{{'start_date' | translate}}</th>
+        <th>{{'end_date' | translate}}</th>
+        <th>{{'remaining_time' | translate}}</th>
+        <th>{{'engagement' | translate}}</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody *ngIf="sent.length > 0 && !loading">
+      <tr *ngFor="let vote of sent | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy" class="border-bottom pointer"
+          routerLink="{{vote.id}}">
+
+        <!-- id -->
+        <td class="text-center">
+          <p class="fs-13">{{vote.id}}</p>
+        </td>
+
+        <!--    title    -->
+        <td>
+          <div class="flex aic bold">
+            <priority [priority]="vote.priority" class="mr-1"></priority>
+            <!-- title -->
+            <span *ngIf="vote?.title?.length! <= 25">{{vote.title}}</span>
+
+            <!-- trimmed title -->
+            <span *ngIf="vote?.title?.length! > 25" [matTooltip]="vote.title">{{vote.title | slice:0:25}}...</span>
+          </div>
+        </td>
+
+        <!-- assignees -->
+        <td>
+          <div class="flex-center gap-x-1">
+            <task-vote-users [images]="vote.assigneeImageUrls"></task-vote-users>
+          </div>
+        </td>
+
+        <!-- start date -->
+        <td>
+          <p>{{vote.startDate | arabicDate:'withTime'}}</p>
+        </td>
+
+        <!-- end date -->
+        <td>
+          <p>{{vote.endDate | arabicDate:'withTime'}}</p>
+        </td>
+
+        <!-- remaining -->
+        <td>
+          <div class="flex-center">
+            <time-left *ngIf="vote.timeLeft && vote.voteFormStateId != 1" [bullet]="vote.bullet" [label]="vote.timeLeftLabel" [timeLeft]="vote.timeLeft"></time-left>
+            <span *ngIf="!vote.timeLeft || vote.voteFormStateId == 1">-</span>
+          </div>
+        </td>
+
+        <!--   engagement     -->
+        <td>
+          <div class="flex-center">
+            <div class="flex aic gap-x-1 fs-13">
+              <task-vote-progress [progress]="vote.voteFormResult.percentage" classes="dark" color="dark"></task-vote-progress>
+              ({{vote.voteFormResult.voters | arabicNumbers}} / {{vote.voteFormResult.total | arabicNumbers}})
+            </div>
+          </div>
+        </td>
+
+        <!-- actions -->
+        <td>
+          <div (click)="$event.stopImmediatePropagation()">
+            <vote-actions [callbackService]="service" [hasEnded]="vote.hasEnded" [hasStarted]="vote.hasStarted" [id]="vote.id" [isCreator]="true" [isReportPublic]="vote.isReportPublic"
+                          [voteFormStateId]="vote.voteFormStateId"/>
+          </div>
+        </td>
+      </tbody>
+      <not-found *ngIf="sent && sent.length == 0 && !loading" class="a-center"></not-found>
+      <loading *ngIf="loading"></loading>
+    </table>
+  </ng-container>
+</layout-with-filters>

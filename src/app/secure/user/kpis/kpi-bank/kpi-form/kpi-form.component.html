@@ -1,0 +1,246 @@
+  <div class="p-2 dir">
+    <p class="mb-2 fs-18 simibold">
+      {{(
+        kpiMode && editMode ? 'edit_kpi' :
+        !kpiMode && editMode ? 'edit_kpi_category' :
+        kpiMode && !editMode ? 'create_kpi' :
+        !kpiMode && !editMode ? 'create_kpi_category' :''
+        ) | translate}}
+    </p>
+    <form [formGroup]="form" class="kpi-create-form">
+      <div class="row">
+        <!-- 'kpi-category' -->
+        <div class="col-lg-6 mb-2 flex-column" *ngIf="kpiMode">
+          <label class="fs-11 simibold w-100" for="name">
+            <i class="mr-50 bx bx-category"></i>
+            <span >{{'kpi_category_name'| translate}}</span>
+          </label>
+          <kpi-category-dropdown-form [labelVisibilty]="false" class="w-100"  [selectedItem]="data.item" [formControlName]="'categoryId'" />
+          <input-error [control]="f['categoryId']"/>
+        </div>
+        <!-- 'name' -->
+        <div class="col-lg-6 mb-2">
+          <div class="label flex aic jcsb">
+            <label class="fs-11 simibold" for="name">
+              <i class="mr-50 bx bx-text"></i>
+              <span >{{(kpiMode ?'kpi_name' :'kpi_category_name' )| translate}}</span>
+            </label>
+          </div>
+          <input
+            type="text"
+            class="input"
+            formControlName="name"
+          />
+          <input-error [control]="f['name']"/>
+        </div>
+        <!-- 'description' -->
+        <div class="col-lg-12 mb-2">
+          <div class="label flex aic jcsb">
+            <label class="fs-11 simibold" for="birth-date">
+              <i class="mr-50 bx bx-align-justify"></i>
+              <span>{{'description' | translate}}</span>
+            </label>
+          </div>
+          <textarea class="input" formControlName="describtion"></textarea>
+        </div>
+         <div class="col-lg-12" *ngIf="kpiMode">
+          <label class="fs-11 simibold d-block">
+            <i class="mr-50 bx bx-category-alt"></i>
+            <span>{{'kpi_type' | translate}}</span>
+          </label>
+          <div class="col-lg-12 mb-2 px-0">
+
+            <label class="custom-radio-box">
+              <input
+                type="radio"
+                formControlName="kpiType"
+                [value]="KpiType.Increased"
+                name="kpiType"
+                (change)="onKpiTypeChange()"  
+                checked 
+              />
+              <span class="radio-label">
+                <div class="flex aic">
+                  <b class="mr-1"> {{ 'basic_performance_indicator' | translate }}</b>
+                  <i class="mr-50 bx bx-up-arrow-circle bold"></i>
+                  <b>{{ 'increase_indicator' | translate }}</b>
+                </div>
+                <div class="desc">{{ 'increase_indicator_desc' | translate }}</div>
+              </span>
+              <i class="bx bx-info-circle"></i>
+  
+            </label>
+            </div>
+  
+            <div class="col-lg-12 mb-2 px-0">
+  
+            <label class="custom-radio-box">
+              <input
+                type="radio"
+                formControlName="kpiType"
+                [value]="KpiType.Decreased"
+                name="kpiType"
+                (change)="onKpiTypeChange()"
+              />
+              <span class="radio-label">
+                <div class="flex aic">
+                  <b class="mr-1"> {{ 'basic_performance_indicator' | translate }}</b>
+                  <i class="mr-50 bx bx-down-arrow-circle bold"></i>
+                  <b>{{ 'decrease_indicator' | translate }}</b>
+                </div>
+                <div class="desc">{{ 'decrease_indicator_desc' | translate }}</div>
+              </span>
+              <i class="bx bx-info-circle"></i>
+  
+            </label>
+            </div>
+            <div class="col-lg-12 mb-2 px-0">
+  
+              <label class="custom-radio-box">
+                <input
+                  type="radio"
+                  formControlName="kpiType"
+                  [value]="KpiType.TaskBased"
+                  name="kpiType"
+                  (change)="onKpiTypeChange()"
+                />
+                <span class="radio-label">
+                  <div class="flex aic">
+                    <b>{{ 'task_performance_indicator' | translate }}</b>
+                  </div>
+                </span>
+    
+              </label>
+              </div>
+  
+         </div>
+        <!-- kpis-type -->
+        <div class="col-lg-12 mb-2" *ngIf="kpiMode">
+          <kpis-type-form [dataSourceFilter]="form.controls['kpiType'].value"  [formControlName]="'valueTypeId'" />
+          <input-error [control]="f['valueTypeId']"/>
+        </div>
+
+
+        <!-- target -->
+        <div class="col-lg-6 mb-2">
+          <div class="label flex aic jcsb">
+            <label class="fs-11 simibold" for="birth-date">
+              <i class="mr-50 bx bx-target-lock"></i>
+              <span>{{'target' | translate}}</span>
+            </label>
+          </div>
+          <input
+            type="number"
+            class="input"
+            formControlName="target"
+          />
+          <input-error [control]="f['target']"/>
+
+        </div>
+        <!-- weight -->
+        <div class="col-lg-6 mb-2">
+          <div class="label flex aic jcsb">
+            <label class="fs-11 simibold" for="birth-date">
+              <i class="mr-50 bx bx-dumbbell"></i>
+              <span>{{'weight' | translate}}</span>
+            </label>
+            <!-- <field-length [percentage]="100"></field-length> -->
+          </div>
+          <div class="position-relative">
+            <input
+            type="number"
+            class="input"
+            pattern="[0-9]*"
+            formControlName="weight"
+          />
+          <span class="input-suffix">%</span>
+          <input-error [control]="f['weight']" [message]="'weight_must_be_greater_than_zero'"/>
+        </div>
+
+        </div>
+        <!-- date_from -->
+        <div class="col-lg-6 mb-2" *ngIf="kpiMode">
+          <label class="fs-11 simibold" for="name">
+            <i class="mr-50 bx bx-calendar"></i>
+            <span >{{'date_from' | translate}}</span>
+          </label>
+          <p-calendar
+            formControlName="dateFrom"
+            [showIcon]="true"
+            inputId="icondisplay"
+            [ngClass]="{'ng-dirty ng-invalid': form.controls['dateFrom'].invalid && form.controls['dateFrom'].touched}"
+             />
+             <input-error [control]="f['dateFrom']"/>
+        </div>
+        <!-- date_to -->
+        <div class="col-lg-6 mb-2" *ngIf="kpiMode">
+          <label class="fs-11 simibold" for="name">
+            <i class="mr-50 bx bx-calendar"></i>
+            <span >{{'date_to' | translate}}</span>
+          </label>
+          <p-calendar
+            formControlName="dateTo"
+            [showIcon]="true"
+            inputId="icondisplay"
+            [ngClass]="{'ng-dirty ng-invalid': form.controls['dateTo'].invalid && form.controls['dateTo'].touched}"/>
+            <input-error [control]="f['dateTo']"/>
+        </div>
+   
+          <!-- kpiRepetition -->
+          <div class="col-lg-6 mb-2" *ngIf="kpiMode">
+            <label class="fs-11 simibold" for="kpiRepetition">
+              <i class="mr-50 bx bx-repeat"></i>
+              <span>{{'KPI_Repetition' | translate}}</span>
+            </label>
+            <ng-select
+            [clearable]="false"
+            [items]="kpiRepetitionOptions"
+            appendTo="body"
+            bindValue="value"
+            bindLabel="label"
+            formControlName="evaluationFrequency"
+            
+          >
+            <ng-template ng-option-tmp let-item="item">
+              {{ item.label | translate }}
+            </ng-template>
+            <ng-template ng-label-tmp let-item="item">
+              {{ item.label | translate }}
+            </ng-template>
+          </ng-select>
+        
+        </div>
+        <!-- departments -->
+        <div class="col-lg-6 mb-2" *ngIf="kpiMode">
+          <label class="fs-11 simibold" for="name">
+            <i class="mr-50 bx bx-buildings"></i>
+            <span >{{'departments' | translate}}</span>
+          </label>
+          <departments-form  [labelVisibilty]="false" [multiable]="true" [formControlName]="'departmentId'" width="w-100"/>
+        </div>
+        <div class="col-lg-12 mb-2" *ngIf="kpiMode">
+          <div class="over-achievement-row">
+            <div class="label-row">
+              <span class="main-label">
+                <i class="bx bx-check"></i>
+                {{ 'allow_over_achievement' | translate }}
+              </span>
+            </div>
+            <div class="checkbox-row">
+              <label class="custom-checkbox-label">
+                <input type="checkbox" formControlName="isOverAchive" />
+                <span class="custom-checkbox"></span>
+                {{ 'yes' | translate }}
+              </label>
+            </div>
+          </div>
+
+          </div>
+      </div>
+    </form>
+
+    <div class="text-right">
+      <button (click)="dialogRef.close()" type="submit" class="bg-white primary py-1 px-2 border-primary rounded  pointer" mat-button>{{'cancel' | translate}}</button>
+      <button (click)="createOrUpdate()" type="submit" class="bg-primary white py-1 px-2 border-primary rounded  pointer ml-1" mat-button>{{(editMode ? 'save' : 'add') | translate}}</button>
+    </div>
+  </div>

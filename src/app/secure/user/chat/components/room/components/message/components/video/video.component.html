@@ -1,0 +1,4 @@
+<div class="video-message">
+  <p class="mb-50" *ngIf="message.text">{{message.text}}</p>
+  <video [src]="apiUrl + '/' + message.url" width="300" controls class="rounded"></video>
+</div>

@@ -1,0 +1,28 @@
+table {
+  width: 100%;
+  height: 35.2rem !important;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: center;
+  width: 14.28%;
+}
+
+.current-date {
+  width: 15rem;
+}
+
+.dot {
+  width: .5rem;
+  height: .5rem;
+}
+
+.selected-day {
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 1.6;
+}
+

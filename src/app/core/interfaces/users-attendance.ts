@@ -1,0 +1,17 @@
+export interface UsersAttendance {
+    creationDate: string,
+    employeeDepartmentId: number,
+    employeeDepartmentName: string,
+    employeeId: number,
+    employeeJobTitle: string,
+    employeeManagerId: number,
+    employeeManagerName: string,
+    employeePhoto: string,
+    employeeName: string,
+    id: number,
+    latitude: number,
+    longitude: number,
+    macAddress: string,
+    status: number,
+    address: string,
+}

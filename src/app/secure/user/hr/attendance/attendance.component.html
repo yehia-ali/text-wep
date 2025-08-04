@@ -1,0 +1,80 @@
+<layout>
+  <div class="attendance p-2 h-100" magicScroll="">
+    <div class="flex aic jcsb mb-2">
+      <div class="overdue">
+        <label>{{'team_members' | translate}}</label>
+        <ng-select class="w-22r" [items]="teamMembers$ | async" [(ngModel)]="selectedUser" (ngModelChange)="userChanged()" bindLabel="name" bindValue="id" appendTo="body" [multiple]="false"
+                   [closeOnSelect]="true">
+        </ng-select>
+      </div>
+      <div class="flex aic jcfe" (click)="rangePicker.open()">
+        <mat-form-field appearance="fill" class="example-form-field">
+          <mat-label class="fs-15">{{"date_range" | translate}}</mat-label>
+          <mat-date-range-input [rangePicker]="rangePicker">
+            <input matStartDate placeholder="Start date" [(ngModel)]="startDate"/>
+            <input matEndDate placeholder="End date" [(ngModel)]="endDate"/>
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #rangePicker>
+            <mat-date-range-picker-actions>
+              <button mat-button matDateRangePickerCancel>{{ "cancel" | translate }}</button>
+              <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateChanged()">
+                {{ "apply" | translate }}
+              </button>
+            </mat-date-range-picker-actions>
+          </mat-date-range-picker>
+        </mat-form-field>
+      </div>
+    </div>
+    <attendance-card (statusChanged)="getAttendanceRange()"></attendance-card>
+    <div class="attendance-history mt-2">
+      <div class="attendance-history-card mb-2 p-2 rounded bg-gray" *ngFor="let attendance of attendanceRange">
+        <div class="flex aic jcc w-100">
+          <div class="flex aic gap-x-2">
+            <div class="img">
+              <img src="assets/images/icons/date.svg" width="25" alt="" class="convert-image-color">
+            </div>
+            <p class="bold date">{{attendance.date | arabicDate}}</p>
+          </div>
+          <div class="flex aifs jcc w-100 gap-x-5">
+            <div class="check-ins">
+              <ng-container *ngFor="let checkin of attendance.userAttendanceDetails; let i = index">
+                <ng-container *ngIf="checkin.status == 1">
+                  <div class="flex gap-x-5 attendance-label">
+                    <div class="info flex aic gap-x-1">
+                      <div class="img">
+                        <img src="assets/images/icons/Checkin.svg" alt="">
+                      </div>
+                      <p>{{'check-in' | translate}}</p>
+                    </div>
+                    <div class="date">
+                      <p>{{checkin.date | arabicTime}}</p>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+            <div class="check-outs">
+              <ng-container *ngFor="let checkin of attendance.userAttendanceDetails; let i = index">
+                <ng-container *ngIf="checkin.status == 2">
+                  <div class="flex gap-x-5 attendance-label">
+                    <div class="info flex aic gap-x-1">
+                      <div class="img">
+                        <img src="assets/images/icons/Checkout.svg" alt="">
+                      </div>
+                      <p>{{'check-out' | translate}}</p>
+                    </div>
+                    <div class="date">
+                      <p>{{checkin.date | arabicTime}}</p>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</layout>

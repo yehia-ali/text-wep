@@ -1,0 +1,66 @@
+<div class="rounded shadow bg-white pt-50 relative">
+  <p class="mx-50 mb-1 simibold bg-light-danger p-1 rounded">{{'beta' | translate}}</p>
+
+  <div class="mb-1 filters text-right border-bottom">
+    <div class="flex aic jcsb">
+      <div class="date flex aic">
+        <a *ngFor="let item of typeFilterList" class="hir-filter mr-1 pointer py-1 px-1 {{selectedHirFilter == item.number ? 'primary active' : '' }}" (click)="displayedData(item.number)">{{item.name | translate}}</a>
+      </div>
+    </div>
+  </div>
+  <i class="bx {{ !vertical ? 'bx-list-ul' : 'bx-grid'}} change-view-btn pointer rounded-50 flex aic jcc" (click)="changeView()"></i>
+
+  <div class="flex aic jcc" *ngIf="!vertical">
+    <div class="card overflow-auto content-chart" id="h-chart-content">
+      <p-organizationChart [value]="userChartData">
+        <ng-template let-item pTemplate="default">
+          <div class="rounded-4 px-50 py-2 mb-50 hier-card mx-25 h-100">
+            <div class="img mb-50 flex aic jcc" *ngIf="userMode">
+              <app-img-title [imgSrc]="item.imageUrl" [imgSize]="40" />
+            </div>
+            <div class="text-center relative">
+              <h3 class="simibold primary" style="line-height: 1.3;">
+                {{item.name}}
+              </h3>
+              <p class="">
+                {{item.jobTitle }}
+              </p>
+              <p *ngIf="userMode && item.code"> ( {{item.code}} )</p>
+              <i class="bx bx-plus-circle fs-16 mt-1 add-users-btn pointer" (click)="getData(item.id)" *ngIf="!item.loaded && item.subCount > 0"></i>
+            </div>
+          </div>
+        </ng-template>
+      </p-organizationChart>
+    </div>
+  </div>
+
+  <div class="vertical-chart w-100 pl-4" *ngIf="vertical">
+    <ng-container *ngFor="let item of userChartData">
+      <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: item }"></ng-container>
+    </ng-container>
+
+    <ng-template #renderNode let-node>
+      <div class="flex aic jcsb px-75 py-75 level-{{node.level}} shadow rounded vertical-chart-item mb-1">
+        <div class="flex">
+          <app-img-title [imgSrc]="node.imageUrl" [noImage]="userMode ? false : true" [imgSize]="35" [title]="node.name  + (node.code ? ' ( ' + node.code + ' )' : '')" [subTitle]="(node.jobTitle || '-') + (node.departmentName ? ' ( ' + node.departmentName + ' )' : '')"/>
+        </div>
+        <div class="flex aic" *ngIf="node.subCount > 0">
+          <span class="pr-50 fs-14">( {{node.subCount}} )</span>
+          <i
+          class="bx  pointer"
+          [ngClass]="{ 'bx-minus-circle': node.isOpen, 'bx-plus-circle': !node.isOpen }"
+          (click)="toggleNode(node)">
+        </i>
+        </div>
+      </div>
+
+      <div class="children ml-5 pl-2 level-{{node.level}}" *ngIf="node.isOpen && node.children && node.children.length > 0">
+        <ng-container *ngFor="let child of node.children">
+          <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: child }"></ng-container>
+        </ng-container>
+      </div>
+    </ng-template>
+  </div>
+
+
+</div>

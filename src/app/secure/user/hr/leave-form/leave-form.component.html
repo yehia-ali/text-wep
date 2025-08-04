@@ -1,0 +1,181 @@
+<div class="create-task" dir="auto">
+  <h2 class="black fs-18">
+    {{ 'create_leave_request' | translate }}
+  </h2>
+
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="row mb-2">
+        <div class="col-lg-4">
+          <label class="custom-radio-box">
+            <input
+              type="radio"
+              name="leaveType"
+              [value]="'full_day'"
+              [checked]="f['leaveType'].value == 'full_day'"
+              formControlName="leaveType"
+              (change)="onLeaveTypeChange('full_day')"
+            />
+            <span class="radio-label d-flex flex-column align-items-start">
+              <p class="text-center fs-14 medium-bold black">{{ 'full_day' | translate }}</p>
+            </span>
+          </label>
+        </div>
+        <div class="col-lg-4">
+          <label class="custom-radio-box">
+            <input
+              type="radio"
+              name="leaveType"
+              [value]="'half_day'"
+              [checked]="f['leaveType'].value == 'half_day'"
+              formControlName="leaveType"
+              (change)="onLeaveTypeChange('half_day')"
+            />
+            <span class="radio-label d-flex flex-column align-items-start">
+              <p class="text-center fs-14 medium-bold black">{{ 'half_day' | translate }}</p>
+            </span>
+          </label>
+        </div>
+        <div class="col-lg-4">
+          <label class="custom-radio-box">
+            <input
+              type="radio"
+              name="leaveType"
+              [value]="'permission'"
+              [checked]="f['leaveType'].value == 'permission'"
+              formControlName="leaveType"
+              (change)="onLeaveTypeChange('permission')"
+            />
+            <span class="radio-label d-flex flex-column align-items-start">
+              <p class="text-center fs-14 medium-bold black">{{ 'permission' | translate }}</p>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="flex-grid gap-y-2" *ngIf="leaveTypes.length > 0">
+        <!-- Select Time of Day -->
+        <div class="col-md-12" *ngIf="f['leaveType'].value == 'half_day'">
+          <input-label key="time_of_day" [control]="f['half_day_Morning']" [showIcon]="true" [icon]="'/assets/images/icons/timer-clock.svg'" />
+          <ng-select (change)="selectHalfDayLeaveType($event)" [items]="halfDayLeaveTypes" bindLabel="name" bindValue="value" appendTo="body"  [clearSearchOnAdd]="true" [clearable]="false"
+                      [clearOnBackspace]="true"
+                      placeholder="{{'select_time_of_day' | translate}}"
+                      >
+          </ng-select>
+          <input-error [control]="f['half_day_Morning']"/>
+        </div>
+        
+        <!-- Select Type -->
+        <div class="col-md-12" *ngIf="f['leaveType'].value == 'full_day' || f['leaveType'].value == 'half_day'">
+          <input-label key="leaves_type" [control]="f['leave_type_id']" [showIcon]="true" [icon]="'/assets/images/icons/group.svg'" />
+          <ng-select (change)="selctedLeaveTypeValue($event)" [items]="leaveTypes" bindLabel="name" bindValue="leaveTypeId" appendTo="body" formControlName="leave_type_id" [clearSearchOnAdd]="true" [clearable]="false"
+                     [clearOnBackspace]="true"
+                     placeholder="{{'select_leave_type' | translate}}"
+                     >
+          </ng-select>
+          <input-error [control]="f['leave_type_id']"/>
+        </div>
+
+        <!-- Select Date -->
+        <div class="col-md-12" *ngIf="f['leaveType'].value == 'full_day' || f['leaveType'].value == 'half_day'">
+          <input-label key="select_date" [control]="f['date']" [showIcon]="true" icon="assets/images/icons/calendar-icon-2.svg" />
+          
+          <!-- Date Range for Full Day -->
+          <div class="d-flex align-items-center gap-x-2" *ngIf="f['leaveType'].value == 'full_day'">
+            <mat-form-field appearance="outline" class="w-85" (click)="rangePicker.open()">
+              <mat-label class="fs-15">{{ "date_range" | translate }}</mat-label>
+              <mat-date-range-input [rangePicker]="rangePicker">
+                <input matStartDate [placeholder]="'start_date' | translate" formControlName="start_date" [min]="today"/>
+                <input matEndDate [placeholder]="'end_date' | translate" formControlName="end_date"/>
+              </mat-date-range-input>
+              <mat-datepicker-toggle matSuffix [for]="rangePicker">
+              </mat-datepicker-toggle>
+              <mat-date-range-picker #rangePicker>
+                <mat-date-range-picker-actions>
+                  <button mat-button matDateRangePickerCancel>
+                    {{ "cancel" | translate }}
+                  </button>
+                  <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateChanged()">
+                    {{ "apply" | translate }}
+                  </button>
+                </mat-date-range-picker-actions>
+              </mat-date-range-picker>
+            </mat-form-field>
+            <div class="days_num w-10">
+              <p class="text-center d-flex align-items-center justify-content-center gap-1">
+                <span class="num fs-14">{{ daysNumber | arabicNumbers }}</span>
+                <br>
+                <span class="title fs-14">{{ "day" | translate }}</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Single Date for Half Day -->
+          <div class="d-flex align-items-center gap-x-2" *ngIf="f['leaveType'].value == 'half_day'">
+            <mat-form-field appearance="outline" class="w-85" (click)="singleDatePicker.open()">
+              <mat-label class="fs-15">{{ "select_date" | translate }}</mat-label>
+              <input matInput [matDatepicker]="singleDatePicker" formControlName="start_date" [min]="today" [placeholder]="'select_date' | translate" readonly (dateChange)="onHalfDayDateChange($event)">
+              <mat-datepicker-toggle matSuffix [for]="singleDatePicker"></mat-datepicker-toggle>
+              <mat-datepicker #singleDatePicker></mat-datepicker>
+            </mat-form-field>
+            <div class="days_num w-10">
+              <p class="text-center d-flex align-items-center justify-content-center gap-1">
+                <span class="num fs-14">{{ daysNumber  }}</span>
+                <br>
+                <span class="title fs-14">{{ "day" | translate }}</span>
+              </p>
+            </div>
+          </div>
+          
+          <input-error [control]="f['dateFrom']"/>
+        </div>
+        <div class="col-md-12" *ngIf="f['leaveType'].value == 'permission'">
+          <input-label key="permission_limit_reached" [control]="f['start_date']" [showIcon]="true" [icon]="'/assets/images/icons/info.svg'" />
+        </div>
+        <!-- Select Hours Count -->
+        <div class="col-md-6 ps-1" *ngIf="f['leaveType'].value == 'permission'">
+          <input-label key="hours_count" [control]="f['permissionDayCount']" [showIcon]="true" [icon]="'/assets/images/icons/timer-clock.svg'" />
+          <ng-select  [items]="permissionDayCount" bindLabel="name" formControlName="permissionDayCount" bindValue="value" appendTo="body"  [clearSearchOnAdd]="true" [clearable]="false"
+                      [clearOnBackspace]="true"
+                      placeholder="{{'hour' | translate}}"
+                      >
+          </ng-select>
+          <input-error [control]="f['permissionDayCount']"/>
+        </div>
+        <!-- Select Hours Count -->
+        <div class="col-md-6 pe-1" *ngIf="f['leaveType'].value == 'permission'">
+          <input-label key="date_and_time" [control]="f['start_date']" [showIcon]="true" [icon]="'/assets/images/icons/calendar-icon-2.svg'" />
+          <date-time-filter 
+          [minDate]="today"
+          [hideLabel]="true"
+          [date]="f['start_date'].value"
+          (dateChange)="onDateTimeChange($event)">
+        </date-time-filter>
+  
+          <input-error [control]="f['start_date']"/>
+        </div>
+
+        <!-- Reason -->
+        <div class="col-md-12">
+          <input-label key="reason" [control]="f['leave_reason']" [showIcon]="true" [icon]="'/assets/images/icons/list.svg'" />
+          <textarea formControlName="leave_reason" class="input" rows="5"></textarea>
+          <input-error [control]="f['leave_reason']"/>
+        </div>
+
+        <!-- Attachments -->
+        <div class="col-md-12" *ngIf="f['leaveType'].value == 'full_day' || f['leaveType'].value == 'half_day'">
+          <get-attachments [multiFiles]="false" [hideLabel]="true" (getAttachments)="attachments = $event"/>
+        </div>
+      </div>
+      <p class="fs-25 black" *ngIf="dataLoaded && leaveTypes.length == 0">{{'no_leaves_assigned' | translate}}</p>
+    </form>
+  </div>
+
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex">
+      <button mat-raised-button color="primary" class="px-3 mr-2 fs-15" (click)="submit()" [disabled]="form.invalid || loading">
+        <submit-button text="create" [loading]="loading"></submit-button>
+      </button>
+      <button class="px-3 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>{{ 'cancel' | translate }}</button>
+    </div>
+  </div>
+</div>

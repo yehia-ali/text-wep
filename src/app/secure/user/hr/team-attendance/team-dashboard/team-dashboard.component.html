@@ -1,0 +1,20 @@
+<div class="user-attendance-dashboard flex aic jcsb gap-x-1 bg-white py-1" *ngIf="service.dashboard | async as dashboard">
+  <div class="py-1 card rounded shadow flex-14 flex-column-center bg-white" [ngClass]="{'pointer': card.filter > 0, 'border-primary shadowBranch_created_success': card.filter == service.filterValue.value}"
+       *ngFor="let card of cards"
+       (click)="card.filter > 0 && filter(card.filter)">
+    <div class="img flex aic jcsb w-100 px-50 mb-50">
+      <p class="fs-25 bold" *ngIf="card.value !== null && card.value !== undefined; else loadingSpinner">
+        {{card.value}}
+      </p>
+      <ng-template #loadingSpinner>
+        <div class="spinner-container d-flex align-items-center">
+          <div class="spinner-border text-primary" role="status">
+          </div>
+        </div>
+      </ng-template>
+      <img src="assets/images/attendance/{{card.name}}.svg" alt="{{card.name}} icon" width="40">
+    </div>
+    <p class="fs-14 bold text-left w-100">{{ card.name | translate }}</p>
+  </div>
+</div>
+

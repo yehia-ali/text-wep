@@ -1,0 +1,22 @@
+form {
+  overflow: hidden;
+}
+
+.create-task-dialog
+{
+  width: 199rem;
+}
+.create-task-sp .p-splitbutton {
+  box-shadow: var(--mdc-protected-button-container-elevation, 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12));
+  .p-splitbutton-defaultbutton {
+    padding-inline: 8px;
+    padding-block: 4px;
+  }
+}
+.ng-dropdown-footer{
+  border: 1px solid #7b58ca ;
+}
+.create-task-dialog{
+  max-width: 80vw !important;
+  width: 800px;
+}

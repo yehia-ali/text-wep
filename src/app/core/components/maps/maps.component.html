@@ -1,0 +1,71 @@
+<!-- map -->
+
+<div>
+  <div class="mb-25">
+    <label class="fs-11 simibold mb-75" for="radius">
+      {{"search_location" | translate }}
+    </label>
+  </div>
+  <div class="flex-grid">
+    <div class="col-md-12 flex aic">
+      <div class="w-100 mb-2 mr-2">
+        <input #searchInput id="search-input" type="text" placeholder="{{'search' | translate}}" class="input" (input)="mapSearch()"/>
+      </div>
+      <div class="text-right mb-2">
+        <button mat-raised-button (click)="setCurrentLocation()"  color="primary" class="flex aic jcc">
+         <span class=" mr-1"> {{'my_location' | translate}}</span>
+         <i class="bx bx-current-location fs-23"></i>
+        </button>
+      </div>
+    </div>
+    <div class="col-lg-4 mb-2" *ngIf="!noRadius">
+      <div class="mb-25">
+        <label class="fs-11 simibold mb-75" for="radius">
+          {{"radius_meters" | translate }}
+        </label>
+      </div>
+      <input
+        type="number"
+        class="input"
+        [(ngModel)]="radius"
+        (input)="handleRadiusChange($event)"
+        />
+    </div>
+    <div class="col-lg-4 mb-2">
+      <div class="mb-25">
+        <label class="fs-11 simibold mb-75" for="radius">
+          {{"lat" | translate }}
+        </label>
+      </div>
+      <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="this.lat" id="search-input" type="number" placeholder="{{'lat' | translate}}" class="input" (input)="handleLatLong($event)"/>
+    </div>
+    <div class="col-lg-4 mb-2">
+      <div class="mb-25">
+        <label class="fs-11 simibold mb-75" for="radius">
+          {{"long" | translate }}
+        </label>
+      </div>
+      <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="this.long" id="search-input" type="number" placeholder="{{'long' | translate}}" class="input" (input)="handleLatLong($event)"/>
+    </div>
+  </div>
+  <div style="width: 100%; height: 250px">
+    <google-map
+      [center]="circleCenter"
+      [zoom]="zoom"
+      [options]="options"
+      (mapClick)="handleMapClick($event)"
+    >
+      <map-marker
+        [position]="circleCenter"
+        [options]="markerOptions"
+      ></map-marker>
+      <map-circle
+        #mapCircle
+        [center]="circleCenter"
+        [radius]="radius"
+        [options]="circleOptions"
+      ></map-circle>
+    </google-map>
+  </div>
+</div>
+<!-- map -->

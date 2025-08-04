@@ -1,0 +1,52 @@
+<layout-with-filters [meta]="meta" (pageChange)="service.page.next($event); service.hasChanged.next(true)">
+  <ng-container filters>
+    <search/>
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': inbox.length == 0 || service.loading.value}" class="table w-100 relative">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">{{ 'user' | translate }}</th>
+        <th class="text-left">{{ 'subject' | translate }}</th>
+        <th class="text-left">{{ 'date' | translate }}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="inbox.length > 0 && !service.loading.value">
+      <tr *ngFor="let mail of inbox| paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy" class="border-bottom pointer"
+          routerLink="details/{{mail.mailId}}/{{mail.messageId}}">
+
+        <!--    user    -->
+        <td>
+          <div class="flex aic bold">
+            <!-- title -->
+            <span class="text-left fs-13" *ngIf="mail.senderEmail.length <= 70">{{ mail.senderEmail }}</span>
+
+            <!-- trimmed senderEmail -->
+            <span class="text-left fs-13" *ngIf="mail.senderEmail.length > 70" [matTooltip]="mail.senderEmail">{{ mail.senderEmail | slice:0:70 }}...</span>
+          </div>
+        </td>
+
+        <!--    subject    -->
+        <td>
+          <div class="flex aic bold">
+            <!-- title -->
+            <span class="text-left fs-13" *ngIf="mail.subject.length <= 70">{{ mail.subject }}</span>
+
+            <!-- trimmed subject -->
+            <span class="text-left fs-13" *ngIf="mail.subject.length > 70" [matTooltip]="mail.subject">{{ mail.subject | slice:0:70 }}...</span>
+          </div>
+        </td>
+
+        <td class="text-left">
+          {{ mail.date | arabicDate:'withTime':false }}
+        </td>
+
+      </tr>
+      </tbody>
+      <not-found *ngIf="inbox.length == 0 && !service.loading.value" class="a-center"></not-found>
+      <loading *ngIf="service.loading.value"></loading>
+    </table>
+
+  </ng-container>
+</layout-with-filters>

@@ -1,0 +1,13 @@
+<div
+  class="d-flex justify-content-between flex-column align-items-center gap-4 dir py-2"
+>
+  <div
+    class="d-flex justify-content-between flex-column align-items-center dir py-2"
+  >
+    <img class="mb-2" src="assets/images/success.svg" alt="Upload" />
+    <span class="fs-18 bold black">{{ message | translate }}</span>
+  </div>
+  <button class="mb-2" mat-raised-button color="primary" (click)="close()">
+    {{ "close" | translate }}
+  </button>
+</div>

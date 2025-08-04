@@ -1,0 +1,41 @@
+@use "src/assets/styles/vars" as *;
+
+input {
+  height: 5rem !important;
+  width: 100%;
+  outline: none !important;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+
+  padding-inline-start:  2rem !important;
+  border: none;
+  &.btn-start{
+    padding-inline-end: 12rem !important;
+  }
+  &.isRecording {
+    padding-top: .5rem !important;
+    padding-bottom: .5rem !important;
+    padding-inline-start: 2rem !important;
+    padding-inline-end: 43rem !important;
+  }
+}
+
+
+.reply {
+  height: 5rem !important;
+  .reply-text {
+    width: 95%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.absolute{
+  position: absolute;
+  inset-inline-end: 0;
+  bottom: 0;
+}
+.jce{
+  justify-content: end;
+}

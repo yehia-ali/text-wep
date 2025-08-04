@@ -1,0 +1,66 @@
+<user-navbar/>
+<div class="p-2">
+  <layout-with-filters [meta]="meta">
+    <ng-container filters>
+      <div class="packages-filters px-2 pb-1 pt-2 flex aic jcfe">
+        <button mat-raised-button color="primary" (click)="createPackage()">{{ 'create_package' | translate }}</button>
+      </div>
+    </ng-container>
+    <ng-container content *ngIf="packages$ | async as packages">
+      <table *ngIf="packages && packages.length > 0 && !loading" class="table" id="packages-table">
+        <thead class="bg-gray border-bottom">
+        <tr>
+          <th class="text-center">{{ 'name' | translate }}</th>
+          <th class="text-center">{{ 'description' | translate }}</th>
+          <th class="text-center">{{ 'grace_period' | translate }}</th>
+          <th class="text-center">{{ 'price_per_user' | translate }}</th>
+          <th class="text-center">{{ 'currency' | translate }}</th>
+          <th class="text-center">{{ 'limited_number_of_users' | translate }}</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="border-bottom pointer"
+            *ngFor="let _package of packages | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy">
+
+          <td class="text-center">
+            <p class="fs-13">{{ _package.name }}</p>
+          </td>
+
+          <td class="text-center">
+            <p class="fs-13">{{ _package.description }}</p>
+          </td>
+
+          <td class="text-center">
+            <p class="fs-13">{{ _package.gracePeriod | arabicNumbers }} {{ _package.gracePeriod ? ('day' | translate) : '-' }}</p>
+          </td>
+
+          <td class="text-center">
+            <p class="fs-13">{{ _package.pricePerUser ? _package.pricePerUser : '-' }}</p>
+          </td>
+
+          <td class="text-center">
+            <p class="fs-13" *ngIf="_package.currencyId">
+              <span *ngIf="_package.currencyId == 1">{{ 'egp' | translate }}</span>
+              <span *ngIf="_package.currencyId == 2">{{ 'usd' | translate }}</span>
+            </p>
+            <p *ngIf="!_package.currencyId">-</p>
+          </td>
+
+          <td class="text-center">
+            <p class="fs-13">{{ _package.limitedNumberOfUser ? _package.limitedNumberOfUser : ('unlimited' | translate) }}</p>
+          </td>
+
+          <td>
+            <i class='bx bxs-edit primary fs-23' (click)="edit(_package)"></i>
+            <i class='bx bx-trash-alt danger fs-23 ml-2' (click)="deletePackage(_package.id)"></i>
+          </td>
+
+        </tr>
+        </tbody>
+      </table>
+      <not-found *ngIf="packages && packages.length == 0 && !loading"></not-found>
+      <loading *ngIf="loading"></loading>
+    </ng-container>
+  </layout-with-filters>
+</div>

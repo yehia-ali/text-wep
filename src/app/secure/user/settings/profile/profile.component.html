@@ -1,0 +1,55 @@
+<layout>
+  <div class="profile-settings p-5 h-100" magicScroll>
+  <div class="update-image mb-4 flex aic jcsb">
+      <upload-image [img]="user.imageUrl" (file)="updateImage($event)"></upload-image>
+       <!-- <app-img-title [imgSize]="80" [imgSrc]="user.imageUrl"></app-img-title> -->
+      <a [href]="env + '/' + user.profileCV.filePath" *ngIf="user.profileCV" download target="_blank" class="underline primary">{{'view_cv' | translate}}</a>
+    </div>
+
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-2">
+        <!--  name  -->
+        <div class="col-xl-6">
+          <input-label [control]="f['name']" key="full_name" [maxLength]="25"/>
+          <input type="text" class="input" formControlName="name" [maxLength]="25" [readonly]="true">
+          <input-error [control]="f['name']"></input-error>
+        </div>
+
+        <!--  job title  -->
+        <div class="col-xl-6">
+          <input-label [control]="f['jobTitle']" key="job_title"></input-label>
+          <input type="text" class="input" formControlName="jobTitle" [readonly]="true">
+          <input-error [control]="f['jobTitle']"></input-error>
+        </div>
+
+        <!--  email -->
+        <div class="col-xl-6">
+          <input-label [control]="f['email']" key="email"></input-label>
+          <input type="text" class="input" formControlName="email" [readonly]="true">
+          <input-error [control]="f['email']"></input-error>
+        </div>
+
+        <!--  phone -->
+        <div class="col-xl-6">
+          <input-label [control]="f['phoneNumber']" key="phone"></input-label>
+          <input type="text" class="input" formControlName="phoneNumber" [readonly]="true">
+          <input-error [control]="f['phoneNumber']"></input-error>
+        </div>
+
+        <!--  job description -->
+        <!-- <div class="col-xl-12">
+          <input-label [control]="f['jobDescription']" key="job_description"></input-label>
+          <textarea class="input disabled-input" [readOnly]="true" formControlName="jobDescription" rows="4"></textarea>
+        </div> -->
+
+      </div>
+
+      <!-- <div class="flex aic jcfe mt-2" *ngIf="!isAdmin">
+        <button class="bg-primary white clickable-btn rounded py-1 submit" [disabled]="form.invalid || loading"
+                (click)="submit()">
+          <submit-button [loading]="loading" text="save"></submit-button>
+        </button>
+      </div> -->
+    </form>
+  </div>
+</layout>

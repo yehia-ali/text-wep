@@ -1,0 +1,53 @@
+<layout>
+  <div class="p-2 h-100">
+    <div class="actions mb-2">
+      <div class="flex-grid gap-y-4">
+        <div class="col-sm-4">
+          <div class="card border border-primary pointer rounded p-3 flex aic jcc gap-x-1" (click)="addLeave()">
+            <div class="img">
+              <img src="assets/images/leave/add-leave.svg" alt="add leave icon" class="convert-image-color">
+            </div>
+            <p class="primary convert-color">{{ 'add_leave' | translate }}</p>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card border border-primary pointer rounded p-3 flex aic jcc gap-x-1" (click)="assignLeave()">
+            <div class="img">
+              <img src="assets/images/leave/assign-leave.svg" alt="assign leave icon" class="convert-image-color">
+            </div>
+            <p class="primary convert-color">{{ 'assign_leave' | translate }}</p>
+          </div>
+        </div>
+        <div class="col-sm-4" (click)="addHoliday()">
+          <div class="card border border-primary pointer rounded p-3 flex aic jcc gap-x-1">
+            <div class="img">
+              <img src="assets/images/leave/add-holiday.svg" alt="add holiday icon" class="convert-image-color">
+            </div>
+            <p class="primary convert-color">{{ 'add_holiday' | translate }}</p>
+          </div>
+        </div>
+        <!--      <div class="col-lg-4">-->
+        <!--        <div class="card border border-primary pointer rounded p-3 flex aic jcc gap-x-1" routerLink="space-leaves-settings">-->
+        <!--          <div class="img">-->
+        <!--            <img src="assets/images/leave/space-leaves-settings.svg" alt="space leaves-settings icon" class="convert-image-color">-->
+        <!--          </div>-->
+        <!--          <p class="primary convert-color">{{ 'space_configuration' | translate }}</p>-->
+        <!--        </div>-->
+        <!--      </div>-->
+      </div>
+    </div>
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0s" class="leaves-group">
+      <mat-tab [label]="'leaves' | translate">
+        <div class="py-2 h-100">
+          <leaves-list/>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'holidays' | translate">
+        <div class="py-2 h-100">
+          <holidays-list/>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+
+  </div>
+</layout>

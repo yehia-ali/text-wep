@@ -1,0 +1,53 @@
+<layout>
+  <div class="email-configuration p-5 h-100" magicScroll>
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-1">
+        <div class="col-xl-6">
+          <input-label key="imap" [control]="f['imap']"/>
+          <input type="text" class="input" formControlName="imap">
+          <input-error [control]="f['imap']"/>
+        </div>
+
+        <div class="col-xl-6">
+          <input-label key="imap_port" [control]="f['imapPort']"/>
+          <input type="number" class="input" formControlName="imapPort">
+          <input-error [control]="f['imapPort']"/>
+        </div>
+
+        <div class="col-xl-6">
+          <input-label key="stmp" [control]="f['stmpServer']"/>
+          <input type="text" class="input" formControlName="stmpServer">
+          <input-error [control]="f['stmpServer']"/>
+        </div>
+
+        <div class="col-xl-6">
+          <input-label key="stmp_port" [control]="f['stmpPort']"/>
+          <input type="number" class="input" formControlName="stmpPort">
+          <input-error [control]="f['stmpPort']"/>
+        </div>
+
+        <div class="col-xl-6">
+          <input-label key="email" [control]="f['email']"/>
+          <input type="email" class="input" formControlName="email">
+          <input-error [control]="f['email']"/>
+        </div>
+
+        <div class="col-xl-6">
+          <input-label key="password" [control]="f['password']"/>
+          <input-password (getType)="type = $event">
+            <input [type]="type" class="input" formControlName="password">
+          </input-password>
+          <input-error [control]="f['password']"/>
+        </div>
+      </div>
+      <div class="flex aic jcsb mt-2" [ngClass]="{'jcfe': !hasConfig}">
+        <button class="bg-danger white clickable-btn rounded py-1 submit" *ngIf="hasConfig" (click)="deleteConfiguration()">
+          <submit-button [loading]="loading" text="delete"></submit-button>
+        </button>
+        <button class="bg-primary white clickable-btn rounded py-1 submit" [disabled]="form.invalid || loading" (click)="submit()">
+          <submit-button [loading]="loading" text="save"></submit-button>
+        </button>
+      </div>
+    </form>
+  </div>
+</layout>

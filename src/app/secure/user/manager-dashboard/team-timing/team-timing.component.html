@@ -1,0 +1,112 @@
+<h2>{{ 'team_timing' | translate }}</h2>
+<div class="flex aic jcsb gap-x-2 mt-1">
+  <div class="timing-card-primary flex aic gap-x-1 p-2 rounded flex-20 bold">
+    <div>
+      <p class="value bold">{{ data?.items.requiredWorkingHours | convertMinutes:'hour'}} {{ 'h' | translate }}</p>
+      <p>{{ 'required_working_hours' | translate }}</p>
+    </div>
+  </div>
+  <div class="timing-card-warn flex aic gap-x-1 p-2 rounded flex-20 bold">
+    <div>
+      <p class="value bold">{{ data?.items.expectedWorkingHours ? (data?.items.expectedWorkingHours | convertMinutes:'minutes') : 0 }} {{ 'h' | translate }}</p>
+      <p>{{ 'expected_hours' | translate }}</p>
+    </div>
+  </div>
+  <div class="timing-card-calm flex aic gap-x-1 p-2 rounded flex-20 bold">
+    <div>
+      <p class="value bold">{{ data?.items.actualWorkingHours ? (data?.items.actualWorkingHours | convertMinutes:'minutes') : 0 }} {{ 'h' | translate }}</p>
+      <p>{{ 'actual_hours' | translate }}</p>
+    </div>
+  </div>
+  <div class="timing-card-success flex aic gap-x-1 p-2 rounded flex-20 bold">
+    <div>
+      <p class="value bold">{{ data?.items.attendanceHours | convertMinutes:'hour' }} {{ 'h' | translate }}</p>
+      <p>{{ 'attendance_hours' | translate }}</p>
+    </div>
+  </div>
+  <div class="timing-card-danger flex aic gap-x-1 p-2 rounded flex-20 bold">
+    <div>
+      <p class="value bold">{{ data?.items.overTimeHours | convertMinutes:'hour' }} {{ 'h' | translate }}</p>
+      <p>{{ 'overtime_hours' | translate }}</p>
+    </div>
+  </div>
+</div>
+<div class="table">
+  <table [ngClass]="{'h-100': data.items.teamTimingAssignees.length == 0 || loading}" class="table w-100 relative mt-2">
+    <thead class="bg-gray border-bottom">
+    <tr>
+      <th class="text-left">{{ 'member' | translate }}</th>
+      <th>{{ 'department' | translate }}</th>
+      <th class="text-left">{{ 'manger' | translate }}</th>
+      <th>{{ 'required_hours' | translate }}</th>
+      <th>{{ 'expected_hours' | translate }}</th>
+      <th>{{ 'actual_hours' | translate }}</th>
+      <th>{{ 'attendance_hours' | translate }}</th>
+      <th>{{ 'overtime_hours' | translate }}</th>
+    </tr>
+    </thead>
+    <tbody *ngIf="data.items.teamTimingAssignees.length > 0 && !loading">
+    <tr *ngFor="let item of data.items.teamTimingAssignees | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy" class="border-bottom">
+      <td>
+        <div class="flex aic jcfs">
+          <app-img-title [imgSrc]="item.assigneePic" [title]="item.assigneeName" [subTitle]="item.assigneeJobTitle" [userId]="item.assigneeId" />
+        </div>
+      </td>
+
+      <td>
+        {{ item.department }}
+      </td>
+
+      <td>
+        <div class="flex aic jcfs">
+          <app-img-title [imgSrc]="item.managerPic" [title]="item.managerName" [subTitle]="item.managerJobTitle" [userId]="item.managerId" />
+        </div>
+      </td>
+
+      <td>
+        {{ item.requiredWorkingHours | convertMinutes:'hour' }} {{ 'h' | translate }}
+      </td>
+
+      <td>
+        {{ item.expectedWorkingHours | convertMinutes:'minutes' }} {{ 'h' | translate }}
+      </td>
+
+      <td>
+        {{ item.actualWorkingHours | convertMinutes:'minutes' }} {{ 'h' | translate }}
+      </td>
+
+      <td>
+        {{ item.attendanceHours | convertMinutes:'hour' }} {{ 'h' | translate }}
+      </td>
+
+      <td>
+        {{ item.overTimeHours | convertMinutes:'hour' }} {{ 'h' | translate }}
+      </td>
+
+    </tr>
+    </tbody>
+    <div *ngIf="data.items.teamTimingAssignees.length == 0 && !loading" style="height: 40vh;">
+      <not-found class="a-center"></not-found>
+    </div>
+    <!-- <loading *ngIf="loading"></loading> -->
+  </table>
+</div>
+<div class="pagination-content flex aic jcsr py-1 bg-white border-top border-bottom" *ngIf="meta?.totalItems > service.limit.value">
+  <div class="flex aic">
+    <p>{{ 'pagination_per_page' | translate }} </p>
+    <input type="number" class="input ml-75 limit text-center" min="1" [(ngModel)]="limit" (ngModelChange)="changeLimit()">
+    <p class="ml-50 primary" *ngIf="meta?.pageSize">{{ 'record' | translate }}</p>
+  </div>
+  <pagination-controls
+  [(ngModel)]="page"
+  (pageChange)="pageChanged($event)"
+  [maxSize]="7"
+  [directionLinks]="true"
+  [previousLabel]="'previous' | translate"
+  [nextLabel]="'next' | translate">
+</pagination-controls>
+
+  <p>{{ 'pagination_total_records' | translate }} <span
+    class="primary">{{ meta?.totalItems | arabicNumbers }} {{ 'record' | translate }}</span>
+  </p>
+</div>

@@ -1,0 +1,660 @@
+<user-navbar />
+<i
+  *ngIf="moreTasksStatus"
+  class="bx bx-refresh more-tasks flex aic jcc fixed white bg-primary fs-20 pointer shadow"
+  (click)="getMoreTasks()"
+  [matTooltip]="'load_more' | translate"
+  matTooltipPosition="above"
+></i>
+<div class="p-2 relative">
+  <div class="py-5 overlay-loading" *ngIf="loading">
+    <loading></loading>
+  </div>
+  <layout>
+    <!-- <h2 class="danger bold my-1 px-1">{{ "beta" | translate }}</h2> -->
+    <div class="flex w-100 m-auto mb-2 aic jcsb px-1 pt-1">
+      <div class="flex w-100 m-auto aic">
+        <div class="w-20r pr-2">
+          <search #searchFilter [width]="'w-100'" (valueChanged)="search($event)" [newSearch]="true" [classes]="'py-75 pr-1 fs-10'" [hideLabel]="true"></search>
+          <!-- <search [width]="'w-100'" (valueChanged)="search($event)" [newSearch]="true" ></search> -->
+        </div>
+        <div class=" pr-2 ">
+          <projects #projectsFilter  [newFilter]="true" [classes]="'w-100'" (valueChanged)="changeProject($event)"></projects>
+        </div>
+        <div class=" pr-2 ">
+          <priority-filter #priorityFilter  [newFilter]="true" [multi]="false" [classes]="'w-100'" (valueChanged)="changePriority($event)"></priority-filter>
+        </div>
+        <div class=" pr-2 ">
+          <task-status #statusFilter  [newFilter]="true" [width]="'w-100'" (valueChanged)="changeTaskStatus($event)"></task-status>
+        </div>
+
+        <div class="filter-calendar pr-2 ">
+          <app-date-range #dateFilter  [newFilter]="true" [label]="'start_date'" [startDate]="startDateFrom"  [endDate]="startDateTo" (valueChanged)="changeStartDate($event)"></app-date-range>
+        </div>
+        <!-- <div class="filter-calendar pr-2" *ngIf="this.adminView">
+          <app-date-range #dateFilter  [newFilter]="true" [label]="'end_date'" [startDate]="endDateFrom"  [endDate]="endDateTo" (valueChanged)="changeEndDate($event)"></app-date-range>
+        </div> -->
+        <div class="pr-2" *ngIf="this.adminView">
+          <select-user #userFilter  [multi]="true" (getSelectedUsers)="changeAssignee($event)" text="assignee" [newFilter]="true"/>
+        </div>
+        <div class="pr-2">
+          <select-user #userFilter  [multi]="true" (getSelectedUsers)="changeCreator($event)" text="creator" [newFilter]="true" />
+        </div>
+
+
+      </div>
+      <div class="flex aic gap-x-1">
+        <div class="flex aic gap-x-1" *ngIf="role.canAccessAdmin | async" >
+          <p class="mb-0 fs-11 simibold text-right" style="width: 80px;">{{'admin_view' | translate}} </p>
+          <p>
+            <mat-slide-toggle [matTooltip]="'admin_view' | translate" (change)="changeView($event)" color="primary"> </mat-slide-toggle>
+          </p>
+        </div>
+
+        <div class="flex aic gap-x-1" *ngIf="role.canAccessAdmin | async">
+          <p class="mb-0 fs-11 simibold text-right" style="width: 50px;">{{'stages' | translate}} </p>
+          <p>
+            <mat-slide-toggle [matTooltip]="'stages' | translate" (change)="changeView($event , true)" color="primary"> </mat-slide-toggle>
+          </p>
+        </div>
+
+        <i class='bx bx-reset pointer fs-18 rounded-circle clear-filters flex aic jcc white bg-primary border border-primary' [matTooltip]="'reset_filter' | translate" (click)="resetFilters()"></i>
+      </div>
+
+    </div>
+
+    <div class=" kanban-layout relative" id="kanban-layout">
+      <div class="w-100">
+        <div class="flex-grid m-auto w-100 acs">
+          <!-- Todo List -->
+          <!-- routerLink="inbox/details/{{item.taskId}}" link================================= -->
+          <div class="example-container kanban-card col-lg-2 px-1">
+            <div class="h-100">
+              <h5 class="mb-50 py-1 px-1 rounded bg-gray simibold title-kanban-list fs-13">
+                {{ "new" | translate }} ({{ todo.length }})
+              </h5>
+              <div
+                cdkDropList
+                #todoList="cdkDropList"
+                [cdkDropListData]="todo"
+                [cdkDropListConnectedTo]="[inprogressList]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <ng-container *ngFor="let item of todo; trackBy: trackByIndex">
+                  <div
+                    class="example-box bg-white p-1 mb-50 pointer new-list"
+                    cdkDrag
+                    (cdkDragReleased)="onItemSelected(item)"
+                    (click)="openDetails(item)"
+                  >
+                    <div>
+                      <div class="flex jcsb">
+                        <p class="fs-12 simibold mb-50">{{ item.title }}</p>
+                        <priority
+                          class="mb-50"
+                          [priority]="item.priority"
+                        ></priority>
+                      </div>
+                      <div class="flex aic mb-1 jcsb">
+                        <div class="cards flex">
+                          <p
+                            *ngIf="item.isOverDue"
+                            class="bg-light-danger px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "overdue" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isRepeated"
+                            class="bg-light-success px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "repeated" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isSubTasks"
+                            class="bg-light-blue px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "project" | translate }}
+                          </p>
+                        </div>
+                        <p class="fs-10 text-right">
+                         <span class="success"> {{ item.startDate | arabicDate:'month' }}</span><br/>
+                         <span class="danger"> {{ item.endDate | arabicDate:'month' }}</span>
+                        </p>
+                      </div>
+                      <div class="flex jcsb aie mt-50">
+                        <app-img-title *ngIf="!adminView" [imgSrc]="item.creatorProfilePicture" [matTooltip]="('creator' | translate) + ': ' + item.creatorName" matTooltipPosition="below"/>
+                        <app-img-title *ngIf="adminView" [imgSrc]="item.assigneeProfilePicture" [matTooltip]="('assignee' | translate) + ': ' +item.assigneeName" matTooltipPosition="below"/>
+                        <p class="mb-0 light fs-11 text-right simibold">
+                          {{ "T-" + item.taskId }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="py-5" *ngIf="todo.length == 0 && !loading">
+                  <not-found></not-found>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- In Progress List -->
+          <div class="example-container kanban-card col-lg-2 px-1">
+            <div class="h-100">
+              <h5 class="mb-50 py-1 px-1 rounded bg-gray simibold title-kanban-list fs-13">
+                {{ "in_progress" | translate }} ({{ inProgress.length }})
+              </h5>
+              <div
+                cdkDropList
+                #inprogressList="cdkDropList"
+                [cdkDropListData]="inProgress"
+                [cdkDropListConnectedTo]="[completedList]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <ng-container
+                  *ngFor="let item of inProgress; trackBy: trackByIndex"
+                >
+                  <div
+                    class="example-box bg-white p-1 mb-50 pointer inprogress-list pointer"
+                    cdkDrag
+                    (cdkDragReleased)="onItemSelected(item)"
+                    (click)="openDetails(item)"
+                  >
+                    <div>
+                      <div class="flex jcsb">
+                        <p class="fs-12 simibold mb-50">{{ item.title }}</p>
+                        <priority
+                          class="mb-50"
+                          [priority]="item.priority"
+                        ></priority>
+                      </div>
+                      <div class="flex aic mb-1 jcsb">
+                        <div class="cards flex">
+                          <p
+                            *ngIf="item.isOverDue"
+                            class="bg-light-danger px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "overdue" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isRepeated"
+                            class="bg-light-success px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "repeated" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isSubTasks"
+                            class="bg-light-blue px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "project" | translate }}
+                          </p>
+                        </div>
+                        <p class="fs-10 text-right">
+                         <span class="success"> {{ item.startDate | arabicDate:'month' }}</span><br/>
+                         <span class="danger"> {{ item.endDate | arabicDate:'month' }}</span>
+                        </p>
+                      </div>
+                      <div class="flex jcsb aie mt-50">
+                        <app-img-title *ngIf="!adminView" [imgSrc]="item.creatorProfilePicture" [matTooltip]="('creator' | translate) + ': ' + item.creatorName" matTooltipPosition="below"/>
+                        <app-img-title *ngIf="adminView" [imgSrc]="item.assigneeProfilePicture" [matTooltip]="('assignee' | translate) + ': ' +item.assigneeName" matTooltipPosition="below"/>
+                        <p class="mb-0 light fs-11 text-right simibold">
+                          {{ "T-" + item.taskId }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="py-5" *ngIf="inProgress.length == 0 && !loading">
+                  <not-found></not-found>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Completed List -->
+          <div class="example-container kanban-card col-lg-2 px-1">
+            <div class="h-100">
+              <h5 class="mb-50 py-1 px-1 rounded bg-gray simibold title-kanban-list fs-13">
+                {{ "completed" | translate }} ({{ completed.length }})
+              </h5>
+              <div
+                cdkDropList
+                #completedList="cdkDropList"
+                [cdkDropListData]="completed"
+                [cdkDropListConnectedTo]="[inprogressList]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <ng-container
+                  *ngFor="let item of completed; trackBy: trackByIndex"
+                >
+                  <div
+                    class="example-box bg-white p-1 mb-50 pointer done-list"
+                    cdkDrag
+                    (cdkDragReleased)="onItemSelected(item)"
+                    (click)="openDetails(item)"
+                  >
+                    <div>
+                      <div class="flex jcsb">
+                        <p class="fs-12 simibold mb-50">{{ item.title }}</p>
+                        <priority
+                          class="mb-50"
+                          [priority]="item.priority"
+                        ></priority>
+                      </div>
+                      <div class="flex aic mb-1 jcsb">
+                        <div class="cards flex">
+                          <p
+                            *ngIf="item.isOverDue"
+                            class="bg-light-danger px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "overdue" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isRepeated"
+                            class="bg-light-success px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "repeated" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isSubTasks"
+                            class="bg-light-blue px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "project" | translate }}
+                          </p>
+                        </div>
+                        <p class="fs-10 text-right">
+                         <span class="success"> {{ item.startDate | arabicDate:'month' }}</span><br/>
+                         <span class="danger"> {{ item.endDate | arabicDate:'month' }}</span>
+                        </p>
+                      </div>
+                      <div class="flex jcsb aie mt-50">
+                        <app-img-title *ngIf="!adminView" [imgSrc]="item.creatorProfilePicture" [matTooltip]="('creator' | translate) + ': ' + item.creatorName" matTooltipPosition="below"/>
+                        <app-img-title *ngIf="adminView" [imgSrc]="item.assigneeProfilePicture" [matTooltip]="('assignee' | translate) + ': ' +item.assigneeName" matTooltipPosition="below"/>
+                        <p class="mb-0 light fs-11 text-right simibold">
+                          {{ "T-" + item.taskId }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="py-5" *ngIf="completed.length == 0 && !loading">
+                  <not-found></not-found>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Waiting for Approval List -->
+          <div class="example-container kanban-card col-lg-2 px-1">
+            <div class="h-100">
+              <h5 class="mb-50 py-1 px-1 rounded bg-gray simibold title-kanban-list fs-13">
+                {{ "waiting" | translate }} ({{ waitingForApprove.length }})
+              </h5>
+              <div
+                cdkDropList
+                #waitingList="cdkDropList"
+                [cdkDropListData]="waitingForApprove"
+                [cdkDropListConnectedTo]="[]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <ng-container
+                  *ngFor="let item of waitingForApprove; trackBy: trackByIndex"
+                >
+                  <div
+                    class="example-box bg-white p-1 mb-50 pointer waiting-list"
+                    cdkDrag
+                    (cdkDragReleased)="onItemSelected(item)"
+                    (click)="openDetails(item)"
+                  >
+                    <div>
+                      <div class="flex jcsb">
+                        <p class="fs-12 simibold mb-50">{{ item.title }}</p>
+                        <priority
+                          class="mb-50"
+                          [priority]="item.priority"
+                        ></priority>
+                      </div>
+                      <div class="flex aic mb-1 jcsb">
+                        <div class="cards flex">
+                          <p
+                            *ngIf="item.isOverDue"
+                            class="bg-light-danger px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "overdue" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isRepeated"
+                            class="bg-light-success px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "repeated" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isSubTasks"
+                            class="bg-light-blue px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "project" | translate }}
+                          </p>
+                        </div>
+                        <p class="fs-10 text-right">
+                         <span class="success"> {{ item.startDate | arabicDate:'month' }}</span><br/>
+                         <span class="danger"> {{ item.endDate | arabicDate:'month' }}</span>
+                        </p>
+                      </div>
+                      <div class="flex jcsb aie mt-50">
+                        <app-img-title *ngIf="!adminView" [imgSrc]="item.creatorProfilePicture" [matTooltip]="('creator' | translate) + ': ' + item.creatorName" matTooltipPosition="below"/>
+                        <app-img-title *ngIf="adminView" [imgSrc]="item.assigneeProfilePicture" [matTooltip]="('assignee' | translate) + ': ' +item.assigneeName" matTooltipPosition="below"/>
+                        <p class="mb-0 light fs-11 text-right simibold">
+                          {{ "T-" + item.taskId }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <div
+                  class="py-5"
+                  *ngIf="waitingForApprove.length == 0 && !loading"
+                >
+                  <not-found></not-found>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="example-container kanban-card col-lg-2 px-1">
+            <div class="h-100">
+              <h5 class="mb-50 py-1 px-1 rounded bg-gray simibold title-kanban-list fs-13">
+                {{ "rejected" | translate }} ({{ rejected.length }})
+              </h5>
+              <div
+                cdkDropList
+                #rejectedList="cdkDropList"
+                [cdkDropListData]="rejected"
+                [cdkDropListConnectedTo]="[]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <ng-container
+                  *ngFor="let item of rejected; trackBy: trackByIndex"
+                >
+                  <div
+                    class="example-box bg-white p-1 mb-50 pointer"
+                    cdkDrag
+                    (cdkDragReleased)="onItemSelected(item)"
+                    (click)="openDetails(item)"
+                  >
+                    <div>
+                      <div class="flex jcsb">
+                        <p class="fs-12 simibold mb-50">{{ item.title }}</p>
+                        <priority
+                          class="mb-50"
+                          [priority]="item.priority"
+                        ></priority>
+                      </div>
+                      <div class="flex aic mb-1 jcsb">
+                        <div class="cards flex">
+                          <p
+                            *ngIf="item.isOverDue"
+                            class="bg-light-danger px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "overdue" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isRepeated"
+                            class="bg-light-success px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "repeated" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isSubTasks"
+                            class="bg-light-blue px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "project" | translate }}
+                          </p>
+                        </div>
+                        <p class="fs-10 text-right">
+                         <span class="success"> {{ item.startDate | arabicDate:'month' }}</span><br/>
+                         <span class="danger"> {{ item.endDate | arabicDate:'month' }}</span>
+                        </p>
+                      </div>
+                      <div class="flex jcsb aie mt-50">
+                        <app-img-title *ngIf="!adminView" [imgSrc]="item.creatorProfilePicture" [matTooltip]="('creator' | translate) + ': ' + item.creatorName" matTooltipPosition="below"/>
+                        <app-img-title *ngIf="adminView" [imgSrc]="item.assigneeProfilePicture" [('assignee' | translate)+matTooltip]="('creator' | translate) + item.creatorName" matTooltipPosition="below"/>
+                        <p class="mb-0 light fs-11 text-('assignee' | translate)+right simibold">
+                          {{ "T-" + item.taskId }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="py-5" *ngIf="rejected.length == 0 && !loading">
+                  <not-found></not-found>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <!-- Overdue List -->
+          <!-- <div class="example-container kanban-card col-lg-2 px-1">
+            <div class="h-100">
+              <h5 class="mb-50 py-1 px-1 rounded bg-gray simibold title-kanban-list fs-13">
+                {{ "overdue" | translate }} ({{ overdue.length }})
+              </h5>
+              <div
+                cdkDropList
+                #overdueList="cdkDropList"
+                [cdkDropListData]="overdue"
+                [cdkDropListConnectedTo]="[inprogressList, completedList]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <ng-container
+                  *ngFor="let item of overdue; trackBy: trackByIndex"
+                >
+                  <div
+                    class="example-box bg-white p-1 mb-50 pointer over-list"
+                    cdkDrag
+                    (cdkDragReleased)="onItemSelected(item)"
+                    (click)="openDetails(item)"
+                  >
+                    <div>
+                      <div class="flex jcsb">
+                        <p class="fs-12 simibold mb-50">{{ item.title }}</p>
+                        <priority
+                          class="mb-50"
+                          [priority]="item.priority"
+                        ></priority>
+                      </div>
+                      <div class="flex aic mb-1 jcsb">
+                        <div class="cards flex">
+                          <p
+                            *ngIf="item.isOverDue"
+                            class="bg-light-danger px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "overdue" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isRepeated"
+                            class="bg-light-success px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "repeated" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isSubTasks"
+                            class="bg-light-blue px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "project" | translate }}
+                          </p>
+                        </div>
+                        <p class="fs-10 text-right">
+                         <span class="success"> {{ item.startDate | arabicDate:'month' }}</span><br/>
+                         <span class="danger"> {{ item.endDate | arabicDate:'month' }}</span>
+                        </p>
+                      </div>
+                      <div class="flex jcsb aie mt-50">
+                        <app-img-title *ngIf="!adminView" [imgSrc]="item.creatorProfilePicture" [matTooltip]="('creator' | translate) + ': ' + item.creatorName" matTooltipPosition="below"/>
+                        <app-img-title *ngIf="adminView" [imgSrc]="item.assigneeProfilePicture" [('assignee' | translate)+matTooltip]="('creator' | translate) + item.creatorName" matTooltipPosition="below"/>
+                        <p class="mb-0 light fs-11 text-('assignee' | translate)+right simibold">
+                          {{ "T-" + item.taskId }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="py-5" *ngIf="overdue.length == 0 && !loading">
+                  <not-found></not-found>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          <!-- Draft List -->
+          <div class="example-container kanban-card col-lg-2 px-1">
+            <div class="h-100">
+              <h5 class="mb-50 py-1 px-1 rounded bg-gray simibold title-kanban-list fs-13">
+                {{ "drafts" | translate }} ({{ draft.length }})
+              </h5>
+              <div
+                cdkDropList
+                #draftList="cdkDropList"
+                [cdkDropListData]="draft"
+                [cdkDropListConnectedTo]="[]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <ng-container *ngFor="let item of draft; trackBy: trackByIndex">
+                  <div
+                    class="example-box bg-white p-1 mb-50 pointer"
+                    cdkDrag
+                    (cdkDragReleased)="onItemSelected(item)"
+                    (click)="openDetails(item)"
+                  >
+                    <div>
+                      <div class="flex jcsb">
+                        <p class="fs-12 simibold mb-50">{{ item.title }}</p>
+                        <priority
+                          class="mb-50"
+                          [priority]="item.priority"
+                        ></priority>
+                      </div>
+                      <div class="flex aic mb-1 jcsb">
+                        <div class="cards flex">
+                          <p
+                            *ngIf="item.isOverDue"
+                            class="bg-light-danger px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "overdue" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isRepeated"
+                            class="bg-light-success px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "repeated" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isSubTasks"
+                            class="bg-light-blue px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "project" | translate }}
+                          </p>
+                        </div>
+                        <p class="fs-10 text-right">
+                         <span class="success"> {{ item.startDate | arabicDate:'month' }}</span><br/>
+                         <span class="danger"> {{ item.endDate | arabicDate:'month' }}</span>
+                        </p>
+                      </div>
+                      <div class="flex jcsb aie mt-50">
+                        <app-img-title *ngIf="!adminView" [imgSrc]="item.creatorProfilePicture" [matTooltip]="('creator' | translate) + ': ' + item.creatorName" matTooltipPosition="below"/>
+                        <app-img-title *ngIf="adminView" [imgSrc]="item.assigneeProfilePicture" [matTooltip]="('assignee' | translate) + ': ' +item.assigneeName" matTooltipPosition="below"/>
+                        <p class="mb-0 light fs-11 text-right simibold">
+                          {{ "T-" + item.taskId }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="py-5" *ngIf="draft.length == 0 && !loading">
+                  <not-found></not-found>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Cancelled List -->
+          <div class="example-container kanban-card col-lg-2 px-1">
+            <div class="h-100">
+              <h5 class="mb-50 py-1 px-1 rounded bg-gray simibold title-kanban-list fs-13">
+                {{ "cancelled" | translate }} ({{ cancelled.length }})
+              </h5>
+              <div
+                cdkDropList
+                #cancelledList="cdkDropList"
+                [cdkDropListData]="cancelled"
+                [cdkDropListConnectedTo]="[]"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <ng-container
+                  *ngFor="let item of cancelled; trackBy: trackByIndex"
+                >
+                  <div
+                    class="example-box bg-white p-1 mb-50 pointer"
+                    cdkDrag
+                    (cdkDragReleased)="onItemSelected(item)"
+                    (click)="openDetails(item)"
+                  >
+                    <div>
+                      <div class="flex jcsb">
+                        <p class="fs-12 simibold mb-50">{{ item.title }}</p>
+                        <priority
+                          class="mb-50"
+                          [priority]="item.priority"
+                        ></priority>
+                      </div>
+                      <div class="flex aic mb-1 jcsb">
+                        <div class="cards flex">
+                          <p
+                            *ngIf="item.isOverDue"
+                            class="bg-light-danger px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "overdue" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isRepeated"
+                            class="bg-light-success px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "repeated" | translate }}
+                          </p>
+                          <p
+                            *ngIf="item.isSubTasks"
+                            class="bg-light-blue px-50 py-50 fs-10 simibold rounded mr-50"
+                          >
+                            {{ "project" | translate }}
+                          </p>
+                        </div>
+                        <p class="fs-10 text-right">
+                         <span class="success"> {{ item.startDate | arabicDate:'month' }}</span><br/>
+                         <span class="danger"> {{ item.endDate | arabicDate:'month' }}</span>
+                        </p>
+                      </div>
+                      <div class="flex jcsb aie mt-50">
+                        <app-img-title *ngIf="!adminView" [imgSrc]="item.creatorProfilePicture" [matTooltip]="('creator' | translate) + ': ' + item.creatorName" matTooltipPosition="below"/>
+                        <app-img-title *ngIf="adminView" [imgSrc]="item.assigneeProfilePicture" [matTooltip]="('assignee' | translate) + ': ' +item.assigneeName" matTooltipPosition="below"/>
+                        <p class="mb-0 light fs-11 text-right simibold">
+                          {{ "T-" + item.taskId }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="py-5" *ngIf="cancelled.length == 0 && !loading">
+                  <not-found></not-found>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </layout>
+</div>

@@ -1,0 +1,42 @@
+<layout>
+  <div class="user-profile h-100" id="user-profile" magicScroll="">
+    <div class="header bg-primary">
+      <div class="user-image inline-block relative">
+        <upload-image [img]="userProfile().imageUrl" [dim]="160" [updateable]="isCurrentUser" [imageUrl]="environment.publicImageUrl" (file)="updateImage($event)"></upload-image>
+      </div>
+    </div>
+    <div class="flex user-profile-context">
+      <user-profile-side-menu [isCurrentUser]="isCurrentUser" [userProfile]="userProfile()"/>
+      <div class="content py-3 px-5" id="user-profile-content">
+        <div *ngIf="isCurrentUser" class="edit-profile flex aic jcfe">
+          <button (click)="editProfile()" [matTooltip]="'edit_profile' | translate" class="img clickable-btn" type="button">
+            <img alt="edit icon" src="assets/images/icons/edit.svg">
+          </button>
+        </div>
+
+        <div class="user-summary">
+          <user-profile-summary [summary]="userProfile().summary"/>
+        </div>
+
+        <div *ngIf="isCurrentUser" class="is-public mt-3">
+          <div class="flex aic jcsb">
+            <label class="fs-18">{{'public' | translate}}</label>
+            <mat-slide-toggle (ngModelChange)="isPublicChange($event)" [(ngModel)]="userProfile().isPublic" color="primary"></mat-slide-toggle>
+          </div>
+        </div>
+        <!-- <div class="reviews mt-2">
+                    <user-profile-last-review />
+                </div> -->
+        <div *ngIf="isCurrentUser || (!isCurrentUser && userProfile().userCertificates?.length > 0)" class="certificates mt-3">
+          <user-profile-certificates [certificates]="userProfile().userCertificates" [isCurrentUser]="isCurrentUser"/>
+        </div>
+        <div *ngIf="isCurrentUser || (!isCurrentUser && userProfile().userWorkExperiences?.length > 0)" class="work-experience mt-3">
+          <user-profile-work-experience [experience]="userProfile().userWorkExperiences" [isCurrentUser]="isCurrentUser"/>
+        </div>
+        <div *ngIf="isCurrentUser || (!isCurrentUser && userProfile().userSkills?.length > 0)" class="skills mt-3">
+          <user-profile-skills [isCurrentUser]="isCurrentUser" [skills]="userProfile().userSkills"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</layout>

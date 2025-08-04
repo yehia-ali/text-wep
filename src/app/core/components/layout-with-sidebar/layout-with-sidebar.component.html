@@ -1,0 +1,19 @@
+<div class="layout-with-sidebar w-100 h-100 relative">
+  <layout>
+    <ng-content select="[top]"></ng-content>
+    <div class="flex h-100">
+      <div class="sidebar bg-white border-right" [ngClass]="{'open': open}" [ngStyle]="{'width': width + 'rem'}">
+        <ng-content select="[sidebar]"></ng-content>
+      </div>
+      <div class="content" [style]="'width: calc(100% - ' + width + 'rem)'">
+        <div class="menu-button pl-1 pr-4 flex aic relative">
+          <i class='bx bx-menu p-1 fs-25 pointer d-lg-none' (click)="openSidebar()"></i>
+          <ng-content select="[top-section]"></ng-content>
+        </div>
+        <ng-content select="[content]"></ng-content>
+      </div>
+    </div>
+  </layout>
+  <div class="backdrop d-none" [ngClass]="{'d-block': open}" (click)="open = false  "></div>
+</div>
+

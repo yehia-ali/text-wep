@@ -1,0 +1,25 @@
+<layout>
+  <div class="departments h-100 p-3 relative" magicScroll="">
+    <div class="flex aic jcfe w-100" *ngIf="isAdmin">
+      <button mat-raised-button color="primary" class="fs-16 py-1 px-2" (click)="addDepartment()">{{'create_department' | translate}}</button>
+    </div>
+    <div class="flex-grid gap-y-2 mt-2" *ngIf="departments.length > 0">
+      <div class="col-xl-6" *ngFor="let department of departments; trackBy: trackBy">
+        <div class="department-card bg-gray rounded p-2">
+          <div class="flex aic jcsb">
+            <p>{{department.name}}</p>
+            <button class="clickable-btn" [matTooltip]="'edit' | translate" (click)="editDepartment(department)" *ngIf="isAdmin">
+              <i class='bx bxs-edit fs-22 primary'></i>
+            </button>
+          </div>
+          <div class="manager mt-1 flex aic">
+            <user-image [dim]="35" [img]="department.managerImageUrl" [id]="department.managerId" (click)="$event.stopImmediatePropagation()"></user-image>
+            <p class="fs-15 ml-1">{{department.managerName}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <not-found *ngIf="departments && departments.length == 0 && !loading"></not-found>
+    <loading *ngIf="loading"></loading>
+  </div>
+</layout>

@@ -1,0 +1,55 @@
+<layout-with-filters (pageChange)="service.page.next($event); service.hasChanged.next(true)" [meta]="meta">
+  <ng-container filters>
+    <div class="flex-wrap aic gap-x-2">
+      <search (valueChanged)="service.search.next($event); filter()" [key]="service.search.value"></search>
+      <session-status-filter (valueChanged)="service.sessionStatus.next($event); filter()" [key]="service.sessionStatus.value"></session-status-filter>
+    </div>
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': mySessions.length == 0 || loading}" class="w-100 relative table">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">{{'date' | translate}}</th>
+        <th class="text-left">{{'session_title' | translate}}</th>
+        <th class="text-left">{{'user' | translate}}</th>
+        <th>{{'remaining_days' | translate}}</th>
+        <th>{{'rate' | translate}}</th>
+        <th class="text-left">{{'cost' | translate}}</th>
+        <th>{{'status' | translate}}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="!loading && mySessions.length > 0">
+      <tr *ngFor="let session of mySessions | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}" [routerLink]="String(session.id)"
+          class="border-bottom pointer">
+        <td class="text-left">{{session.startDate | arabicDate}}</td>
+        <td class="text-left">{{session.title}}</td>
+        <td>
+          <div class="flex aic gap-x-1">
+            <user-image [imageUrl]="environment.publicImageUrl" [img]="session.image"/>
+            <p>{{session.userName}}</p>
+          </div>
+        </td>
+        <td>
+          <remaining-time *ngIf="session.sessionAttendeesStatus == 1 || session.sessionAttendeesStatus == 2" [remainingTime]="session.remainingTime"/>
+          <p *ngIf="session.sessionAttendeesStatus != 1 && session.sessionAttendeesStatus != 2">-</p>
+        </td>
+        <td>
+          <div class="flex-center">
+            <p *ngIf="session.sessionAttendeesStatus != 6">-</p>
+            <rate *ngIf="session.sessionAttendeesStatus == 6" [rate]="session.attendeeRate" type="small"/>
+          </div>
+        </td>
+        <td class="text-left">{{session.price | arabicNumbers}} {{'egp' | translate}}</td>
+        <td>
+          <div class="flex-center">
+            <session-status [sessionStatus]="session.sessionAttendeesStatus"/>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+      <loading *ngIf="loading"/>
+      <not-found *ngIf="!loading && mySessions.length == 0" class="a-center"/>
+    </table>
+  </ng-container>
+</layout-with-filters>

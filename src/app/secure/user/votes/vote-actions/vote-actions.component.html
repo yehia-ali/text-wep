@@ -1,0 +1,12 @@
+<div class="flex aic">
+  <img *ngIf="isCreator || isReportPublic" alt="" class="convert-image-color pointer mr-50" routerLink="/votes/report/{{id}}" src="assets/images/icons/report.svg">
+  <img (click)="getAssignees(id)" *ngIf="isCreator" alt="" class="convert-image-color pointer px-1" src="assets/images/icons/users.svg">
+  <i *ngIf="(!hasEnded) && isCreator && voteFormStateId != 1" [matMenuTriggerFor]="menu" class='bx bx-dots-vertical-rounded fs-25 pointer'>
+  </i>
+</div>
+
+<mat-menu #menu="matMenu">
+  <!--    <button mat-menu-item *ngIf="!selectedVote?.hasStarted">{{'edit' | translate}}</button>-->
+  <button (click)="archiveVote()" *ngIf="hasStarted" mat-menu-item>{{'archive' | translate}}</button>
+  <button (click)="deleteVote()" *ngIf="!hasStarted" mat-menu-item>{{'delete' | translate}}</button>
+</mat-menu>

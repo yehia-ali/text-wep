@@ -1,0 +1,237 @@
+<div class="py-1">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <div class="col-lg-6 text-left">
+      <h3 class="simibold black">{{ "penalty_types" | translate }}</h3>
+    </div>
+    <div class="col-lg-6 text-right">
+      <button
+        (click)="openDialog()"
+        class="bg-primary white py-1 px-2 border-primary rounded pointer"
+        mat-button
+      >
+        {{ "add_penalty_type" | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading></loading>
+    </div>
+
+    <div class="table-container mx-1" *ngIf="penalties.length > 0 && !loading">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">{{ "arabic_name" | translate }}</th>
+            <th class="text-left py-1">{{ "english_name" | translate }}</th>
+            <th class="text-left py-1">{{ "first_time" | translate }}</th>
+            <th class="text-left py-1">{{ "second_time" | translate }}</th>
+            <th class="text-left py-1">{{ "third_time" | translate }}</th>
+            <th class="text-left py-1">{{ "fourth_time" | translate }}</th>
+            <th class="text-left py-1">{{ "date" | translate }}</th>
+            <th class="text-left py-1">{{ "action" | translate }}</th>
+          </tr>
+        </thead>
+
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of penalties">
+            <td class="text-left">{{ item.nameAr }}</td>
+            <td class="text-left">{{ item.name }}</td>
+            <td class="text-left">{{ item.deductionAmountFirstTime }}</td>
+            <td class="text-left">{{ item.deductionAmountSecondTime }}</td>
+            <td class="text-left">{{ item.deductionAmountThirdTime }}</td>
+            <td class="text-left">{{ item.deductionAmountFourthTime }}</td>
+            <td class="text-left">{{ item.creationDate | arabicDate }}</td>
+            <td>
+              <div class="img pointer" (click)="editPenalty(item)">
+                <img src="assets/images/icons/edit1.svg" alt="edit icon" />
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="penalties.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>
+<ng-template #dialogTemplate>
+  <div class="dir">
+    <div class="flex w-100 jcsb">
+      <h4 class="simibold black">
+        {{
+          data.action === "edit"
+            ? ("edit_penalty_type" | translate)
+            : ("add_penalty_type" | translate)
+        }}
+      </h4>
+    </div>
+    <mat-dialog-content>
+      <form action="" [formGroup]="form">
+        <div class="flex-grid gap-y-2">
+          <div class="col-lg-6">
+            <div class="name">
+              <input-label
+                key="arabic_name"
+                [control]="f['nameAr']"
+                [showIcon]="true"
+                [icon]="'assets/images/icons/text-block.svg'"
+              />
+              <input
+                type="text"
+                formControlName="nameAr"
+                class="input"
+                appArabicText
+                [appArabicTextAllowSpaces]="true"
+                [appArabicTextAllowNumbers]="false"
+              />
+              <input-error [control]="f['nameAr']" />
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="name">
+              <input-label
+                key="english_name"
+                [control]="f['name']"
+                [showIcon]="true"
+                [icon]="'assets/images/icons/text-block.svg'"
+              />
+              <input
+                type="text"
+                formControlName="name"
+                class="input"
+                appEnglishText
+                [appEnglishTextAllowSpaces]="true"
+                [appEnglishTextAllowNumbers]="false"
+                [appEnglishTextAllowSpecialChars]="false"
+              />
+              <input-error [control]="f['name']" />
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="name">
+              <div class="flex">
+                <input-label
+                  key="first_time"
+                  [control]="f['deductionAmountFirstTime']"
+                  [showIcon]="true"
+                  [icon]="'assets/images/icons/number.svg'"
+                />
+              </div>
+              <div class="flex aic position-relative">
+                <input
+                  type="text"
+                  formControlName="deductionAmountFirstTime"
+                  class="input"
+                  [max]="5"
+                />
+                <span class="input-suffix">{{ "day" | translate }}</span>
+              </div>
+              <input-error [control]="f['deductionAmountFirstTime']" />
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="name">
+              <div class="flex">
+                <input-label
+                  key="second_time"
+                  [control]="f['deductionAmountSecondTime']"
+                />
+              </div>
+              <div class="flex aic position-relative">
+                <input
+                  type="text"
+                  formControlName="deductionAmountSecondTime"
+                  class="input"
+                  [max]="5"
+                />
+                <span class="input-suffix">{{ "day" | translate }}</span>
+              </div>
+              <input-error [control]="f['deductionAmountSecondTime']" />
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="name">
+              <div class="flex">
+                <input-label
+                  key="third_time"
+                  [control]="f['deductionAmountThirdTime']"
+                  [showIcon]="true"
+                  [icon]="'assets/images/icons/number.svg'"
+                />
+              </div>
+              <div class="flex aic position-relative">
+                <input
+                  type="text"
+                  formControlName="deductionAmountThirdTime"
+                  class="input"
+                  [max]="5"
+                />
+                <span class="input-suffix">{{ "day" | translate }}</span>
+              </div>
+              <input-error [control]="f['deductionAmountThirdTime']" />
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="name">
+              <div class="flex">
+                <input-label
+                  key="fourth_time"
+                  [control]="f['deductionAmountFourthTime']"
+                  [showIcon]="true"
+                  [icon]="'assets/images/icons/number.svg'"
+                />
+              </div>
+              <div class="flex aic position-relative">
+                <input
+                  type="text"
+                  formControlName="deductionAmountFourthTime"
+                  class="input"
+                  [max]="5"
+                />
+                <span class="input-suffix">{{ "day" | translate }}</span>
+              </div>
+              <input-error [control]="f['deductionAmountFourthTime']" />
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <div class="text-right w-100">
+        <button
+          *ngIf="data.action === 'add'"
+          (click)="addPenalty()"
+          type="submit"
+          class="bg-primary white py-1 px-2 border-primary rounded pointer"
+          mat-button
+        >
+          {{ "add" | translate }}
+        </button>
+        <button
+          *ngIf="data.action === 'edit'"
+          (click)="updatePenalty()"
+          type="submit"
+          class="bg-primary white py-1 px-2 border-primary rounded pointer"
+          mat-button
+        >
+          {{ "update" | translate }}
+        </button>
+
+        <button
+          (click)="closeDialog()"
+          type="button"
+          class="bg-white primary py-1 px-2 border-primary rounded pointer ml-1"
+          mat-button
+        >
+          {{ "cancel" | translate }}
+        </button>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</ng-template>

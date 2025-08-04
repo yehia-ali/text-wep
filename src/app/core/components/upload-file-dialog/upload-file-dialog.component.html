@@ -1,0 +1,104 @@
+<div class="dir py-2">
+  <div class="flex aic jcsb px-2 mb-2">
+    <p class="fs-18 black bold" *ngIf="stepUpload || stepProgress">{{ "upload_employees_file" | translate }}</p>
+    <p class="fs-18 black bold" *ngIf="stepError">{{ "upload_employees_file_errors" | translate }}</p>
+    <p class="fs-18 black bold" *ngIf="stepConfirm">{{ "confirm_upload" | translate }}</p>
+  </div>
+  <div class="px-2 mb-2" *ngIf="stepUpload">
+    <p class="fs-18 fw-500 primary pointer" (click)="downloadTemplate()">
+      {{ "download_template_xls_csv" | translate }}
+      <span class="black">{{
+        "fill_with_information" | translate
+      }}</span>
+    </p>
+  </div>
+  <div class="px-2 mb-2">
+    <!-- get attachments -->
+    <get-attachments [hideLabel]="true"  [multiFiles]="false" accept=".xls,.xlsx"  (getAttachments)="getAttachments($event)" *ngIf="stepUpload"/>
+    <!-- upload progress -->
+    <div class="ngx-file-drop__drop-zone" *ngIf="stepProgress">
+      <div class="ngx-file-drop__content mt-2">
+        <div class="d-flex flex-column align-items-center">
+          <div class="img mb-50">
+            <img src="assets/images/icons/attachments.svg" width="25" alt="" />
+          </div>
+          <div class="d-flex flex-column align-items-center mb-1">
+            <span class="black">{{ "uploading_file" | translate }}</span>
+          </div>
+          <div class="w-75">
+            <mat-progress-bar
+              class="custom-progress"
+              mode="determinate"
+              [value]="progress"
+            ></mat-progress-bar>
+          </div>
+        </div>
+      </div>
+    </div>
+      <!-- error-list -->
+  <div class="error-list" *ngIf="stepError">
+    <!-- Error Alert Box -->
+    <div class="alert alert-danger d-flex align-items-center mb-2 gap-x-1">
+      <img src="assets/images/icons/alert-triangle-danger.svg" alt="Error" />
+      <div>
+        <p class="bold danger">{{ "found_errors" | translate }}: {{ errors.length }} {{ "errors" | translate }}</p>
+        <p class="black fs-14">
+          {{ "fix_errors_and_reupload" | translate }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Error List -->
+    <ul class="list-unstyled" *ngFor="let error of errors; let i = index">
+      <li class="d-flex align-items-center mb-1 gap-x-1" >
+        <img src="assets/images/icons/alert-triangle.svg" alt="Warning" />    
+        <div  class="mb-1">
+          <p *ngFor="let errorMessage of error.errors">{{ "field" | translate }} {{ errorMessage }}</p>
+          <!-- <p>{{ "cells" | translate }}: <strong>M3, M4, M5</strong></p> -->
+        </div>
+      </li>
+
+    </ul>
+  </div>
+  <!-- confirm upload -->
+  <div class="confirm-upload" *ngIf="stepConfirm">
+    <!-- Summary -->
+    <div class="d-flex align-items-center mb-2 gap-x-1">
+      <img src="assets/images/icons/files.svg" alt="Upload">
+      <span class="fs-16 black">{{ "add_employees" | translate: { count: validList.length } }}</span>
+    </div>
+
+    <!-- Success Message -->
+    <div class="d-flex align-items-center mb-2 alert alert-success gap-x-1">
+      <img src="assets/images/icons/success.svg" alt="Success">
+      <span class="fs-15">{{ "no_errors" | translate }}</span>
+    </div>
+
+    <!-- Warning Message -->
+    <div class="d-flex align-items-center alert alert-warning gap-x-1" *ngIf="warningList.length > 0">
+      <img src="assets/images/icons/alert-triangle-warning.svg" alt="Warning">
+      <div>
+        <div>{{ "warning_employees" | translate: { count: warningList.length } }}</div>
+        <!-- <div>خلايا: <strong>{{ warningList.map((item: any) => item.cells).join(', ') }}</strong></div> -->
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- Upload Button -->
+  <div class="px-2 mt-4 flex aic jce gap-x-1">
+    <button mat-raised-button color="primary" [disabled]="stepProgress" (click)="uploadFile()" *ngIf="stepUpload">
+      {{ "upload" | translate }}
+    </button>
+    <button mat-raised-button color="primary" *ngIf="stepError" (click)="reUpload()">
+      {{ "re-upload" | translate }}
+    </button>
+    <button mat-raised-button color="primary" *ngIf="stepConfirm" (click)="confirmUpload()">
+      {{ "confirm" | translate }}
+    </button>
+    <button class="border-primary primary" mat-stroked-button (click)="dialogRef.close()">
+      {{ "cancel" | translate }}
+    </button>
+  </div>
+</div>

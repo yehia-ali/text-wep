@@ -1,0 +1,54 @@
+.rated {
+  overflow: visible;
+  .rate-reason {
+    position: absolute;
+    top: calc(100% + 10px);
+    inset-inline-start: 0;
+    width: 25rem;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 9999;
+    transition: all 0.2s ease-in-out;
+  }
+  &:hover {
+    .rate-reason {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+.inline-flex{
+  display: inline-flex;
+}
+.border-start{
+  border-inline-start: 1px solid #e7e7e7 !important;
+}
+
+
+.timeline {
+  .history {
+    &:not(:last-of-type):before {
+      content: "";
+      position: absolute;
+      height: calc(100% + 24px);
+      top: 12px;
+      inset-inline-start: -20px;
+      border-inline-start: 1px dashed #ccc;
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      height: 10px;
+      width: 10px;
+      background: var(--primary);
+      border-radius: 50%;
+      top: 12px;
+      inset-inline-start: -24.5px;
+    }
+  }
+
+  .date {
+    color: #C7C7CC;
+  }
+}

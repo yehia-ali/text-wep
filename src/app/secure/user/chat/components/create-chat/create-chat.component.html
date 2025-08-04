@@ -1,0 +1,11 @@
+<div class="create-chat rounded-50 flex-center bg-primary white pointer" [matMenuTriggerFor]="menu" [matTooltip]="'create_chat' | translate">
+  <i class='bx bxs-message-alt-detail fs-22'></i>
+</div>
+
+<mat-menu #menu="matMenu">
+  <!--  <button mat-menu-item (click)="privateChat()">{{'create_private_chat' | translate}}</button>-->
+  <button mat-menu-item>
+    <select-user [chat]="true" [multi]="false" classes="clear-btn-style" (getSelectedUsers)="createPrivateChat($event)" text="create_private_chat"/>
+  </button>
+  <button mat-menu-item (click)="createGroupChat()">{{'create_group_chat' | translate}}</button>
+</mat-menu>

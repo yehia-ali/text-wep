@@ -1,0 +1,35 @@
+<div class="user-navbar relative w-100 bg-white flex aic jcsb px-2 py-1">
+
+  <!--    <main-search class="flex-50"/>-->
+
+  <!--  <chat-card/>-->
+
+  <div class="flex aic gap-x-2">
+    <!--    <language/>-->
+    <h4 *ngIf="isSuperAdmin">{{ spaceName }}</h4>
+  </div>
+
+  <div class="a-center">
+    <time-card/>
+  </div>
+
+  <div class="user flex aic">
+    <notifications *ngIf="!isSuperAdmin" matTooltip="{{'notifications' | translate}}"/>
+    <div class="img" routerLink="/chat" *ngIf="!isSuperAdmin" matTooltip="{{'chat' | translate}}">
+      <img src="assets/images/icons/messages.svg" alt="chat icon" width="28" class="convert-image-color">
+    </div>
+    <!--        <i class='bx bx-cog fs-27'></i>-->
+    <dark-mode matTooltip="{{'dark_mode' | translate}}" />
+    <language matTooltip="{{'language' | translate}}" />
+
+    <div class="page-info" (click)="getInfo()" *ngIf="pageInfoSer.pageInfo.value" matTooltip="{{'info' | translate}}">
+      <i class='bx bx-error-circle bx-rotate-180 warning fs-28'></i>
+    </div>
+
+    <user-card *ngIf="!isSuperAdmin" matTooltip="{{'profile' | translate}}"/>
+    <div class="logout img right" (click)="logout()" *ngIf="isSuperAdmin">
+      <img src="assets/images/icons/welcome-logout.svg" alt="logout icon" class="convert-image-color">
+    </div>
+  </div>
+
+</div>

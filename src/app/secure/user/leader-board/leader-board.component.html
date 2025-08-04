@@ -1,0 +1,86 @@
+<user-navbar/>
+<div class="p-2">
+  <layout>
+    <p class="mx-50 mt-50 simibold bg-light-danger p-1 rounded">{{'beta' | translate}}</p>
+    <div class="filters text-right border-bottom">
+      <div class="flex aic jcsb">
+        <div class="date flex aic">
+          <ng-container *ngFor="let item of dateFilterList" >
+            <div class="date-filter mr-1 pointer py-1 px-1 {{selectedDateFilter == item.number ? 'primary active' : '' }}" (click)="dateRange(item.number)">{{item.name | translate}}</div>
+          </ng-container>
+        </div>
+        <p class="mr-1 flex aic"><span> {{'last_update' | translate}} : </span>
+          <span>{{casheTime | arabicDate}} - {{casheTime | arabicTime}}</span>
+          <i class="bx bx-refresh primary fs-18 pointer" (click)="refreshBtn()"></i>
+        </p>
+        <div class="flex aic">
+          <search [newSearch]="true" [width]="'w-20r'" [hideLabel]="true" [classes]="'py-50 pr-1 fs-10 mr-1'" (valueChanged)="search($event)"/>
+          <a [href]="url + urlDetails" target="_blank" class="btn mr-1 rounded bg-primary white py-50 px-2 fs-12">
+            {{'export' | translate}}
+          </a>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="selectedDateFilter == 1">
+      <div class="flex aic w-100 pt-1 px-1 pb-75 border-bottom">
+        <ng-container *ngFor="let month of months">
+          <div *ngIf="month.month  <= currentCMonth.month" class="month-filter mr-1 pointer py-25 rounded-4 border px-50 fs-12 {{currentMonth.name == month.name ? 'white bg-primary active-month' : ''}}" (click)="monthFilter(month)">{{month.name | translate}}</div>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="selectedDateFilter == 2">
+      <div class="flex aic w-100 pt-1 px-1 pb-75 border-bottom">
+        <ng-container *ngFor="let quarter of quarters">
+          <a *ngIf="quarter.start - 1 <= quarterCStartMonth"  class="month-filter mr-1 pointer py-25 rounded-4 border px-50 fs-12 {{quarter.start - 1 == quarterStartMonth ? 'white bg-primary active-month' : ''}}" (click)="quarterFilter(quarter)">{{quarter.name | translate}}</a>
+        </ng-container>
+      </div>
+    </ng-container>
+    <div class="leader-board-content relative">
+      <div class="flex-grid m-0 w-100 flex-grid-margin" >
+        <!-- <div class="col-xl-3 col-lg-4"></div> -->
+        <div class="col-xl-12 px-0">
+          <div class="leader-board-list" #leaderBoardList>
+            <div class="flex-grid  aic top-three pt-3 mx-0 w-100 flex-grid-margin mb-2">
+              <div *ngFor="let item of topThree; let i = index;" class="col-md-4 px-1">
+                <div class="item {{item.number == 1 ? 'primary-dark' : 'primary-light'}} rounded p-1 h-100 text-center">
+                  <div class="img aic jcc rounded-50 {{item?.number == 1 ? 'leader' : ''}}">
+                    <app-img-title [imgSize]="item?.number == 1 ? 65 : 45" [imgSrc]="item?.data.img" />
+                  </div>
+                    <h4 class="name gold-color simibold">{{item?.data.name}}</h4>
+                    <p class="job-title white">{{item?.data.jobTitle}}</p>
+                    <div class="number">
+                      <h5 class="rounded-50 light-bg white aic jcc bold {{item?.number == 1 ? 'leader' : 'top'}}">{{item?.number | arabicNumbers }}</h5>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class=" mx-1 rounded-3 border shadow pl-1 mb-2 item-list" *ngFor="let item of leaderBoard ; let i = index">
+              <div class="flex-grid mx-0">
+                <div class="col-sm-6 flex aic px-0">
+                  <span class="simibold primary mr-1">{{i + 1}}</span>
+                  <div class="img-list">
+                    <app-img-title [imgSrc]="item.img" [imgSize]="50" [title]="item.name" [subTitle]="item.jobTitle"/>
+                  </div>
+                </div>
+                <div class="col-sm-6 flex aic jcsb px-0">
+                  <div>
+                    <!-- {{item.jobTitle}} -->
+                  </div>
+                  <div class="percentage white bg-primary flex-column aic jcc  rounded-3">
+                    <!-- <p class="mb-0 p-0 fs-12">{{'rate' | translate}}</p> -->
+                    <p class="simibold">{{(item.percentage | arabicNumbers)  }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="loading py-5 w-100">
+      <loading *ngIf="loading"/>
+      <not-found *ngIf="!loading && leaderBoard.length == 0"></not-found>
+    </div>
+  </layout>
+</div>

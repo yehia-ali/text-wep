@@ -1,0 +1,23 @@
+<div class="flex aic">
+  <img
+    (click)="showProfile()"
+    *ngIf="!noImage"
+    src="{{imgSrc ? imageUrl + imgSrc: noUser}}"
+    height="{{imgSize || 30}}"
+    width="{{imgSize || 30}}"
+    class="object-fit-cover rounded-50 shadow bg-light {{userId ? 'pointer' : ''}} {{imgBorder}}"  />
+  <div class="{{noImage ? '' : 'ml-1'}} text-left" *ngIf="bigTitle || title || subTitle || date">
+    <h5 *ngIf="bigTitle" class="mb-1"> {{bigTitle}}</h5>
+    <p *ngIf="title" class="{{fontSize}} mb-0  mb-0 secondary">
+      {{ title }}
+    </p>
+    <p *ngIf="subTitle" class="small mb-0  mb-0 secondary">
+      {{ subTitle }}
+    </p>
+    <div class="flex aic">
+      <p *ngIf="date" class="simibold small danger mr-1">{{date | arabicDate}}</p>
+      <p *ngIf="date" class="simibold small">{{date | arabicTime}}</p>
+    </div>
+  </div>
+</div>
+<user-info [open]="open" [user]="user" *ngIf="userId"/>

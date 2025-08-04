@@ -1,0 +1,497 @@
+<div class="create-task" dir="auto">
+  <h2 class="flex aic jcsb black">
+    <div class="start">
+      <p *ngIf="data?.isMeeting">{{ "schedule_meeting" | translate }}</p>
+      <p *ngIf="!data?.isMeeting && !data?.editTask">
+        {{ "create_task" | translate }}
+      </p>
+      <p *ngIf="data?.editTask">{{ "edit" | translate }}</p>
+      <p class="muted fs-15" style="cursor: default" *ngIf="data?.isSubTask">
+        {{ data?.taskTitle }}/
+      </p>
+    </div>
+    <div class="aic flex jce">
+      <i
+        [matTooltip]="'templates' | translate"
+        class="bx bx-spreadsheet fs-25 dark mx-1 pointer"
+        (click)="getTemplates()"
+        *ngIf="!isEdit"
+      ></i>
+      <i
+        [matTooltip]="'show_less' | translate"
+        class="bx bx-windows fs-25 dark mx-1 pointer"
+        (click)="showMore()"
+        *ngIf="more"
+      ></i>
+      <i
+        [matTooltip]="'advanced_details' | translate"
+        class="bx bx-window fs-25 dark mx-1 pointer"
+        (click)="showMore()"
+        *ngIf="!more"
+      ></i>
+      <i class="bx bx-x fs-25 pointer danger" [matTooltip]="'close' | translate" mat-dialog-close></i>
+    </div>
+  </h2>
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-1">
+        <div class="col-lg-{{ more ? '7' : '6' }}">
+          <div class="label flex aic jcsb">
+            <input-label [control]="f['title']" key="title" />
+            <field-length
+              [length]="f['title'].value.length"
+              [max]="100"
+            ></field-length>
+          </div>
+          <input
+            type="text"
+            maxlength="100"
+            class="input"
+            formControlName="title"
+          />
+          <input-error [control]="f['title']" />
+        </div>
+
+        <!--        Assignees     -->
+        <div class="col-lg-{{ more ? '5' : '6' }} flex">
+          <input
+            type="file"
+            hidden
+            id="fileInput"
+            *ngIf="!uploadFile"
+            (change)="onFileSelect($event)"
+            accept=".xlsx, .xls"
+            class="form-control"
+          />
+          <div class="mr-1">
+            <input-label key="assignees" />
+            <div class="flex aic">
+              <ng-container *ngIf="customSpaceId == '98989'">
+                <!-- Ezaby Work -->
+                <select-user
+                  text="users"
+                  class="mr-1"
+                  [isEdit]="isEdit"
+                  [isTask]="true"
+                  (selectedManagersChange)="getAssigneesManager($event)"
+                  (selectedLevelsChange)="getAssigneesLevels($event)"
+                  (selectedJobTitlesChange)="getAssigneesJobTitles($event)"
+                  [selectedManagers]="assigneesManager"
+                  [selectedLevels]="assigneesLevels"
+                  [selectedJobTitles]="assigneesJobTitles"
+                  [selectedUsers]="selectedUsers"
+                  (getSelectedUsers)="getAssignees($event)"
+                  />
+              </ng-container>
+              <ng-container *ngIf="customSpaceId != '98989' ">
+                <select-user
+                text="individuals"
+                [isEdit]="isEdit"
+                [isTask]="true"
+                [selectedUsers]="selectedUsers"
+                (getSelectedUsers)="getAssignees($event)"
+              />
+              <select-user
+              *ngIf="!isEdit"
+                text="groups"
+                [isEdit]="isEdit"
+                [isTask]="true"
+                [group]="true"
+                (selectedDepartments)="getAssigneesDepartment($event)"
+                (selectedManagersChange)="getAssigneesManager($event)"
+                (selectedPlacesChange)="getAssigneesPlaces($event)"
+                (selectedLevelsChange)="getAssigneesLevels($event)"
+                (selectedJobTitlesChange)="getAssigneesJobTitles($event)"
+                [selectedDeprtment]="assigneesDepartment"
+                [selectedManagers]="assigneesManager"
+                [selectedPlaces]="assigneesPlaces"
+                [selectedLevels]="assigneesLevels"
+                [selectedJobTitles]="assigneesJobTitles"
+                class="ml-1 mr-1"
+              />
+              </ng-container>
+              <!-- <span class="create-task-sp">
+                <p-splitButton
+                  [model]="emloyeesItems"
+                  [label]="'file' | translate"
+                  class="mr-1"
+                />
+              </span> -->
+            </div>
+          </div>
+        </div>
+
+        <!--        timing      -->
+        <div class="col-lg-12 p-0">
+          <create-task-timing
+            [startDate]="startDate"
+            [endDate]="endDate"
+            [isEdit]="isEdit"
+            [more]="more"
+            [isMeeting]="isMeeting"
+            (getTimeForm)="this.timingForm = $event"
+            (soundDescription)="soundDescription = $event"
+            [soundUrl]="
+              data?.task?.taskGroupAttachments &&
+              data?.task?.taskGroupAttachments[0]?.fileType == 5
+                ? baseUrl + data?.task?.taskGroupAttachments[0].filePath
+                : ''
+            "
+          />
+        </div>
+
+
+        <!--        Expected time     -->
+        <div class="col-md-6" *ngIf="!isSignature && !isKpi">
+          <input-label key="expected_time" [control]="f['expectedTime']" />
+          <select-time
+            (calcMinutes)="setExpectedTime($event)"
+            [hours]="hours"
+            [minutes]="minutes"
+            [withMargin]="false"
+          ></select-time>
+          <input-error [control]="f['expectedTime']" />
+        </div>
+
+        <!--      description      -->
+        <div class="col-md-12">
+          <input-label
+            [optional]="true"
+            [control]="f['description']"
+            key="description"
+          />
+          <!-- <angular-editor formControlName="description" [config]="config" id="description2"></angular-editor> -->
+          <text-editor
+            [formGroup]="form"
+            [formControlName]="'description'"
+          ></text-editor>
+        </div>
+        <!-- <div class="col-lg-6" *ngIf="selectedTemplate">
+          <input-label
+            [control]="f['projectId']"
+            key="stage"
+            [optional]="true"
+          />
+          <ng-select
+            [items]="stages"
+            formControlName="projectId"
+            [clearSearchOnAdd]="true"
+            [clearOnBackspace]="true"
+            bindLabel="name"
+            bindValue="id"
+            appendTo="body"
+          >
+            <ng-template ng-footer-tmp>
+              <div class="">
+                <div class="flex aic pointer" *ngIf="!addStage" (click)="addStage = true">
+                  <i class="bx bx-plus primary fs-18"></i>
+                  <span class="fw-500">{{ 'add_stage' | translate }}</span>
+                </div>
+                <div class="flex aic relative" *ngIf="addStage">
+                  <i class="bx bx-plus primary fs-18 px-1 absolute pointer" style="inset-inline-end: 0;" (click)="saveStage()"></i>
+                  <input required="required" (keypress)="onAddStagePress($event)" type="text" class="input" [(ngModel)]="stageTitle" [ngModelOptions]="{ standalone: true }" />
+                </div>
+              </div>
+            </ng-template>
+          </ng-select>
+          <input-error [control]="f['projectId']" />
+        </div> -->
+
+        <div class="col-md-12 flex aic gap-x-1" >
+          <div>
+            <input-label [optional]="true" key="kpi" />
+            <button
+            mat-raised-button
+            class="px-3 fs-15"
+            color="primary"
+            (click)="openKpiDialog()"
+          >
+            {{ selectedKpis.length > 0 ? ('selected' | translate) + ' ('+selectedKpis.length + ') ' :  ('kpi' | translate) }}
+          </button>
+          </div>
+          <div *ngIf="needApprove && !isKpi">
+            <input-label [optional]="true" key="manager_approve" />
+            <mat-checkbox
+              [checked]="true"
+              class="example-margin"
+              color="primary"
+              formControlName="isManagerApprovalRequired"
+            ></mat-checkbox>
+          </div>
+
+        </div>
+
+
+        <ng-container *ngIf="more">
+          <!-- Not Required -->
+          <!--        Project     -->
+          <div class="col-lg-4" *ngIf="projects.length > 0">
+            <input-label
+              [control]="f['projectId']"
+              key="project"
+              [optional]="true"
+            />
+            <ng-select
+              [items]="projects"
+              formControlName="projectId"
+              [readonly]="data?.mainTask || data?.isSubTask"
+              [clearSearchOnAdd]="true"
+              [clearOnBackspace]="true"
+              bindLabel="title"
+              bindValue="id"
+              appendTo="body"
+            ></ng-select>
+            <input-error [control]="f['projectId']" />
+          </div>
+
+          <!--        task type     -->
+          <div class="col-lg-4" *ngIf="!isEdit">
+            <input-label [control]="f['taskGroupType']" key="task_type" />
+            <ng-select
+              [items]="taskType"
+              bindLabel="name"
+              bindValue="value"
+              [readonly]="data?.isMeeting"
+              [clearable]="false"
+              (change)="taskTypeChanged()"
+              formControlName="taskGroupType"
+            />
+            <input-error [control]="f['taskGroupType']" />
+          </div>
+
+          <!--        priority     -->
+          <div class="col-lg-4">
+            <input-label [control]="f['priority']" key="priority" />
+            <ng-select
+              [items]="priorities"
+              formControlName="priority"
+              [clearable]="false"
+              bindLabel="name"
+              bindValue="value"
+              appendTo="body"
+            >
+              <ng-template ng-option-tmp ng-label-tmp let-item="item">
+                <div class="flex aic">
+                  <priority [priority]="item.value"></priority>
+                  <span class="ml-1 fs-15">{{ item.name | translate }}</span>
+                </div>
+              </ng-template>
+            </ng-select>
+            <input-error [control]="f['priority']" />
+          </div>
+          <ng-container *ngIf="isKpi" class="col-lg-12">
+            <div class="col-lg-4">
+              <div class="label flex aic jcsb">
+                <input-label [control]="f['kpiTarget']" key="target" />
+              </div>
+              <input
+                type="number"
+                min="1"
+                class="input"
+                formControlName="kpiTarget"
+              />
+              <input-error [control]="f['kpiTarget']" />
+            </div>
+            <div class="col-lg-4">
+              <div class="label flex aic jcsb">
+                <input-label [control]="f['weight']" key="weight" />
+                <field-length
+                  [percentage]="100"
+                ></field-length>
+              </div>
+              <input
+                type="number"
+                max="100"
+                class="input"
+                formControlName="weight"
+              />
+              <input-error [control]="f['weight']" />
+            </div>
+           </ng-container>
+          <!--        CC Assignees     -->
+          <div class="col-lg-4" *ngIf="!isMeeting && !isEdit && !isKpi">
+            <input-label key="cc_assignees" [optional]="true" />
+            <select-user
+              text="cc_assignees"
+              [isTask]="true"
+              (selectedDepartments)="getReportersDepartment($event)"
+              [selectedDeprtment]="reportersDepartment"
+              [selectedUsers]="selectedReporters"
+              (getSelectedUsers)="getReporters($event)"
+            />
+          </div>
+
+          <!--        location     -->
+          <div class="col-lg-12" *ngIf="isMeeting">
+            <div class="">
+              <input-label [control]="f['link']" key="meeting_link" />
+              <input
+                type="text"
+                maxlength="100"
+                class="input"
+                formControlName="link"
+              />
+            </div>
+            <div class="">
+              <p class="fs-11 simibold">{{ "prevent_location" | translate }}</p>
+              <!-- <mat-checkbox [checked]="map" color="primary" (change)="onCheckboxChange($event)"></mat-checkbox> -->
+              <mat-slide-toggle
+                labelPosition="before"
+                color="primary"
+                (change)="meetingLocation($event)"
+              ></mat-slide-toggle>
+            </div>
+            <app-maps
+              *ngIf="isMeetingLocation"
+              [lat]="lat"
+              [long]="long"
+              [noRadius]="true"
+              (mapChanged)="getMapData($event)"
+            />
+            <!-- <location [isLocation]="isLocation" [isMeeting]="isMeeting" (formValues)="locationForm = $event"></location> -->
+          </div>
+
+          <div class="col-lg-12" *ngIf="isLocation">
+            <app-maps
+              [lat]="lat"
+              [long]="long"
+              [noRadius]="true"
+              (mapChanged)="getMapData($event)"
+            />
+            <!-- <location [isLocation]="isLocation" [isMeeting]="isMeeting" (formValues)="locationForm = $event"></location> -->
+          </div>
+
+          <!--      DOD      -->
+          <div class="col-md-12" *ngIf="!isKpi">
+            <input-label
+              [optional]="true"
+              [control]="f['definitionOfDone']"
+              key="dod"
+            />
+            <!-- <angular-editor formControlName="definitionOfDone" [config]="config" id="definitionOfDone2"></angular-editor>-->
+            <text-editor
+              [formGroup]="form"
+              [formControlName]="'definitionOfDone'"
+            ></text-editor>
+          </div>
+
+          <!--      attachments      -->
+          <div class="col-lg-12" *ngIf="!isEdit">
+            <get-attachments
+              (getAttachments)="attachments = $event"
+              [attachments]="
+                data?.isDraft || data?.editTask
+                  ? data?.task?.taskGroupAttachments
+                  : []
+              "
+            />
+          </div>
+
+          <!--      todo      -->
+          <div class="col-lg-12 mb-1" *ngIf="!isEdit && !isSignature && !isKpi">
+            <create-task-todo
+              [propsState]="true"
+              (todoAdded)="getProps($event)"
+              [props]="props"
+              [label]="'questions'"
+            />
+          </div>
+
+          <div class="col-lg-12 mb-1" *ngIf="!isEdit && !isSignature && !isKpi">
+            <create-task-todo (todoAdded)="getTodos($event)" [todos]="todos" />
+          </div>
+        </ng-container>
+      </div>
+      <p
+        (click)="showMore()"
+        class="fs-12 bold primary text-right pointer mt-1"
+        *ngIf="!more"
+      >
+        {{ "advanced_details" | translate }} .
+      </p>
+      <p
+        (click)="showMore()"
+        class="fs-12 bold primary text-right pointer mt-1"
+        *ngIf="more"
+      >
+        {{ "show_less" | translate }} .
+      </p>
+    </form>
+  </div>
+
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex jcsb aic w-100">
+      <button
+        mat-stroked-button
+        color="primary"
+        class="px-3 fs-15"
+        (click)="saveDraft()"
+        [disabled]="!(form.value.title && form.value.description)"
+        *ngIf="!data?.isMeeting"
+      >
+        {{ "save_draft" | translate }}
+      </button>
+      <div class="flex" *ngIf="!isEdit">
+        <button
+          mat-raised-button
+          color="primary"
+          class="px-3 fs-15"
+          (click)="submit(true)"
+          [disabled]="
+            form.invalid ||
+            timingForm.invalid ||
+            (assignees.length == 0 &&
+              assigneesDepartment.length == 0 &&
+              assigneesManager.length == 0 &&
+              assigneesJobTitles.length == 0 &&
+              assigneesPlaces.length == 0 &&
+              assigneesLevels.length == 0) ||
+            loading ||
+            (isLocation && !locationForm.controls['latitude'].value)
+          "
+        >
+          <submit-button
+            text="create_and_continue"
+            [loading]="loading"
+          ></submit-button>
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          class="px-3 fs-15"
+          (click)="submit(false)"
+          [disabled]="
+            form.invalid ||
+            timingForm.invalid ||
+            (assignees.length == 0 &&
+              assigneesDepartment.length == 0 &&
+              assigneesManager.length == 0 &&
+              assigneesJobTitles.length == 0 &&
+              assigneesPlaces.length == 0 &&
+              assigneesLevels.length == 0) ||
+            loading ||
+            (isLocation && !locationForm.controls['latitude'].value)
+          "
+        >
+          <submit-button text="create" [loading]="loading"></submit-button>
+        </button>
+      </div>
+      <button
+        *ngIf="isEdit"
+        mat-raised-button
+        color="primary"
+        class="px-3 fs-15"
+        (click)="submit(false)"
+        [disabled]="
+          form.invalid ||
+          timingForm.invalid ||
+          assignees.length == 0 ||
+          loading ||
+          (isLocation && !locationForm.controls['latitude'].value)
+        "
+      >
+        <submit-button text="save" [loading]="loading"></submit-button>
+      </button>
+    </div>
+  </div>
+</div>

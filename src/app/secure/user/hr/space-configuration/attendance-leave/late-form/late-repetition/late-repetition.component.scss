@@ -1,0 +1,28 @@
+.late-select {
+  width: 100%;
+}
+
+.deduction-value {
+  color: var(--gray-600);
+  padding-block-end: 1rem;
+  border-radius: 4px;
+}
+
+.value-container {
+  .minutes-container {
+    gap: 0.5rem;
+  }
+
+  .input-time {
+    width: 80px;
+    padding: 0.5rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 4px;
+    text-align: center;
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+  }
+} 

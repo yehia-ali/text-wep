@@ -1,0 +1,52 @@
+.attendance-label {
+  &:not(:last-of-type) {
+    margin-bottom: 1rem;
+  }
+}
+.date {
+  width: 20rem;
+}
+
+.sticky {
+  position: sticky;
+  top: -20px;
+  z-index: 99;
+}
+
+thead {
+  top: 100px !important;
+}
+.day-card
+{
+  width: 100px;
+}
+.bg-light-blue{
+  color:#557FDE !important;
+  background-color: rgba($color: #557FDE, $alpha: 0.2) !important;
+}
+
+
+/* styles.scss */
+  .ng-dropdown-panel {
+    width: 100% !important; /* Adjust the width to your needs */
+    max-width: 250px; /* Optionally, set a max width */
+  }
+  .date-range {
+    mat-form-field {
+      width: 100%;
+      .mat-mdc-text-field-wrapper {
+        width: 100% !important;
+        height: 41.2px !important;
+        border-radius: 0.5rem !important;
+        background: transparent !important;
+        border: 1px solid #e7e7e7 !important;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+.bg-exceeded{
+  background: #C6C4BD;
+  color: #554104;
+}

@@ -1,0 +1,152 @@
+<div class="bg-white border layout rounded shadow-sm">
+  <div class="dir pt-1">
+    <div class="flex jcsb aic mb-2 px-2">
+      <p class="fs-18 font-weight-bold text-primary mb-0">{{'teamKpis.teamPerformanceMetrics' | translate}}</p>
+    </div>
+    <div class="h-100">
+      <div class="kpis-bank-list">
+        <div class="px-2 flex aic jcsb mb-2 flex-wrap gap-y-1">
+          <div class="flex aic gap-x-2 flex-wrap">
+            <search [width]="'w-15r'" [classes]="'py-50'" [newSearch]="true" [hideLabel]="true" (valueChanged)="applyFilter(FilterType.SEARCH, $event)"></search>
+            <app-departments-filter (valueChanged)="applyFilter(FilterType.DEPARTMENT, $event)"/>
+            <app-date-filter (valueChanged)="applyFilter(FilterType.DATE, $event)"/>
+          </div>
+          <button (click)="exportToExcel()" class="btn rounded bg-success white py-75 px-2 fs-14 d-flex aic gap-x-1" aria-label="Export">
+            {{'export' | translate}}
+          </button>
+        </div>
+        <div class="table-container border-0 rounded shadow-xs overflow-auto">
+          <table class="table table-bordered table-hover" *ngIf="!loading && usersKpisDataList.length > 0" id="team-kpis-table">
+            <thead>
+              <tr class="bg-gray">
+                <th class="text-left w-20">
+                  <mat-checkbox class="mr-1 example-margin" color="primary" (change)="checkAll($event)" [checked]="allCategoriesChecked" aria-label="Select all employees"/>
+                  {{ 'teamKpis.employeeName' | translate }}
+                </th>
+                <th class="text-left w-60">{{ 'teamKpis.numberOfPerformanceIndicators' | translate }}</th>
+                <th class="text-left w-10">
+                  <span class="primary">{{ 'teamKpis.totalPerformance' | translate }}</span>
+                  <i class="bx bx-info-circle fs-12 pointer ml-1" [matTooltip]=" 'teamKpis.totalPerformanceTooltip' | translate" aria-label="Info"></i>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let row of usersKpisDataList | paginate: {itemsPerPage: limit, currentPage: page, totalItems: totalItems}; trackBy: trackByUserId">
+                <tr class="border-bottom hoverable-row">
+                  <td class="text-left">
+                    <div class="flex aic gap-x-1">
+                      <mat-checkbox class="mr-1 example-margin" color="primary" [checked]="row.isSelected" (change)="selectRow($event, row, null)" aria-label="Select employee"/>
+                      <div class="flex aic mr-1" *ngIf="row?.employeeImage">
+                        <img [src]="imageRootUrl + row?.employeeImage" class="avatar-xs rounded-circle border" [alt]="row?.employeeName" />
+                      </div>
+                      <div class="flex flex-column">
+                        <span class="employee-name fw-600">{{ row?.employeeName }}</span>
+                        <span class="employee-title text-muted fs-12">{{ row?.employeeJobTitle || '' }}</span>
+                      </div>
+                      <button class="btn btn-link btn-sm px-1 py-0 ml-2" (click)="row.isExpand = !row.isExpand" [attr.aria-expanded]="row.isExpand" [attr.aria-label]="row.isExpand ? 'Collapse' : 'Expand'">
+                        <i *ngIf="!row.isExpand" class="pointer fs-19 bx bx-chevron-down"></i>
+                        <i *ngIf="row.isExpand" class="pointer fs-19 bx bx-chevron-up"></i>
+                      </button>
+                    </div>
+                  </td>
+                  <td class="text-left">{{ row?.kpisCount || 0 }}</td>
+                  <td class="text-left">
+                    <span class="fw-600">{{ row?.totalAchive || 0 }}%</span>
+                  </td>
+                </tr>
+                <tr *ngIf="row.isExpand">
+                  <td colspan="4" class="px-0 py-0 bg-gray">
+                    <table class="table table-sm bg-gray mb-0" *ngIf="row?.employeeKpiLists && row.employeeKpiLists.length > 0">
+                      <thead class="bg-gray">
+                        <tr class="border-bottom">
+                          <th class="text-left"></th>
+                          <th class="text-left">{{ 'teamKpis.performance_name' | translate }}</th>
+                          <th class="text-left">{{ 'teamKpis.performance_category' | translate }}</th>
+                          <th class="text-left">{{ 'teamKpis.start_date' | translate }}</th>
+                          <th class="text-left">{{ 'teamKpis.end_date' | translate }}</th>
+                          <th class="text-left">{{ 'teamKpis.repetition' | translate }}</th>
+                          <th class="text-left">{{ 'teamKpis.evaluator' | translate }}</th>
+                          <th class="text-left">{{ 'teamKpis.weight' | translate }}</th>
+                          <th class="text-left">{{ 'teamKpis.target' | translate }}</th>
+                          <th class="text-left">{{ 'teamKpis.actual' | translate }}</th>
+                          <th class="text-left">
+                            {{ 'teamKpis.achievement_rate' | translate }}
+                            <i class="bx bx-info-circle fs-12 pointer ml-1" [matTooltip]=" 'teamKpis.achievement_rate_tooltip' | translate" aria-label="Info"></i>
+                          </th>
+                          <th class="text-left">
+                            {{ 'teamKpis.achieved_weight' | translate }}
+                            <i class="bx bx-info-circle fs-12 pointer ml-1" [matTooltip]=" 'teamKpis.achieved_weight_tooltip' | translate" aria-label="Info"></i>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="bg-light-violet">
+                        <tr class="border-bottom" *ngFor="let employee of row?.employeeKpiLists; trackBy: trackByKpiId">
+                          <td class="text-left pl-4 pr-50">
+                            <div class="flex aic mr-1">
+                              <mat-checkbox class="mr-1 example-margin" color="primary" [checked]="employee.isSelected" (change)="selectRow($event, employee, row)" aria-label="Select KPI"/>
+                            </div>
+                          </td>
+                          <td class="text-left">{{ employee?.kpiName }}</td>
+                          <td class="text-left">{{ employee?.kpiCategoryName }}</td>
+                          <td class="text-left">{{ employee?.startDate | date:'d/M/yyyy' }}</td>
+                          <td class="text-left">{{ employee?.endDate | date:'d/M/yyyy' }}</td>
+                          <td class="text-left">{{ EvaluationFrequency[employee.evaluationFrequency - 1]?.name }}</td>
+                          <td class="text-left flex aic gap-x-1">
+                            <div class="flex aic">
+                              <div class="flex aic mr-1" *ngIf="employee?.raterImage">
+                                <img [src]="imageRootUrl + employee?.raterImage" class="avatar-xs rounded-circle border" [alt]="employee?.raterName" />
+                              </div>
+                              <div class="flex flex-column">
+                                <span class="employee-name">{{ employee?.raterName }}</span>
+                                <span class="employee-title text-muted fs-12">{{ employee?.raterJobTitle || '' }}</span>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="text-left">{{ employee?.weight }}</td>
+                          <td class="text-left">{{ employee?.target }}</td>
+                          <td class="text-left">
+                            <span [ngClass]="getAchievementColor(employee?.value || 0)">{{ employee?.value }}</span>
+                          </td>
+                          <td class="text-left">
+                            <span [ngClass]="getAchievementColor(employee?.actual_on_target || 0)">{{ employee?.actual_on_target }}</span>
+                          </td>
+                          <td class="text-left">{{ employee?.actual_on_Weight }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <p class="text-center py-1 text-muted" *ngIf="!row?.employeeKpiLists?.length">{{'no_data_found' | translate}}</p>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+          <div class="flex aic jcc py-5" *ngIf="loading || usersKpisDataList.length == 0">
+            <loading *ngIf="loading" [centerd]="true"/>
+            <not-found *ngIf="!loading && usersKpisDataList.length == 0" />
+          </div>
+        </div>
+        <div class="pagination-content flex aic jcsb py-1 bg-white border-top border-bottom px-2 mt-2">
+          <div class="flex aic gap-x-1">
+            <p class="fs-12 simibold mb-0">{{ 'pagination_per_page' | translate }}</p>
+            <input type="number" style="width:50px" class="input ml-75 limit text-center py-50 px-0" min="1" [(ngModel)]="limit" (ngModelChange)="changeLimit()" aria-label="Items per page">
+            <p class="ml-50 primary fs-12 mb-0">{{ 'record' | translate }}</p>
+          </div>
+          <pagination-controls
+            (pageChange)="pageChanged($event)"
+            [maxSize]="7"
+            [directionLinks]="true"
+            [previousLabel]="'previous' | translate"
+            [nextLabel]="'next' | translate"
+          >
+          </pagination-controls>
+          <p class="fs-12 simibold pr-3 mb-0">{{ 'pagination_total_records' | translate }} <span class="primary">{{ totalItems | arabicNumbers }} {{ 'record' | translate }}</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add the following to your component.ts for trackBy functions -->
+<!--
+trackByUserId(index: number, item: any) { return item?.employeeId; }
+trackByKpiId(index: number, item: any) { return item?.kpiId; }
+-->

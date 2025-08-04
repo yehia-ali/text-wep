@@ -1,0 +1,124 @@
+<user-navbar/>
+<div class="p-2">
+  <layout-with-filters (pageChange)="changePage($event)" [meta]="meta" [admin]="true"
+                       (limitChanged)="limitChanged($event)" [limit]="service.limitValue">
+    <ng-container filters>
+      <spaces (export)="exportToExcel()" (emitChange)="getBillingOrders()" [service]="service"></spaces>
+    </ng-container>
+
+    <ng-container content>
+      <table *ngIf="orders && orders.length > 0 && !loading" class="table" id="orders-table">
+        <thead class="bg-gray border-bottom">
+        <tr>
+          <th class="text-center">{{ 'order_id' | translate }}</th>
+          <th class="text-center">{{ 'gateway_id' | translate }}</th>
+          <th class="text-left">
+            <div class="flex aic">
+              <p class="mr-50">{{ 'space_name' | translate }}</p>
+              <sorting (down)="sort(3 , 0)" (up)="sort(3 , 1)"></sorting>
+            </div>
+          </th>
+          <th class="text-left">
+            <div class="flex aic">
+              <p class="mr-50">{{ 'owner_name' | translate }}</p>
+              <sorting (down)="sort(4 , 0)" (up)="sort(4 , 1)"></sorting>
+            </div>
+          </th>
+          <th class="text-center">{{ 'creation_date' | translate }}</th>
+          <th class="text-center">{{ 'package_name' | translate }}</th>
+          <th>
+            <div class="flex-center">
+              <p class="mr-50">{{ 'active_users' | translate }}</p>
+              <sorting (down)="sort(6 , 1)" (up)="sort(6 , 0)"></sorting>
+            </div>
+          </th>
+          <th class="text-center">
+            <div class="flex-center">
+              <p class="mr-50">{{ 'status' | translate }}</p>
+              <sorting (down)="sort(1 , 1)" (up)="sort(1 , 0)"></sorting>
+            </div>
+          </th>
+          <th class="text-center">
+            <div class="flex-center">
+              <p class="mr-50">{{ 'total_price' | translate }}</p>
+              <sorting (down)="sort(5 , 0)" (up)="sort(5 , 1)"></sorting>
+            </div>
+          </th>
+          <th class="text-left">{{ 'gateway' | translate }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="border-bottom pointer"
+            *ngFor="let order of orders | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy">
+
+          <!-- id -->
+          <td class="text-center">
+            <p class="fs-13">{{ order.id }}</p>
+          </td>
+
+          <!--        payment expiration date-->
+          <td class="text-center">
+            <p>{{ order.paymentGetWayOrderId }}</p>
+          </td>
+
+
+          <!--    name    -->
+          <td class="text-left">
+            <p class="bold primary">{{ order.spaceName }}</p>
+          </td>
+
+          <!--    owner name    -->
+          <td class="text-left">
+            <p>{{ order.spaceCreatorName }}</p>
+          </td>
+
+          <!--    creation date    -->
+          <td>
+            <div class="flex-center">
+              <p>{{ order.startDate ? (order.startDate | arabicDate) : '-' }}</p>
+            </div>
+          </td>
+
+
+          <!--    package name    -->
+          <td class="text-center">
+            <p>{{ order.paymentPackageName || '-' }}</p>
+          </td>
+
+          <!--    package users    -->
+          <td>
+            <p>{{ order.numberOfUser || '-' }}</p>
+          </td>
+
+          <!--    package status    -->
+          <td>
+            <div class="flex-center">
+              <div *ngIf="order.paymentStatus == 1 || order.paymentStatus == 2" class="flex jcc chip px-1 rounded-5 bg-primary white">
+                {{ order.paymentStatus == 1 ? ('paid' | translate) : ('paid_offline' | translate) }}
+              </div>
+              <div *ngIf="order.paymentStatus == 0" class="flex jcc chip px-1 rounded-5 bg-danger white">
+                {{ 'unpaid' | translate }}
+              </div>
+            </div>
+          </td>
+
+
+          <!--    orderTotalPrice    -->
+          <td>
+            <p>{{ order.totalPrice ? order.totalPrice + ' ' + translate.instant('EGP') : '-' }}</p>
+          </td>
+
+          <!--        payment gateway-->
+          <td class="text-left">
+            <p>{{ order.getaway }}</p>
+          </td>
+
+
+        </tr>
+        </tbody>
+      </table>
+      <not-found *ngIf="orders && orders.length == 0 && !loading"></not-found>
+      <loading *ngIf="loading"></loading>
+    </ng-container>
+  </layout-with-filters>
+</div>

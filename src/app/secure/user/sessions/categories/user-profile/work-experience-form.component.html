@@ -1,0 +1,73 @@
+<div class="work-experience-form" dir="auto">
+  <h3 *ngIf="!data.isEdit">{{'add_working_experience' | translate}}</h3>
+  <h3 *ngIf="data.isEdit">{{'edit_working_experience' | translate}}</h3>
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-1">
+        <div class="col-lg-12">
+          <input-label [control]="f['jobTitle']" [maxLength]="30" key="job_title"/>
+          <input class="input" formControlName="jobTitle" maxlength="30" type="text">
+          <input-error [control]="f['jobTitle']"/>
+        </div>
+        <div class="col-lg-6">
+          <input-label [control]="f['companyName']" [maxLength]="30" key="company_name"/>
+          <input class="input" formControlName="companyName" maxlength="30" type="text">
+          <input-error [control]="f['companyName']"/>
+        </div>
+        <div class="col-lg-6">
+          <input-label [control]="f['logo']" key="company_logo"/>
+          <label *ngIf="!selectedLogo" class="upload bg-light-primary-10 primary rounded flex-center pointer" for="experience">
+            <div class="img">
+              <img alt="upload image" src="../../../../assets/images/icons/upload.svg">
+            </div>
+            <p class="ml-75">{{'upload' | translate}}</p>
+          </label>
+          <div *ngIf="selectedLogo" class="selected-image upload rounded bg-gray flex aic jcsb fs-14">
+            <p *ngIf="selectedLogo.length > 25">
+              {{selectedLogo | slice:0:21}}.{{selectedLogo.split('.')[1]}}
+            </p>
+            <p *ngIf="selectedLogo.length <= 25">
+              {{selectedLogo}}
+            </p>
+            <i (click)="removeSelectedFile()" class='bx bx-x danger fs-25 pointer'></i>
+          </div>
+          <input-error [control]="f['logo']"/>
+        </div>
+        <div class="col-lg-12">
+          <mat-checkbox class="example-margin dark" color="primary" formControlName="isPresent">
+            {{'currently_working' | translate}}
+          </mat-checkbox>
+        </div>
+        <div class="col-lg-6">
+          <input-label [control]="f['startDate']" key="start_date"/>
+          <div (click)="start.open()" class="relative pointer">
+            <input [matDatepicker]="start" [max]="today" class="input" formControlName="startDate" readonly>
+            <img alt="date icon" class="picker-icon img" src="../../../../assets/images/icons/date.svg">
+          </div>
+          <input-error [control]="f['startDate']"/>
+        </div>
+        <div class="col-lg-6">
+          <input-label [control]="f['endDate']" key="end_date"/>
+          <div (click)="end.open()" [ngClass]="{'pointer': !f['isPresent'].value}" class="relative">
+            <input [matDatepicker]="end" [max]="today" [min]="f['startDate'].value" class="input" formControlName="endDate" readonly>
+            <img alt="date icon" class="picker-icon img" src="../../../../assets/images/icons/date.svg">
+          </div>
+          <input-error [control]="f['endDate']"/>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div align="end" mat-dialog-actions>
+    <div class="flex aic jcsb w-100">
+      <button (click)="saveAndAdd()" class="clickable-btn primary fs-16">{{'save_and_add_another' | translate}}</button>
+      <div class="end">
+        <button (click)="submit()" class="px-3" color="primary" mat-raised-button>{{'save' | translate}}</button>
+        <button class="shadow-0 border border-dark px-2 ml-1" mat-dialog-close="" mat-raised-button>{{'cancel' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<input (change)="fileChanged($event)" accept='image/*' hidden id="experience" type="file"/>
+<mat-datepicker #start></mat-datepicker>
+<mat-datepicker #end></mat-datepicker>

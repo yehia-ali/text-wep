@@ -1,0 +1,82 @@
+@use "src/assets/styles/vars" as *;
+
+.top-section {
+  position: absolute;
+  z-index: 99999;
+}
+
+.register-content {
+  padding-top: 9rem;
+}
+
+.package {
+  padding: 1.2rem 1.5rem;
+  background: rgb(247 244 254);
+
+  &.active {
+    border: 1px solid $primary !important;
+
+    .package-name {
+      color: $primary !important;
+    }
+  }
+}
+
+.pt-10 {
+  padding-top: 3rem !important;
+}
+
+@media (min-width: 992px) {
+  .content {
+    height: 100%;
+  }
+
+  .d-lg-flex {
+    display: flex !important;
+  }
+
+  .pt-10 {
+    padding-top: 4rem !important;
+  }
+}
+
+@media (min-width: 800px) and (max-width: 1400px) {
+  .register-content.create-space {
+    padding-top: 25rem !important;
+  }
+}
+
+
+.primary-border {
+  border-color: $primary !important;
+}
+
+.auth-layout {
+  overflow-x: hidden;
+}
+
+.mh-100v {
+  height: 100vh;
+  min-height: 100vh;
+}
+
+.content {
+  padding: 3rem min(2rem, 90%);
+}
+
+.number-input::-webkit-outer-spin-button,
+.number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.number-input {
+  border: none;
+  height: 34px;
+  width: 100%;
+  text-align: center;
+  color: $dark-color !important
+}
+.overflow-auto{
+  overflow: auto;
+}

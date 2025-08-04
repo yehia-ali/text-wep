@@ -1,0 +1,140 @@
+<div class="book-session" dir="auto">
+  <div *ngIf="!checkout">
+    <h3 class="flex aic jcsb">
+      <p>{{'book_session' | translate}}</p>
+      <i class='bx bx-x danger fs-30 pointer' (click)="closeDialog()"></i>
+    </h3>
+    <div mat-dialog-content>
+      <mat-stepper linear #stepper>
+        <mat-step>
+          <ng-template matStepLabel>{{'appointments' | translate}}</ng-template>
+          <!-- <calendar (selectedDateChanged)="getSessions($event)" /> -->
+          <div class="week-view mt-1">
+            <week-view (selectedDateChanged)="getConsultantAppointments($event)"/>
+          </div>
+          <div class="flex aic jcsb mt-2 mb-1">
+            <p>{{'choose_session' | translate}}</p>
+          </div>
+          <div class="sessions flex-grid gap-y-2 relative" [ngClass]="{'flex-center': sessions().length == 0}">
+            <ng-container *ngIf="sessions().length > 0 && !loading">
+              <div class="col-lg-4" *ngFor="let session of sessions()">
+                <div class="session" [ngClass]="{'pointer': session.sessionDateStatus == 0}"
+                     (click)="session.sessionDateStatus == 0 && selectSession(session.id)">
+                  <session-card [sessionData]="session" [isActive]="selectedSessions.includes(session.id)"/>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="sessions().length == 0 || loading">
+              <loading *ngIf="loading"/>
+              <not-found *ngIf="sessions().length == 0 && !loading"/>
+            </ng-container>
+
+          </div>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>{{'details' | translate}}</ng-template>
+          <div class="flex aic gap-x-5 pb-2 pt-1">
+            <div class="user-info flex aic gap-x-1">
+              <user-image [imageUrl]="environment.publicImageUrl" [img]="serviceProvider().imageUrl"></user-image>
+              <div>
+                <p class="bold">{{serviceProvider().name}}</p>
+                <div class="flex">
+                  <p class="mr-5">{{serviceProvider().jobTitle}}</p>
+                  <p class="category bg-light-primary-1 rounded-5 inline-block  px-50 fs-15" *ngIf="serviceProvider().serviceSubCategory">
+                    {{dir == 'ltr' ? serviceProvider().serviceSubCategory.serviceCategory.enName : serviceProvider().serviceSubCategory.serviceCategory.arName}}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="flex aic jcc gap-x-1 mt-2 bold">
+              <div class="img">
+                <img src="assets/images/icons/money.svg" alt="money icon">
+              </div>
+              <p class="fs-16">
+                <span>{{serviceProvider().sessionDuration | arabicNumbers}}</span>
+                <span class="ml-25">{{'minute' | translate}}</span>
+                <span> / </span>
+                <span>{{serviceProvider().sessionFees | arabicNumbers}}</span>
+                <span class="ml-25" *ngIf="!!serviceProvider().currency">{{serviceProvider().currency.currencyCode || 'EGP' | translate}}</span>
+                <span class="ml-25" *ngIf="!serviceProvider().currency">{{'EGP' | translate}}</span>
+              </p>
+            </div>
+          </div>
+          <form [formGroup]="form">
+            <div class="title mb-2">
+              <input-label [control]="f['title']" key="title" [maxLength]="50"/>
+              <input type="text" class="input" formControlName="title" maxlength="50">
+              <input-error [control]="f['title']"/>
+            </div>
+            <div class="description">
+              <input-label [control]="f['description']" key="description" [maxLength]="500"/>
+              <textarea rows="6" class="input" formControlName="description" maxlength="500"></textarea>
+              <span class="danger fs-14" *ngIf="f['description'].errors?.['required'] && f['description'].touched">{{'required' | translate}}</span>
+            </div>
+          </form>
+          <div class="border rounded mt-2">
+            <div class="checkout flex aic jcsb border-bottom p-1">
+              <div class="start">
+                <p class="mb-1">{{'session_number' | translate}}</p>
+                <p>{{'session_cost' | translate}}</p>
+              </div>
+              <div class="end text-right">
+                <p class="mb-1 bold">{{selectedSessions.length | arabicNumbers}}</p>
+                <p class="bold" *ngIf="serviceProvider().currency">{{serviceProvider().sessionFees | arabicNumbers}} {{serviceProvider().currency.currencyCode | translate}}</p>
+              </div>
+            </div>
+            <div class="total flex aic jcsb p-1">
+              <p>{{'total_cost' | translate}}</p>
+              <p class="bold" *ngIf="serviceProvider().currency">{{selectedSessions.length * serviceProvider().sessionFees | arabicNumbers}} {{serviceProvider().currency.currencyCode | translate}}</p>
+            </div>
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </div>
+    <div mat-dialog-actions align="end">
+      <div class="flex aic gap-x-1">
+        <button mat-raised-button matStepperPrevious class="flex-auto dark-color rounded shadow-0 border border-dark px-3" (click)="stepper.previous()"
+                *ngIf="stepper.selectedIndex != 0">
+          {{'back' | translate}}
+        </button>
+
+        <button class="flex-auto rounded px-3" color="primary" *ngIf="stepper.selectedIndex == 0" mat-raised-button (click)="
+        selectedSessions.length != 0 && stepper.next();
+        selectedSessions.length == 0 && selectSessionError()">
+          {{'next' |translate}}
+        </button>
+
+        <button class="flex-auto rounded px-3" color="primary" [disabled]="btnDisabled" *ngIf="stepper.selectedIndex == 1" mat-raised-button
+                (click)="form.valid && bookSession(); form.invalid && form.markAllAsTouched()">
+          {{'confirm' |translate}}
+        </button>
+
+        <!--      <button class="flex-auto rounded px-3" color="primary" mat-raised-button (click)="bookSession()" *ngIf="stepper.selectedIndex == 2"-->
+        <!--              [disabled]=" (stepper.selectedIndex == 2 && (form.invalid || selectedSessions.length == 0))">-->
+        <!--        {{'confirm' |translate}}-->
+        <!--      </button>-->
+
+      </div>
+    </div>
+  </div>
+  <div *ngIf="checkout">
+    <div class="flex aic jcsb">
+      <h3>{{'checkout' | translate}}</h3>
+      <i class='bx bx-x danger fs-30 pointer' (click)="closeDialog()"></i>
+    </div>
+    <div mat-dialog-content>
+      <checkout [selectedSessions]="selectedSessions"/>
+    </div>
+    <div mat-dialog-actions align="end">
+      <div class="flex aic gap-x-1">
+        <button mat-raised-button matStepperPrevious class="flex-auto dark-color rounded shadow-0 border border-dark px-3" (click)="checkout = false">
+          {{'back' | translate}}
+        </button>
+
+        <button class="flex-auto rounded px-3" [disabled]="btnDisabled" color="primary" mat-raised-button (click)="confirmBooking()">
+          {{'confirm' |translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

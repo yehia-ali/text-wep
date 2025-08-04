@@ -1,0 +1,127 @@
+.p-calendar {
+  width: 100%;
+}
+
+.custom-radio-box {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  border-radius: 8px;
+  padding: 10px;
+  margin-left: 0px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  transition: box-shadow 0.2s;
+}
+
+.custom-radio-box input[type="radio"] {
+  display: none;
+}
+
+.custom-radio-box .radio-label {
+  display: flex;
+  flex-direction: row;
+}
+
+.radio-label b {
+  font-size: 10px;
+}
+
+.custom-radio-box .desc {
+  color: #8a8a8a;
+  font-size: 10px;
+  margin-inline-start: 10px;
+}
+
+.custom-radio-box:has(input[type="radio"]:checked) {
+  background: #f6f3ff;
+  border-color: #a084e8;
+}
+
+.over-achievement-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.label-row {
+  margin-bottom: 4px;
+}
+
+.main-label {
+  color: #888;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.main-label i {
+  color: #888;
+  font-size: 18px;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.custom-checkbox-label {
+  display: flex;
+  align-items: center;
+  color: #aaa;
+  font-size: 15px;
+  cursor: pointer;
+  gap: 8px;
+  position: relative;
+}
+
+.custom-checkbox-label input[type="checkbox"] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.custom-checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #a084e8;
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+.custom-checkbox-label input[type="checkbox"]:checked+.custom-checkbox {
+  background: #f6f3ff;
+  border-color: #a084e8;
+}
+
+.custom-checkbox-label input[type="checkbox"]:checked+.custom-checkbox:after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 12px;
+  border: solid #a084e8;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+
+.kpi-create-form {
+  height: 70vh;
+  overflow: hidden;
+  overflow-y: auto;
+  padding-inline-end: 15px;
+  margin-inline-end: -15px;
+}

@@ -1,0 +1,46 @@
+<div class="new-card bg-white p-1 rounded-4 card-shadow h-100" >
+  <h4 *ngIf="dashboard">{{'timing_report' | translate}}</h4>
+  <div class="total mb-1">
+
+    <div class="bg-primary mb-2 mt-75" *ngIf="!dashboard"
+         [ngStyle]="{'width': workingHours?.requiredPercentage + '%'}"></div>
+    <div class="flex aic w-100 relative extra-hours" *ngIf="!dashboard">
+      <div class="bg-light-primary" [ngStyle]="{'width': workingHours?.actualPercentage + '%'}"></div>
+      <div class="bg-danger" *ngIf="workingHours?.extraHours || workingHours?.extraMinutes"
+           [ngStyle]="{'width': workingHours?.extraTimePercentage + '%'}"></div>
+      <p class="line-height danger bold">
+        <span *ngIf="workingHours?.extraHours">{{workingHours?.extraHours}}</span>
+        <span *ngIf="workingHours?.extraMinutes && workingHours?.extraHours && !dashboard" class="mx-50">:</span>
+        <span *ngIf="workingHours?.extraMinutes && !dashboard">{{workingHours?.extraMinutes}}</span>
+      </p>
+    </div>
+
+  </div>
+  <div class="flex jcsr aic w-100" *ngIf="workingHours">
+    <div class="flex aic" *ngIf="dashboard">
+      <p class="primary">{{'working_hours' | translate}}</p>
+      <p class="bold ml-1">
+        <span>{{(userSer.user$.value.requiredMonthlyHours || 0) | arabicNumbers}}</span>
+        <span>{{'h' | translate}}</span>
+      </p>
+    </div>
+    <div class="flex aic">
+      <p class="primary" *ngIf="dashboard">{{'expected_hours' | translate}}</p>
+      <p class="primary" *ngIf="!dashboard">{{'required_text' | translate}}</p>
+      <p class="bold ml-1">
+        <span>{{workingHours?.required || (0 | arabicNumbers ) + ('h' | translate)}}</span>
+        <span *ngIf="workingHours?.requiredMinutes && workingHours?.requiredMinutes && !dashboard" class="mx-50">:</span>
+        <span *ngIf="workingHours?.requiredMinutes && !dashboard">{{workingHours?.requiredMinutes}}</span>
+      </p>
+    </div>
+    <div class="flex aic">
+      <p class="primary" *ngIf="dashboard">{{'actual_hours' | translate}}</p>
+      <p class="primary" *ngIf="!dashboard">{{'actual' | translate}}</p>
+      <p class="bold ml-1">
+        <span>{{workingHours?.actual || (0 | arabicNumbers ) + ('h' | translate)}}</span>
+        <span *ngIf="workingHours?.actualMinutes && !dashboard" class="mx-50">:</span>
+        <span *ngIf="workingHours?.actualMinutes && !dashboard">{{workingHours?.actualMinutes}}</span>
+      </p>
+    </div>
+  </div>
+</div>

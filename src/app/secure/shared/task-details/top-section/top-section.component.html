@@ -1,0 +1,93 @@
+<div class="top-section px-2 py-1 border-bottom flex aic jcsb">
+  <div class="header flex">
+    <!-- task-type -->
+    <div class="flex aic border rounded task-type">
+      <div class="inline-flex aic px-1">
+        <i class="bx bx-radio-circle-marked mr-25 fs-18 text-center mt-25"></i>
+        <span class="fs-12">
+          {{ taskTypeValue | translate }}
+        </span>
+      </div>
+      <div class="flex aic border-start">
+        <span class="fs-12 px-1">{{details?.taskId}}</span>
+      </div>
+    </div>
+    <p class="fs-17 bold ml-2">{{ details.title }}</p>
+    <!-- task-type -->
+  </div>
+  <div class="flex aic gap-x-2">
+    <add-rate (rateAdded)="rateAdded.emit(true)" [details]="details" [resultMode]="details.taskGroupType == 6 ? true : false" text="{{details.taskGroupType == 6 ? 'add_result' : 'add_rate'}}" *ngIf="!details.rate && details.taskStateId == 2 && creator"/>
+    <add-rate (rateAdded)="rateAdded.emit(true)" [details]="details" [resultMode]="details.taskGroupType == 6 ? true : false" text="{{details.taskGroupType == 6 ? 'edit_result' : 'update_rate'}}" *ngIf="canUpdateRate && details.taskStateId == 2 && creator"/>
+    <div class="rated relative">
+      <rate [rate]="details.rate" [displayNumber]="false" size="fs-23" *ngIf="details.rate"/>
+      <div class="rate-reason shadow p-1 rounded border bg-white">
+        {{ details.rateReason }}
+      </div>
+    </div>
+    <!-- <task-status [state]="details.taskStateId"/> -->
+    <button class="img clickable-btn" (click)="getHistory()">
+      <img src="assets/images/icons/history.svg" alt="history icon" class="convert-image-color" width="20">
+    </button>
+    <i class="bx bx-x fs-25 pointer" (click)="close()" *ngIf="this.data"></i>
+    <task-actions [taskDetails]="true" (cancel)="cancel(details.taskId)" (delete)="delete(details.taskId, details.taskGroupId)" [taskState]="details.taskStateId" [reassignVisible]="false"
+                  *ngIf="creator && (details.taskStateId == 1 || details.taskStateId == 3 || details.taskStateId == 7) && withActions"/>
+  </div>
+</div>
+
+
+<info-sidebar [open]="historyIsOpen">
+  <ng-container header>
+    <h2>{{ 'history' | translate }}</h2>
+  </ng-container>
+
+  <ng-container content>
+    <div class="p-2 h-100">
+      <ng-container content>
+        <mat-tab-group class="h-100" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)" animationDuration="400ms">
+          <mat-tab class="h-100" [label]="'activity' | translate" *ngIf="history.length > 0">
+            <!-- <history [history]="history"></history> -->
+            <div class="timeline ml-3 mb-4" *ngIf="history.length > 0">
+              <ng-container *ngFor="let item of history">
+                  <div class="history relative">
+                      <div class="date mt-1 fs-15">
+                          {{item.date | arabicDate}}
+                      </div>
+                      <div class="log mt-1">
+                          <div  class="mb-2">
+                              <p class="fs-12 simibold mb-50">{{item?.message}}</p>
+                              <p class="muted fs-12 simibold">{{item?.creationDate | arabicTime}}</p>
+                          </div>
+                      </div>
+                  </div>
+              </ng-container>
+              <div class="relative h-100" *ngIf="history?.length == 0">
+                <not-found/>
+              </div>
+          </div>
+          </mat-tab>
+          <mat-tab class="h-100" [label]="'work_log' | translate" *ngIf="logs.length > 0">
+            <!-- <history [history]="logs"></history> -->
+            <div class="timeline ml-3 mb-4" *ngIf="logs.length > 0">
+              <ng-container *ngFor="let item of logs">
+                  <div class="history relative">
+                      <div class="date mt-1 fs-15">
+                          {{item.date | arabicDate}}
+                      </div>
+                      <div class="log mt-1">
+                          <div class="mb-2">
+                              <p class="fs-12 simibold mb-50">{{item?.message}}</p>
+                              <p class="muted fs-12 simibold">{{item?.creationDate | arabicTime}}</p>
+                          </div>
+                      </div>
+                  </div>
+              </ng-container>
+              <div class="relative h-100" *ngIf="logs?.length == 0">
+                <not-found/>
+              </div>
+          </div>
+          </mat-tab>
+        </mat-tab-group>
+      </ng-container>
+    </div>
+  </ng-container>
+</info-sidebar>

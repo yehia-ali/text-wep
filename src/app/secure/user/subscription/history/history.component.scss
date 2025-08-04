@@ -1,0 +1,14 @@
+@use "src/assets/styles/vars" as *;
+
+.sidebar-item.active, .sidebar-item:hover {
+  color: $primary;
+  position: relative;
+  &:before {
+    content: '';
+    height: 3.5rem;
+    width: 2px;
+    background: $primary;
+    position: absolute;
+    inset-inline: 0;
+  }
+}

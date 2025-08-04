@@ -1,0 +1,57 @@
+<div class="">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <div class="col-lg-3">
+      <search [newSearch]="true" (valueChanged)="search($event)"></search>
+    </div>
+    <div class="col-lg-3 text-right">
+      <a (click)="addWorkInfo()" style="display: inline-block;" [routerLink]="['./employee']" class="btn rounded bg-primary white py-75 px-1 fs-14">
+        {{'add_work_info' | translate}}
+      </a>
+    </div>
+  </div>
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+
+    <div class="table-container mx-1" *ngIf="allWorkInfo.length > 0 && !loading">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">{{'employee_code' | translate}}</th>
+            <th class="text-left py-1">{{'job_title' | translate}}</th>
+            <th class="text-left py-1">{{'department' | translate}}</th>
+            <th class="text-left py-1">{{'start_date' | translate}}</th>
+            <th class="text-left py-1">{{'end_date' | translate}}</th>
+            <th class="text-left py-1">{{'manager' | translate}}</th>
+            <th class="text-left py-1">{{'work_system' | translate}}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of allWorkInfo" >
+            <td>{{item.employeeCode}}</td>
+            <td>{{item.jobTitleName}}</td>
+            <td>{{item.departmentName}}</td>
+            <td>{{item.startDate | arabicDate}}</td>
+            <td>{{item.endDate | arabicDate}}</td>
+            <td>{{item.managerName }}</td>
+            <td>{{item.workTypeName }}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="img pointer" (click)="editWorkInfo(item)">
+                <img src="assets/images/icons/edit1.svg" alt="edit icon">
+              </div>
+              <i (click)="deleteWorkInfo(item.id)" class="bx bx-trash danger fs-30 pointer"></i>
+            </div>
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="allWorkInfo.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>

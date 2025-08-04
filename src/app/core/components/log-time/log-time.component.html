@@ -1,0 +1,41 @@
+<div class="log-time" dir="auto">
+  <h3>{{ 'log_time' | translate }}</h3>
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-1">
+        <div class="col-lg-6">
+          <input-label key="title" [control]="f['title']"/>
+          <input type="text" class="input" formControlName="title">
+          <input-error [control]="f['title']"/>
+        </div>
+        <div class="col-lg-6">
+          <input-label key="date" [control]="f['date']"/>
+          <div class="date-picker">
+            <div (click)="picker.open()" class="flex aic relative">
+              <input [matDatepicker]="picker" class="input" formControlName="date" [max]="today" [min]="service.details.value.startDate">
+              <div (click)="$event.stopImmediatePropagation();" *ngIf="f['date'].value" class="clear pointer danger">
+                <i class='bx bx-x fs-23'></i>
+              </div>
+              <mat-datepicker-toggle [for]="picker" class="picker-icon" matSuffix></mat-datepicker-toggle>
+              <mat-datepicker #picker [disabled]="false"></mat-datepicker>
+            </div>
+          </div>
+          <input-error [control]="f['date']"/>
+        </div>
+        <div class="col-lg-12">
+          <input-label key="time" [control]="f['minutes']"/>
+          <select-time (calcMinutes)="setLogTime($event)" [hours]="hours" [minutes]="minutes" [withMargin]="false"></select-time>
+          <input-error [control]="f['minutes']"/>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div mat-dialog-actions align="end" dir="auto">
+    <div class="flex">
+      <button class="px-4 mr-2 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>{{ 'cancel' | translate }}</button>
+      <button mat-raised-button color="primary" class="px-5 fs-15" (click)="submit()" [disabled]="form.invalid || loading">
+        <submit-button text="add" [loading]="loading"></submit-button>
+      </button>
+    </div>
+  </div>
+</div>

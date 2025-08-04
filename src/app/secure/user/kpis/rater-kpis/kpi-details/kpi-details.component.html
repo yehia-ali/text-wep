@@ -1,0 +1,143 @@
+<layout class="dir pt-1 ">
+  <div class="kpi-details"*ngIf="kpiDetails && !loading">
+    <div class="kpi-details-header py-1 px-2 border-bottom flex aic jcsb">
+      <div class="flex aic gap-x-1">
+        <i class="bx bx-tachometer danger fs-25 flex pointer"></i>
+        <p class="fs-14 fw-500">{{kpiDetails.kpiName}}</p>
+      </div>
+      <div class="flex aic jce gap-x-1">
+        <button *ngIf="(!isCurrentDate) || (isCurrentDate && !kpiDetails.value) " type="submit" class="fs-12 btn rounded bg-primary white py-50 px-2 " (click)="addRate()">
+          {{(!kpiDetails.value ? 'evaluate' : 'evaluate') | translate}}
+        </button>
+        <i class="bx bx-history fs-25 flex pointer" (click)="getLogs(kpiDetails.id)"></i>
+      </div>
+    </div>
+    <div class="kpi-details-body px-2 pt-2 pb-2">
+      <div class="flex-grid mx-0 mb-2">
+        <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0">
+          <div class="flex aic">
+            <div class="fs-15 info-title flex aic gap-x-1 w-11r">
+              <i class="bx bx-user"></i>
+              <span class="fw-500">{{'assignee' | translate}}</span>
+            </div>
+            <div class="info-data">
+              <app-img-title [imgSize]="25" [userId]="kpiDetails.employeeId" [imgSrc]="kpiDetails.employeePic" [title]="kpiDetails.employeeName"/>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0">
+          <div class="flex aic">
+            <div class="fs-15 info-title flex aic gap-x-1 w-11r">
+              <i class="bx bx-user"></i>
+              <span class="fw-500">{{'rater' | translate}}</span>
+            </div>
+            <div class="info-data">
+              <app-img-title [imgSize]="25" [userId]="kpiDetails.raterId" [imgSrc]="kpiDetails.raterPic" [title]="kpiDetails.raterName"/>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0" >
+          <div class="flex aic">
+            <div class="fs-15 info-title flex aic gap-x-1 w-11r">
+              <i class="bx bx-buildings"></i>
+              <span class="fw-500">{{'department' | translate}}</span>
+            </div>
+            <div class="info-data">
+              {{kpiDetails.departmentName}}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0" >
+          <div class="flex aic">
+            <div class="fs-15 info-title flex aic gap-x-1 w-11r">
+              <i class="bx bx-category"></i>
+              <span class="fw-500">{{'category' | translate}}</span>
+            </div>
+            <div class="info-data">
+              {{kpiDetails.categoryName}}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0" >
+          <div class="flex aic">
+            <div class="fs-15 info-title flex aic gap-x-1 w-11r">
+              <i class="bx bx-calendar"></i>
+              <span class="fw-500">{{'date_from' | translate}}</span>
+            </div>
+            <div class="info-data">
+              {{kpiDetails.dateFrom | arabicDate}}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0" >
+          <div class="flex aic">
+            <div class="fs-15 info-title flex aic gap-x-1 w-11r">
+              <i class="bx bx-calendar"></i>
+              <span class="fw-500">{{'date_to' | translate}}</span>
+            </div>
+            <div class="info-data">
+              {{kpiDetails.dateTo | arabicDate}}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 mb-2 fs-16 pl-0" >
+          <div class="">
+            <div class="fs-15 info-title flex aic gap-x-1 w-11r">
+              <i class="bx bx-align-justify"></i>
+              <span class="fw-500">{{'description' | translate}}</span>
+            </div>
+            <div class="info-data">
+              <p [innerHTML]="kpiDetails.describtion"></p>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="card-shadow pt-3 rounded mb-2">
+        <chart-radial-bar [details]="kpiDetails"/>
+      </div>
+      <div class=" mb-2 px-2 py-1 rounded border-danger bg-light-danger" *ngIf="kpiDetails.evaluationfrequency > 0 ">
+        {{('kpi_repeat_message' | translate) + ' - ' + evaluationfrequency[kpiDetails.evaluationfrequency - 1].name}}
+      </div>
+    </div>
+  </div>
+  <div class="py-5" *ngIf="loading" >
+    <loading [centerd]="true"/>
+  </div>
+</layout>
+
+<info-sidebar [open]="historyIsOpen" *ngIf="historyIsOpen">
+  <ng-container header>
+    <h2>{{ 'history' | translate }}</h2>
+  </ng-container>
+  <ng-container content>
+    <div class="flex aic jcc w-100" *ngIf="historyloading" >
+      <loading [centerd]="true"/>
+    </div>
+
+    <div class="timeline ml-3 mb-4" *ngIf="itemLogs.length > 0">
+      <ng-container *ngFor="let item of itemLogs">
+          <div class="history relative">
+              <div class="date mt-1 fs-15">
+                  {{item.createdDate | arabicDate}}
+              </div>
+              <div class="log mt-1">
+                  <div  class="mb-2">
+                      <p class="fs-12 simibold mb-50">{{enLanguage ? item.actionEn : item.actionAr}}</p>
+                      <p class="muted fs-12 simibold">{{item?.createdDate | arabicTime}}</p>
+                  </div>
+              </div>
+          </div>
+      </ng-container>
+      <div class="relative h-100" *ngIf="itemLogs?.length == 0 && !historyloading">
+        <not-found/>
+      </div>
+  </div>
+  </ng-container>
+</info-sidebar>

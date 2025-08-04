@@ -1,0 +1,39 @@
+<layout>
+  <div class="h-100" magicScroll="">
+    <table *ngIf="drafts && drafts.length > 0 && !loading" class="table w-100">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left pl-4">{{'title' | translate}}</th>
+        <th class="text-center"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="border-bottom pointer" *ngFor="let draft of drafts | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy"
+          (click)="createTask(draft)">
+<!--      <tr class="border-bottom pointer" *ngFor="let draft of drafts | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy">-->
+
+        <!--    title    -->
+        <td class="pl-4">
+          <div class="flex aic bold">
+            <priority [priority]="draft?.priority" class="mr-1"></priority>
+
+            <!-- title -->
+            <span *ngIf="draft?.title?.length! <= 70">{{draft?.title}}</span>
+
+            <!-- trimmed title -->
+            <span *ngIf="draft?.title?.length! > 70" [matTooltip]="draft.title">{{draft?.title | slice:0:70}}...</span>
+          </div>
+        </td>
+
+        <td>
+          <div class="flex-center">
+            <i class='bx bx-trash danger fs-23 px-2' (click)="$event.stopImmediatePropagation(); deleteDraft(draft)"></i>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <not-found *ngIf="drafts && drafts.length == 0 && !loading"></not-found>
+    <loading *ngIf="loading"></loading>
+  </div>
+</layout>

@@ -1,0 +1,75 @@
+<div class="p-2">
+  <div class="flex-grid jcsb">
+    <div class="col-lg-3 mb-2">
+      <div class="ar-name">
+        <all-shifts [selectedItem]="shiftId" [label]="'workplans'" (valueChanged)="changeShift($event)"></all-shifts>
+      </div>
+    </div>
+
+    <div class="col-lg-6 flex aie jce mb-2" *ngIf="saveUserShift">
+      <button
+        mat-raised-button
+        color="primary"
+        class="px-5 fs-15"
+        (click)="addUserToShift()"
+      >
+        <submit-button [text]="'save'" [loading]="loading"></submit-button>
+      </button>
+    </div>
+  </div>
+  <div class="table-container">
+    <table class="w-100 rounded">
+      <thead>
+        <tr class="border-bottom fs-12 simibold">
+          <th class="py-1 text-left pl-1" style="width: 16%">{{ "workplan_table" | translate }}</th>
+          <th class="py-1 text-center pl-1" style="width: 12%">{{ "sunday" | translate }}</th>
+          <th class="py-1 text-center pl-1" style="width: 12%">{{ "monday" | translate }}</th>
+          <th class="py-1 text-center pl-1" style="width: 12%">{{ "tuesday" | translate }}</th>
+          <th class="py-1 text-center pl-1" style="width: 12%">{{ "wednesday" | translate }}</th>
+          <th class="py-1 text-center pl-1" style="width: 12%">{{ "thursday" | translate }}</th>
+          <th class="py-1 text-center pl-1" style="width: 12%">{{ "friday" | translate }}</th>
+          <th class="py-1 text-center pl-1" style="width: 12%">{{ "saturday" | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+       
+        <tr class=" ">
+          <td>
+            {{ "working_hours" | translate }}
+          </td>
+          <td *ngFor="let day of allDays" class="text-center">
+            <div class="text-center">
+              <mat-checkbox
+                (change)="weekendChanged(day)"
+                [checked]="day.isWeekEnd"
+                [value]="day.weekDay"
+                [disabled]="day.isDayAdded"
+                color="primary"
+              >
+                {{ 'weekend_leave'  | translate }}
+              </mat-checkbox>
+            </div>
+            <i
+              *ngIf="!day.isDayAdded"
+              (click)="addWorkingHours()"
+              class="bx bx-plus bg-gray fs-25 rounded pointer py-25 w-100 text-center"
+            ></i>
+            <span *ngIf="day.isDayAdded && !day.isWeekEnd">
+              {{(day.checkInTime | arabicTime) + ' - ' + ((day.checkOutTime | arabicTime))}}
+            </span>
+            <span *ngIf="day.isWeekEnd">{{'weekend' | translate}}</span>
+          </td>
+        </tr>
+        <tr class="">
+          <td >{{ "flexible_working_hours" | translate }}</td>
+          <td *ngFor="let day of allDays" class="text-center py-1">
+          <span *ngIf="!day.isDayAdded">00 - 00</span>
+          <span *ngIf="day.isDayAdded">
+            {{day.checkInAllowance + ("m" | translate) + ' - ' + day.checkOutAllowance + ("m" | translate)}}
+          </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

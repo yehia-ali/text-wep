@@ -1,0 +1,14 @@
+<div
+  class="card flex app-dropdown app-dropdown-small icon relative flex aic {{startDropDown ? 'start-drop-down' : 'end-drop-down'}}"
+  [ngClass]="{ 'app-dropdown-small': small, 'app-dropdown-icon': icon }">
+  <p-dropdown
+    [options]="items"
+    [(ngModel)]="selectedValue"
+    [filter]="true"
+    optionLabel="title"
+    (ngModelChange)="onChange($event)"
+    (onFilter)="search($event)"
+    filterBy="title"
+    [placeholder]="title | translate" />
+    <i class="bx {{iconName}} absolute dropdown-icon"></i>
+</div>

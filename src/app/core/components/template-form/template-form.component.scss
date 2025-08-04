@@ -1,0 +1,33 @@
+
+.border-black {
+  border: 1px solid #1f1f1f;
+  min-width: 14rem !important;
+}
+
+.submit {
+  width: 13rem !important;
+}
+
+.input-container {
+  overflow: hidden;
+  input {
+    padding-inline-end: 6.5rem;
+  }
+  .add-todo {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+    height: 100%;
+    width: 5rem;
+  }
+}
+.remove-todo {
+  position: relative;
+  top: 4px;
+}
+.ng-option-selected{
+  .input,.bx{
+    color : #f0f0f0 !important;
+    border-color: #f0f0f0 !important;
+  }
+}

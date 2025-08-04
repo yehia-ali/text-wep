@@ -1,0 +1,67 @@
+<layout>
+  <div class="profile-settings p-3 h-100" magicScroll="">
+    <div class="update-image mb-4 inline-block" [ngClass]="{'unclickable': !isAdmin}">
+      <upload-image [img]="company?.logo" (file)="updateImage($event)" [updateable]="isAdmin"></upload-image>
+    </div>
+
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-2">
+        <!--  name  -->
+        <div class="col-xl-6">
+          <input-label [control]="f['name']" key="company_name" [maxLength]="50"></input-label>
+          <input type="text" class="input" formControlName="name" maxlength="50"/>
+          <input-error [control]="f['name']"></input-error>
+        </div>
+
+        <!--  countryId -->
+        <div class="col-xl-6">
+          <input-label [control]="f['countryId']" key="country"></input-label>
+          <ng-select [items]="countries" appendTo="body" id='basicSelect1' class="select-input" [readonly]="!isAdmin" formControlName='countryId' bindLabel="enName" bindValue="id">
+            <ng-template ng-option-tmp ng-label-tmp let-item="item">
+              <div class="flex aic">
+                <img [src]="api + item.countryFlag" width="25" alt="" class="mr-1">
+                <span>{{ lang == 'en' ? item.enName : item.arName }}</span>
+              </div>
+            </ng-template>
+          </ng-select>
+          <input-error [control]="f['countryId']"></input-error>
+        </div>
+
+        <!--  hrEmail -->
+        <div class="col-xl-6">
+          <div class="flex aic jcsb">
+            <input-label [control]="f['hrEmail']" key="hr_email"></input-label>
+          </div>
+          <input type="text" class="input" formControlName="hrEmail">
+          <input-error [control]="f['hrEmail']"></input-error>
+        </div>
+
+        <!--  numberOfEmployees -->
+        <div class="col-xl-6">
+          <input-label [control]="f['numberOfEmployees']" key="number_of_employees"></input-label>
+          <ng-select
+            [items]="employees"
+            [readonly]="!isAdmin"
+            bindLabel="text"
+            bindValue="value"
+            appendTo="body"
+            [multiple]="false"
+            [closeOnSelect]="true"
+            [clearSearchOnAdd]="true"
+            formControlName="numberOfEmployees"
+            class="select-input"
+          >
+          </ng-select>
+          <input-error [control]="f['numberOfEmployees']"></input-error>
+        </div>
+      </div>
+      <div class="flex aic jcfe mt-2" *ngIf="isAdmin">
+        <button class="bg-primary white clickable-btn rounded py-1 submit" [disabled]="form.invalid || loading"
+                (click)="submit()">
+          <submit-button [loading]="loading" text="save"></submit-button>
+        </button>
+      </div>
+    </form>
+  </div>
+
+</layout>

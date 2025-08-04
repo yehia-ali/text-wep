@@ -1,0 +1,32 @@
+<table>
+  <thead>
+  <tr>
+    <th colspan="7" class="pb-3">
+      <div class="flex aic jcc gap-x-3">
+        <button (click)="previousMonth()" class="clickable-btn line-height left" [disabled]="disablePreviousMonth">
+          <img src="assets/images/icons/chev-left.svg" alt="chev left icon" [ngClass]="{'disabled-img': disablePreviousMonth}">
+        </button>
+        <p class="current-date">{{currentDate | arabicDate:'short'}}</p>
+        <button (click)="nextMonth()" class="clickable-btn line-height right">
+          <img src="assets/images/icons/chev-right.svg" alt="chev right icon">
+        </button>
+      </div>
+    </th>
+  </tr>
+  <tr>
+    <th *ngFor="let day of ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']">{{ day | translate}}</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let week of monthData">
+    <td *ngFor="let day of week">
+      <div class="flex-column aic jcc">
+        <p class="pointer" (click)="!day.isDisabledDay && selectDate(day.day); day.isDisabledDay && cantSelect()"
+           [ngClass]="{'bg-primary white rounded-50 selected-day bold': day.isSelectedDay,'muted lighter': day.isDisabledDay, 'bold': !day.isDisabledDay}">
+          {{day.day | arabicNumbers}}</p>
+        <p class="dot bg-primary rounded-50 mt-25" *ngIf="day.isCurrentDay"></p>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</table>

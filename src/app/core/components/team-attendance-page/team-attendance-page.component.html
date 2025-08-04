@@ -1,0 +1,229 @@
+<div class="attendance h-100 relative">
+  <div class="filters row justify-content-between align-items-end mb-2">
+    <div class="col-lg-3">
+      <div class="d-flex align-items-center gap-5">
+          <search (valueChanged)="service.search.next($event) ; service.page.next(1)" [key]="service.search.value" [placeholder]="'employee_name_or_code'"/>
+          <date-filter [clearable]="false" key="date" (valueChanged)="dateChanged($event)" [selectedValue]="service.startDateFrom.value"/>
+
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <p class="d-flex align-items-center gap-2">
+        <span> {{'last_update' | translate}} : </span>
+        <span>{{cacheTime | arabicDate}} - {{cacheTime | arabicTime}}</span>
+        <i class="bx bx-refresh primary fs-18 pointer" 
+           [ngClass]="{'bx-spin': loading && !isDataCached}" 
+           (click)="refreshBtn()" 
+           [title]="isDataCached ? 'Refresh data' : 'Data is being refreshed'">
+        </i>
+        <span *ngIf="!isDataCached && loading" class="text-muted fs-12">(Refreshing...)</span>
+      </p>
+    </div>
+    <div class="col-lg-1 text-right">
+      <button
+        (click)="exportToExcel()"
+        mat-button
+        color="primary"
+        mat-raised-button
+        [disabled]="loadingExport"
+      >
+        <div class="d-flex align-items-center gap-2">
+          <div class="spinner-container d-flex align-items-center" *ngIf="loadingExport">
+            <div class="spinner-border text-primary" role="status">
+            </div>
+          </div>
+          {{ "export" | translate }}
+
+        </div>
+      </button>
+    </div>
+  </div>
+  <div class="mb-1">
+    <team-dashboard/>
+  </div>
+  <ng-container content *ngIf="attendance$ | async as attendance">
+    <table [ngClass]="{'h-100': attendance.length == 0 || loading}" class="table w-100 relative" id="attendance"  *ngIf="attendance.length > 0 && !loading">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">{{ 'employee' | translate }}</th>
+        <th class="text-left">{{ 'employee_code' | translate }}</th>
+        <th class="text-left">{{ 'job_title' | translate }}</th>
+        <th class="text-left">{{ 'joining_date' | translate }}</th>
+        <th class="text-left">{{ 'department' | translate }}</th>
+        <th class="text-left">{{ 'manager' | translate }}</th>
+        <th class="text-left">{{ 'check-in' | translate }}</th>
+        <th class="text-left">{{ 'check-out' | translate }}</th>
+        <th>{{ 'total_hours' | translate }}</th>
+        <th>{{ 'notes' | translate }}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="attendance.length > 0 && !loading">
+        <tr *ngFor="let item of attendance | paginate: {itemsPerPage: limit, currentPage: page, totalItems: totalItems}; trackBy: trackBy" class="border-bottom pointer">
+        <td>
+          <div class="flex aic jcfs">
+            <app-img-title [title]="item.userName" [imgSrc]="item.imageUrl" [userId]="item.userId" />
+          </div>
+        </td>
+        <td class="text-left">{{ item.employeeCode || '-' }}</td>
+        <td class="text-left">{{ item.jobTitle || '-' }}</td>
+        <td class="text-left">{{ item.joiningDate | arabicDate }}</td>
+        <td class="text-left">
+          {{ item.department || '-' }}
+
+        </td>
+
+        <td>
+          <div class="flex aic jcfs" *ngIf="item.managerUserName">
+            <app-img-title [title]="item.managerUserName" [imgSrc]="item.managerImageUrl" [userId]="item.managerUserId" />
+          </div>
+          <span class="" *ngIf="!item.managerUserName">-</span>
+        </td>
+        <!-- Normal Check In  -->
+        <ng-container *ngIf="item.stauts != 4 && item.stauts != 3 && item.stauts != 1 && item.stauts != 2">
+        <td>
+          <p class="fs-13" *ngIf="!!item.checkIn" [ngClass]="{'danger': item.checkIn.isLate}">{{ item.checkIn.time ? (item.checkIn.time | arabicTime) : '-' }}</p>
+          <p *ngIf="!item.checkIn">-</p>
+        </td>
+        <td>
+          <p class="fs-13" *ngIf="item.checkOut" [ngClass]="{'danger': item.checkOut.isLate}">{{ item.checkOut.time ? (item.checkOut.time | arabicTime) : '-' }}</p>
+          <p *ngIf="!item.checkOut">-</p>
+        </td>
+        <td>
+          <p class="fs-13" *ngIf="!!item.totalHours" [ngClass]="{'danger': !item.totalHours.isEqual}">{{ item.totalHours.time || '-' }}</p>
+          <p class="fs-13" *ngIf="!item.totalHours">-</p>
+        </td>
+        <td>
+          <p class="fs-13">-</p>
+        </td>
+       </ng-container>
+       <!-- weekend chekin -->
+      <ng-container *ngIf="item.checkIn && item.stauts == 2">
+        <td>
+          <p class="fs-13" *ngIf="!!item.checkIn" [ngClass]="{'warning': item.checkIn.isLate}">{{ item.checkIn.time ? (item.checkIn.time | arabicTime) : '-' }}</p>
+          <p *ngIf="!item.checkIn">-</p>
+        </td>
+        <td>
+          <p class="fs-13" *ngIf="item.checkOut" [ngClass]="{'warning': item.checkOut.isLate}">{{ item.checkOut.time ? (item.checkOut.time | arabicTime) : '-' }}</p>
+          <p *ngIf="!item.checkOut">-</p>
+        </td>
+        <td>
+          <p class="fs-13" *ngIf="!!item.totalHours" [ngClass]="{'warning': !item.totalHours.isEqual}">{{ item.totalHours.time || '-' }}</p>
+          <p class="fs-13" *ngIf="!item.totalHours">-</p>
+        </td>
+        <td>
+          <span class="warning"> {{ item.reason | translate }}</span>
+        </td>
+      </ng-container>
+       <!-- weekend chekin -->
+      <ng-container *ngIf="item.checkIn && item.stauts == 3">
+        <td>
+          <p class="fs-13" *ngIf="!!item.checkIn">{{ item.checkIn.time ? (item.checkIn.time | arabicTime) : '-' }}</p>
+          <p *ngIf="!item.checkIn">-</p>
+        </td>
+        <td>
+          <p class="fs-13" *ngIf="item.checkOut">{{ item.checkOut.time ? (item.checkOut.time | arabicTime) : '-' }}</p>
+          <p *ngIf="!item.checkOut">-</p>
+        </td>
+        <td>
+          <p class="fs-13" *ngIf="!!item.totalHours">{{ item.totalHours.time || '-' }}</p>
+          <p class="fs-13" *ngIf="!item.totalHours">-</p>
+        </td>
+        <td  class="py-0">
+          <div class="flex-center gap-x-1 bg-light-blue w-100 py-75 rounded">
+            <p>{{ 'weekend_leave' | translate }}</p>
+          </div>
+        </td>
+      </ng-container>
+
+        <ng-container *ngIf="item.stauts == 1 && !item.checkIn">
+          <td class="py-0">-</td>
+          <td class="py-0">-</td>
+          <td class="py-0">-</td>
+          <td class="py-0">
+            <div class="flex-center gap-x-1 bg-light-primary white w-100 py-75 rounded">
+              <p>{{ item.reason | translate }}</p>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container *ngIf="item.stauts == 1 && item.checkIn">
+          <td>
+            <p class="fs-13" *ngIf="!!item.checkIn">{{ item.checkIn.time ? (item.checkIn.time | arabicTime) : '-' }}</p>
+            <p *ngIf="!item.checkIn">-</p>
+          </td>
+          <td>
+            <p class="fs-13" *ngIf="item.checkOut">{{ item.checkOut.time ? (item.checkOut.time | arabicTime) : '-' }}</p>
+            <p *ngIf="!item.checkOut">-</p>
+          </td>
+          <td>
+            <p class="fs-13" *ngIf="!!item.totalHours">{{ item.totalHours.time || '-' }}</p>
+            <p class="fs-13" *ngIf="!item.totalHours">-</p>
+          </td>
+          <td class="py-0">
+            <div class="flex-center gap-x-1 bg-light-primary white w-100 py-75 rounded">
+              <p>{{ item.reason | translate }}</p>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container *ngIf="item.stauts == 2 && !item.checkIn">
+          <td class="py-0">-</td>
+          <td class="py-0">-</td>
+          <td class="py-0">-</td>
+          <td  class="py-0">
+            <div class="flex-center gap-x-1 bg-light-warning w-100 py-75 rounded">
+              <p>{{ item.reason | translate }}</p>
+            </div>
+          </td>
+        </ng-container>
+
+
+        <ng-container *ngIf="item.stauts == 3 && !item.checkIn">
+          <td class="py-0">-</td>
+          <td class="py-0">-</td>
+          <td class="py-0">-</td>
+          <td  class="py-0">
+            <div class="flex-center gap-x-1 bg-light-blue w-100 py-75 rounded">
+              <p>{{ 'weekend_leave' | translate }}</p>
+            </div>
+          </td>
+        </ng-container>
+
+
+        <ng-container *ngIf="item.stauts == 4">
+          <td class="py-0">-</td>
+          <td class="py-0">-</td>
+          <td class="py-0">-</td>
+          <td   class="py-0">
+            <div class="flex-center gap-x-1 bg-light-danger w-100 py-75 rounded px-1">
+              <img src="assets/images/attendance/close.svg" alt="close icon">
+              <p>{{ 'absent' | translate }}</p>
+            </div>
+          </td>
+        </ng-container>
+
+      </tr>
+      </tbody>
+    </table>
+    <not-found *ngIf="attendance.length == 0 && !loading"></not-found>
+  </ng-container>
+  <loading *ngIf="loading"></loading>
+  <ng-container content *ngIf="attendance$ | async as attendance">
+
+    <div class="fixed-pagination pagination-content flex aic jcsb py-1 bg-white border-top border-bottom px-2 mt-2" *ngIf="attendance.length > 0 && !loading">
+      <div class="flex aic gap-x-1">
+        <p class="fs-12 simibold mb-0">{{ 'pagination_per_page' | translate }}</p>
+        <input type="number" style="width:50px" class="input ml-75 limit text-center py-50 px-0" min="1" [(ngModel)]="limit" (ngModelChange)="changeLimit()" aria-label="Items per page">
+        <p class="ml-50 primary fs-12 mb-0">{{ 'record' | translate }}</p>
+      </div>
+      <pagination-controls
+        (pageChange)="pageChanged($event)"
+        [maxSize]="7"
+        [directionLinks]="true"
+        [previousLabel]="'previous' | translate"
+        [nextLabel]="'next' | translate"
+      >
+      </pagination-controls>
+      <p class="fs-12 simibold pr-3 mb-0">{{ 'pagination_total_records' | translate }} <span class="primary">{{ totalItems | arabicNumbers }} {{ 'record' | translate }}</span></p>
+    </div>
+    </ng-container>
+</div>

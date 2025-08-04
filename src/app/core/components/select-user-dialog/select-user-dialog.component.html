@@ -1,0 +1,107 @@
+<div class="select-users" dir="auto">
+<div class="flex aic jcsb pt-2 px-2">
+  <div class="flex aic">
+    <p class="fs-18 simibold px-0 py-0 mr-1">{{ 'users' | translate }}</p>
+    <ng-container *ngIf="!data?.group">
+      <search [width]="'w-20r'" [hideLabel]="true" [classes]="'py-50 pr-1 fs-10 mr-1'" [placeholder]="'name'" (valueChanged)="filter($event, service.search)"/>
+      <search [width]="'w-20r'" [hideLabel]="true" [classes]="'py-50 pr-1 fs-10'" [placeholder]="'employee_code'" (valueChanged)="filter($event, service.employeeCode)"/>
+    </ng-container>
+  </div>
+
+  <ng-container *ngIf="multi && !data?.group">
+    <a (click)="selectAllUsers()" class="btn rounded bg-primary white py-50 px-2 fs-12">
+      {{ allSelected ? ('un_select_all' | translate) : ('select_all' | translate)}}
+    </a>
+  </ng-container>
+</div>
+  <div class="mt-1 px-3 dir">
+    <div class="flex aic gap-x-1" *ngIf="!data?.isTask">
+      <app-departments-filter (valueChanged)="filter($event, service.departments)" [labelTitle]="'department_filter'" [tree]="true"></app-departments-filter>
+      <app-users-filter (valueChanged)="filter($event, service.managers)" [manager]="true" [multi]="true" [labelTitle]="'manager_filter'"></app-users-filter>
+      <app-places-filter (valueChanged)="filter($event, service.places)" [tree]="true" [labelTitle]="'place_filter'"></app-places-filter>
+      <app-levels-filter (valueChanged)="filter($event, service.levels)" [tree]="true" [labelTitle]="'level_filter'"></app-levels-filter>
+      <app-job-title-filter (valueChanged)="filter($event, service.jobTitles)" [tree]="true" [labelTitle]="'job_title_filter'"></app-job-title-filter>
+    </div>
+    <ng-container *ngIf="data?.isTask">
+      <ng-container *ngIf="customSpaceId != '98989'">
+        <div class="flex aic gap-x-1" *ngIf="!data?.group">
+          <app-departments-filter (valueChanged)="filter($event, service.departments)" [labelTitle]="'department_filter'" [tree]="true"></app-departments-filter>
+          <app-users-filter (valueChanged)="filter($event, service.managers)" [manager]="true" [multi]="true" [labelTitle]="'manager_filter'"></app-users-filter>
+          <app-places-filter (valueChanged)="filter($event, service.places)" [tree]="true" [labelTitle]="'place_filter'"></app-places-filter>
+          <app-levels-filter (valueChanged)="filter($event, service.levels)" [tree]="true" [labelTitle]="'level_filter'"></app-levels-filter>
+          <app-job-title-filter (valueChanged)="filter($event, service.jobTitles)" [tree]="true" [labelTitle]="'job_title_filter'"></app-job-title-filter>
+        </div>
+        <div class="flex aic gap-x-1 mt-1" *ngIf="data?.group && !isEdit">
+          <app-departments-filter [selectedValue]="selectedDepartments" (valueChanged)="getSelectedDepartments($event)" [tree]="true" [labelTitle]="'select_department_users'"></app-departments-filter>
+          <app-users-filter [selectedValue]="selectedManagers" (valueChanged)="getSelectedManagers($event)" [manager]="true" [multi]="true" [labelTitle]="'select_manager_users'"></app-users-filter>
+          <app-places-filter [selectedValue]="selectedPlaces" (valueChanged)="getSelectedPlaces($event)" [tree]="true" [labelTitle]="'select_place_users'"></app-places-filter>
+          <app-levels-filter [selectedValue]="selectedLevels" (valueChanged)="getSelectedLevels($event)" [tree]="true" [labelTitle]="'select_level_users'"></app-levels-filter>
+          <app-job-title-filter [selectedValue]="selectedJobTitles" (valueChanged)="getSelectedJobTitles($event)" [labelTitle]="'select_job_title'" [tree]="true"></app-job-title-filter>
+        </div>
+      </ng-container>
+      <div class="flex aic gap-x-1 mt-1" *ngIf="customSpaceId == '98989'">
+        <app-users-filter [selectedValue]="selectedManagers" (valueChanged)="getSelectedManagers($event)" [manager]="true" [multi]="true" [labelTitle]="'select_manager_users'"></app-users-filter>
+        <app-levels-filter [selectedValue]="selectedLevels" (valueChanged)="getSelectedLevels($event)" [tree]="true" [labelTitle]="'select_level_users'"></app-levels-filter>
+        <app-job-title-filter [selectedValue]="selectedJobTitles" (valueChanged)="getSelectedJobTitles($event)" [labelTitle]="'select_job_title'" [tree]="true"></app-job-title-filter>
+      </div>
+    </ng-container>
+    <!-- <departments (valueChanged)="filter($event, service.departments)"/>
+    <managers (valueChanged)="filter($event, service.managers)"/> -->
+  </div>
+
+  <!-- <div class="px-3 mt-1" *ngIf="data?.isTask">
+    <departments label="select_department_users" [selectedDepartment]="selectedDepartments" (valueChanged)="getSelectedDepartments($event)"/>
+  </div> -->
+  <ng-container *ngIf="!data?.group">
+    <ng-container *ngIf="selectedUsers$ | async as allSelectedUsers">
+      <div class="selected-users flex aic gap-x-1 mt-1 scrolling px-3" *ngIf="allSelectedUsers.length > 0">
+        <div class="selected-user bg-light-primary-2 px-50 py-50 rounded flex aic" *ngFor="let user of allSelectedUsers">
+          <!-- <user-image [img]="user.imageUrl" [dim]="30"></user-image> -->
+          <div class="ml-75">
+            <p class="fs-13 line-height">{{ user.name.length > 15 ? (user.name | slice:0:15) + '...' : user.name }}</p>
+            <!-- <p class="muted fs-12 line-height ">{{ user.jobTitle }}</p> -->
+          </div>
+          <i class='bx bx-x danger ml-1 pointer' (click)="unSelectUser(user)"></i>
+        </div>
+      </div>
+    </ng-container>
+    <div mat-dialog-content class="relative" id="select-user-content" [ngClass]="{'flex-center': users.length == 0}">
+      <table *ngIf="users.length > 0" class="w-100 table">
+        <thead class="border bg-gray">
+        <tr>
+          <th class="text-left">
+
+            {{ 'code' | translate }}</th>
+          <th class="text-left">{{ 'user' | translate }}</th>
+          <th class="text-left job-title">{{ 'job_title' | translate }}</th>
+          <th class="text-left">{{ 'manager' | translate }}</th>
+          <th class="text-left">{{ 'department' | translate }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="border pointer" (click)="selectUser(user)" [ngClass]="{'bg-primary white': user.isSelected}" *ngFor="let user of users">
+          <td class="fs-13 text-left">{{ user.employeeCode || '-' }}</td>
+          <td class="fs-14 flex aic jcfs text-left gap-x-1">
+            <user-image [img]="user.imageUrl" [dim]="30"></user-image>
+            {{ user.name.length > 20 ? (user.name | slice:0:20) + '...' : user.name }}
+          </td>
+          <td class="fs-13 text-left">{{ user.jobTitle || '-' }}</td>
+          <td class="fs-13 text-left"> {{ user.name.length > 20 ? (user.name | slice:0:20) + '...' : user.name }}</td>
+          <td class="fs-13 text-left">{{ user.departmentName }}</td>
+        </tr>
+        </tbody>
+      </table>
+      <not-found class="a-center" *ngIf="users && users.length == 0 && !loading"></not-found>
+      <loading *ngIf="loading"></loading>
+    </div>
+  </ng-container>
+  <div class="mt-2" mat-dialog-actions align="end" dir="auto">
+    <div class="flex gap-x-1">
+      <button class="px-4 dark-color clickable-btn rounded cancel-btn" [mat-dialog-close]="{changed: false}">{{ 'cancel' | translate }}</button>
+      <button mat-raised-button color="primary" class="px-4 fs-15" [mat-dialog-close]="{changed: true, users: selectedUsers, selectedDepartments , selectedManagers , selectedJobTitles , selectedPlaces , selectedLevels }">{{ 'save' | translate }}
+        ({{ (selectedUsers.length + selectedDepartments?.length + selectedManagers?.length + selectedPlaces?.length + selectedLevels?.length + selectedJobTitles?.length) | arabicNumbers }})
+      </button>
+    </div>
+  </div>
+
+</div>

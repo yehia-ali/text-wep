@@ -1,0 +1,82 @@
+<div class="edit-profile" dir="auto">
+  <h3>{{'edit_profile' | translate}}</h3>
+
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-1">
+        <div class="col-lg-6 name">
+          <input-label [control]="f['name']" [maxLength]="30" key="full_name"/>
+          <input class="input" formControlName="name" maxlength="30" type="text">
+          <input-error [control]="f['name']"/>
+        </div>
+        <div class="col-lg-6 job-title">
+          <input-label [control]="f['jobTitle']" [maxLength]="100" key="job_title"/>
+          <input class="input" formControlName="jobTitle" maxlength="100" type="text">
+          <input-error [control]="f['jobTitle']"/>
+        </div>
+        <div class="col-lg-12 -summary">
+          <input-label [control]="f['summary']" [maxLength]="250" key="summary"/>
+          <textarea class="input d-block" rows="4" formControlName="summary" maxlength="250" type="text"></textarea>
+          <input-error [control]="f['summary']"/>
+        </div>
+        <div class="col-lg-12 public mb-1">
+          <div class="flex aic jcsb">
+            <label class="fs-14">{{'public_account' | translate}}</label>
+            <mat-slide-toggle color="primary" formControlName="isPublic"></mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+      <div class="flex-grid gap-y-1">
+        <div class="col-lg-6 category">
+          <input-label [control]="f['category']" key="category"/>
+          <ng-select [bindLabel]="language == 'ar' ? 'arName' : 'enName'" [clearable]="false" [items]="categories()" appendTo="body" bindValue="id" formControlName="category">
+          </ng-select>
+          <input-error [control]="f['category']"/>
+        </div>
+        <div class="col-lg-6 sub-category">
+          <input-label [control]="f['serviceSubCategoryId']" key="sub_category"/>
+          <ng-select [bindLabel]="language == 'ar' ? 'arName' : 'enName'" [clearable]="false" [items]="subCategories" appendTo="body" bindValue="id" formControlName="serviceSubCategoryId">
+          </ng-select>
+          <input-error [control]="f['serviceSubCategoryId']"/>
+        </div>
+        <div class="col-sm-6 session-duration">
+          <input-label [control]="f['sessionDuration']" key="session_duration"/>
+          <div class="flex aic gap-x-1 w-100">
+            <input [(ngModel)]="sessionHours" [ngModelOptions]="{standalone: true}" class="input" min="0" type="number">
+            <div class="input w-auto line-height">{{'h' | translate}}</div>
+            <input [(ngModel)]="sessionMinutes" [ngModelOptions]="{standalone: true}" class="input ml-2" min="0" type="number">
+            <div class="input w-auto line-height">{{'m' | translate}}</div>
+          </div>
+          <input-error [control]="f['sessionDuration']"/>
+        </div>
+        <div class="col-sm-6 buffer-duration">
+          <input-label [control]="f['bufferDuration']" key="buffer_duration"/>
+          <div class="flex aic gap-x-2 w-100">
+            <input [(ngModel)]="bufferHours" [ngModelOptions]="{standalone: true}" class="input" min="0" type="number">
+            <div class="input w-auto line-height">{{'h' | translate}}</div>
+            <input [(ngModel)]="bufferMinutes" [ngModelOptions]="{standalone: true}" class="input ml-2" min="0" type="number">
+            <div class="input w-auto line-height">{{'m' | translate}}</div>
+          </div>
+          <input-error [control]="f['bufferDuration']"/>
+        </div>
+        <div class="col-lg-6 session-fees">
+          <input-label [control]="f['sessionFees']" key="session_fees"/>
+          <div class="flex aic gap-x-2 w-100">
+            <input class="input" formControlName="sessionFees" min="0" type="number">
+            <ng-select [(ngModel)]="currencyId" [clearable]="false" [items]="currencies$ | async" [ngModelOptions]="{standalone: true}" appendTo="body" bindLabel="currencyCode" bindValue="id"
+                       class="box">
+            </ng-select>
+          </div>
+          <input-error [control]="f['sessionFees']"/>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div align="end" mat-dialog-actions>
+    <button (click)="submit()" [disabled]="form.invalid || loading || (f['isPublic'].value && ((!sessionMinutes && !sessionHours)))" class="border border-dark px-3 mr-1 shadow-0"
+            color="primary" mat-raised-button>{{'save' | translate}}</button>
+    <button class="border border-dark px-2 shadow-0" mat-dialog-close="" mat-raised-button>{{'cancel' |
+      translate}}</button>
+  </div>
+</div>

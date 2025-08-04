@@ -1,0 +1,32 @@
+<div class="schedule-meeting-card p-2 flex aic jcsb primary gap-x-1">
+  <div class="img">
+    <img src="assets/images/icons/meet.svg" alt="meeting icon">
+  </div>
+  <div class="start flex aic gap-x-2">
+    <div class="img">
+      <img src="assets/images/icons/primary-meet.svg" alt="solid meet icon" width="50">
+    </div>
+    <div class="content">
+      <h3 class="line-height">{{'get_your_meeting' | translate}}</h3>
+      <p class="fs-15">{{'stremline' | translate}}</p>
+    </div>
+  </div>
+  <div class="end flex aic gap-x-3">
+    <div class="flex aic gap-x-1 pointer bg-primary white p-1 rounded" routerLink="/meeting/meet">
+      <div class="img">
+        <img src="assets/images/icons/meeting.svg" alt="meeting icon" width="25">
+      </div>
+      <h4>{{'start_meeting' | translate}}</h4>
+    </div>
+    <div class="flex aic pointer border-primary p-1 rounded" (click)="joinMeeting()">
+      <div class="line-height mr-50 fs-25">+</div>
+      <h4>{{'new_meeting' | translate}}</h4>
+    </div>
+    <div class="flex aic pointer border-primary p-1 rounded" (click)="scheduleMeeting()">
+      <div class="img mr-50">
+        <img src="assets/images/icons/primary-calendar.svg" alt="meeting icon" width="25">
+      </div>
+      <h4>{{'schedule_meeting' | translate}}</h4>
+    </div>
+  </div>
+</div>

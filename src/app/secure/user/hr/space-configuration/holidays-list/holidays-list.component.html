@@ -1,0 +1,62 @@
+
+<div class="py-1">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <div class="col-lg-6 text-left d-flex align-items-center gap-x-1">
+      <h3 class="simibold black">{{ "holidays" | translate }}</h3>
+      <year-filter 
+      [classes]="'w-12r'"
+      [showLabel]="false"
+      [selectedDate]="year"
+      (onChange)="service.year.next($event); service.hasChanged.next(true)">
+    </year-filter>
+    </div>
+    <div class="col-lg-6 text-right">
+      <button
+        (click)="addHoliday()"
+        class="bg-primary white py-1 px-2 border-primary rounded pointer"
+        mat-button
+      >
+        {{ "add_holiday" | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+
+    <div class="table-container mx-1" *ngIf="holidays.length > 0 && !loading">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">{{ 'arabic_name' | translate }}</th>
+            <th class="text-left py-1">{{ 'english_name' | translate }}</th>
+            <th class="text-left py-1">{{ 'teamKpis.start_date' | translate }}</th>
+            <th class="text-left py-1">{{ 'teamKpis.end_date' | translate }}</th>
+            <th class="text-left py-1">{{ 'days_number' | translate }}</th>
+            <th class="text-left py-1">{{ 'action' | translate }}</th>
+          </tr>
+        </thead>
+
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of holidays" >
+            <td class="text-left">{{ item.nameAr }}</td>
+            <td class="text-left">{{ item.nameEn }}</td>
+            <td class="text-left">{{ item.startDate | date:'dd/MM/yyyy'  }}</td>
+            <td class="text-left">{{ item.endDate | date:'dd/MM/yyyy'  }}</td>
+            <td class="text-left">{{ item.daysNumber }}</td>
+          <!-- show if data is not passed -->
+            <td class="text-left" *ngIf="!isDatePassed(item.startDate)">
+              <i (click)="deleteHolidayGroupConfirmation(item.groupIds)" class="bx bx-trash danger fs-30 pointer"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="holidays.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>

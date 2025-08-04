@@ -1,0 +1,16 @@
+.dialog-content {
+  min-height: 15rem;
+}
+
+.bg-pending {
+  color: #606060;
+  background-color: #ececed;
+}
+.bg-approved {
+  color: #29cc99;
+  background-color: rgba($color: #29cc99, $alpha: 0.25);
+}
+.bg-rejected {
+  color: #d32f2f;
+  background-color: rgba($color: #d32f2f, $alpha: 0.25);
+}

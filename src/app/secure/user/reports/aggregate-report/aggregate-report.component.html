@@ -1,0 +1,240 @@
+<layout-with-filters [meta]="meta" (pageChange)="changePage($event)" [admin]="true" [limit]="service.limit.value">
+<ng-container filters>
+    <aggregate-report-filter (export)="exportToExcel()" [service]="service"/>
+  </ng-container>
+  <ng-container content>
+    <table *ngIf="reports && reports.length > 0 && !loading" class="table" id="reports-table">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th rowspan="3" class="text-left">{{ "user" | translate }}</th>
+        <th rowspan="3" class="text-left px-2">
+          {{ "department" | translate }}
+        </th>
+        <th colspan="8" class="text-center">
+          {{ "inbox_tasks" | translate }}
+        </th>
+        <th colspan="8" class="text-center">
+          {{ "sent_tasks" | translate }}
+        </th>
+      </tr>
+      <tr>
+        <!-- for-inbox -->
+        <th rowspan="2" class="px-0">
+          <div class="flex-center">
+            <p class="mr-50">{{'total' | translate}}</p>
+            <sorting (up)="sort(['2', '0'], '0')" (down)="sort(['2', '0'], '1')"></sorting>
+          </div>
+        </th>
+
+        <th colspan="2">
+          <div class="flex-center">
+            <p class="mr-50">{{'new' | translate}}</p>
+            <sorting (up)="sort(['2', '2', '0'], '0')" (down)="sort(['2', '2', '0'], '1')"></sorting>
+          </div>
+        </th>
+
+        <th colspan="2">
+          <div class="flex-center">
+            <p class="mr-50">{{'in_progress' | translate}}</p>
+            <sorting (up)="sort(['2', '3', '0'], '0')" (down)="sort(['2', '3', '0'], '1')"></sorting>
+          </div>
+        </th>
+
+        <th colspan="2">
+          <div class="flex-center">
+            <p class="mr-50">{{'completed' | translate}}</p>
+            <sorting (up)="sort(['2', '4', '0'], '0')" (down)="sort(['2', '4', '0'], '1')"></sorting>
+          </div>
+        </th>
+
+        <th rowspan="2">
+          <div class="flex-center">
+            <i class='bx bx-stopwatch danger fs-21 mr-50 desktop'></i>
+            <p class="print">{{'overdue' | translate}}</p>
+            <sorting (up)="sort(['2', '6', '0'], '0')" (down)="sort(['2', '6', '0'], '1')"></sorting>
+          </div>
+        </th>
+
+        <!-- for-sent -->
+        <th rowspan="2">
+          <div class="flex-center">
+            <p class="mr-50">{{'total' | translate}}</p>
+            <sorting (up)="sort(['1', '0'], '0')" (down)="sort(['1', '0'], '1')"></sorting>
+          </div>
+        </th>
+
+        <th colspan="2">
+          <div class="flex-center">
+            <p class="mr-50">{{'new' | translate}}</p>
+            <sorting (up)="sort(['1', '2', '0'], '0')" (down)="sort(['1', '2', '0'], '1')"></sorting>
+          </div>
+        </th>
+
+        <th colspan="2">
+          <div class="flex-center">
+            <p class="mr-50">{{'in_progress' | translate}}</p>
+            <sorting (up)="sort(['1', '3', '0'], '0')" (down)="sort(['1', '3', '0'], '1')"></sorting>
+          </div>
+        </th>
+
+        <th colspan="2">
+          <div class="flex-center">
+            <p class="mr-50">{{'completed' | translate}}</p>
+            <sorting (up)="sort(['1', '4', '0'], '0')" (down)="sort(['1', '4', '0'], '1')"></sorting>
+          </div>
+        </th>
+
+        <th rowspan="2" class="px-0">
+          <div class="flex-center">
+            <i class='bx bx-stopwatch mr-50 danger fs-21 desktop'></i>
+            <p class="print">{{'overdue' | translate}}</p>
+            <sorting (up)="sort(['1', '6', '0'], '0')" (down)="sort(['1', '6', '0'], '1')"></sorting>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <!-- for-inbox -->
+        <th class="px-0">
+          <div class="flex-center">
+            <i class='bx bx-stopwatch primary fs-21 mr-50 desktop'></i>
+            <p class="print">{{'on_time' | translate}}</p>
+            <sorting (up)="sort(['2', '2', '2'], '0')" (down)="sort(['2', '2', '2'], '1')"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <i class='bx bx-stopwatch mr-50 danger fs-21 desktop'></i>
+            <p class="print">{{'overdue' | translate}}</p>
+            <sorting (up)="sort(['2', '2', '4'], '0')" (down)="sort(['2', '2', '4'], '1')"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <i class='bx bx-stopwatch primary fs-21 mr-50 desktop'></i>
+            <p class="print">{{'on_time' | translate}}</p>
+            <sorting (up)="sort(['2', '3', '2'], '0')" (down)="sort(['2', '3', '2'], '1')"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <i class='bx bx-stopwatch danger fs-21 mr-50 desktop'></i>
+            <p class="print">{{'overdue' | translate}}</p>
+            <sorting (up)="sort(['2', '3', '4'], '0')" (down)="sort(['2', '3', '4'], '1')"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <i class='bx bx-stopwatch primary fs-21 mr-50 desktop'></i>
+            <p class="print">{{'on_time' | translate}}</p>
+            <sorting (up)="sort(['2', '4', '2'], '0')" (down)="sort(['2', '4', '2'], '1')"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <i class='bx bx-stopwatch danger fs-21 mr-50 desktop'></i>
+            <p class="print">{{'overdue' | translate}}</p>
+            <sorting (up)="sort(['2', '4', '4'], '0')" (down)="sort(['2', '4', '4'], '1')"></sorting>
+          </div>
+        </th>
+        <!-- for-sent -->
+        <th>
+          <div class="flex-center">
+            <i class='bx bx-stopwatch primary fs-21 mr-50 desktop'></i>
+            <p class="print">{{'on_time' | translate}}</p>
+            <sorting (up)="sort(['1', '2', '2'], '0')" (down)="sort(['1', '2', '2'], '1')"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <i class='bx bx-stopwatch danger fs-21 mr-50 desktop'></i>
+            <p class="print">{{'overdue' | translate}}</p>
+            <sorting (up)="sort(['1', '2', '4'], '0')" (down)="sort(['1', '2', '4'], '1')"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <i class='bx bx-stopwatch primary fs-21 mr-50 desktop'></i>
+            <p class="print">{{'on_time' | translate}}</p>
+            <sorting (up)="sort(['1', '3', '2'], '0')" (down)="sort(['1', '3', '2'], '1')"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <i class='bx bx-stopwatch danger fs-21 mr-50 desktop'></i>
+            <p class="print">{{'overdue' | translate}}</p>
+            <sorting (up)="sort(['1', '3', '4'], '0')" (down)="sort(['1', '3', '4'], '1')"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <i class='bx bx-stopwatch primary fs-21 mr-50 desktop'></i>
+            <p class="print">{{'on_time' | translate}}</p>
+            <sorting (up)="sort(['1', '4', '2'], '0')" (down)="sort(['1', '4', '2'], '1')"></sorting>
+          </div>
+        </th>
+        <th class="px-0">
+          <div class="flex-center">
+            <i class='bx bx-stopwatch danger fs-21 mr-50 desktop'></i>
+            <p class="print">{{'overdue' | translate}}</p>
+            <sorting (up)="sort(['1', '4', '4'], '0')" (down)="sort(['1', '4', '4'], '1')"></sorting>
+          </div>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let user of reports | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy" class="border-bottom">
+        <td class="text-left primary">{{ user.name }}</td>
+        <td class="text-left px-2">
+          {{ user.departmentName }}
+        </td>
+        <!-- for-inbox -->
+        <td>{{ user.inboxTasks.totalCount }}</td>
+        <td>
+          {{ user.inboxTasks.newTasks.onTimeCount }}
+        </td>
+        <td class="over bg-light-danger">
+          {{ user.inboxTasks.newTasks.overDueCount }}
+        </td>
+        <td>
+          {{ user.inboxTasks.inprogressTasks.onTimeCount }}
+        </td>
+        <td class="over bg-light-danger">
+          {{ user.inboxTasks.inprogressTasks.overDueCount }}
+        </td>
+        <td>
+          {{ user.inboxTasks.completedTasks.onTimeCount }}
+        </td>
+        <td class="over bg-light-danger">
+          {{ user.inboxTasks.completedTasks.overDueCount }}
+        </td>
+        <td>
+          {{ user.inboxTasks.overDueTasks.totalCount }}
+        </td>
+        <!-- for-sent -->
+        <td>{{ user.sentTasks.totalCount }}</td>
+        <td>
+          {{ user.sentTasks.newTasks.onTimeCount }}
+        </td>
+        <td class="over bg-light-danger">
+          {{ user.sentTasks.newTasks.overDueCount }}
+        </td>
+        <td>
+          {{ user.sentTasks.inprogressTasks.onTimeCount }}
+        </td>
+        <td class="over bg-light-danger">
+          {{ user.sentTasks.inprogressTasks.overDueCount }}
+        </td>
+        <td>
+          {{ user.sentTasks.completedTasks.onTimeCount }}
+        </td>
+        <td class="over bg-light-danger">
+          {{ user.sentTasks.completedTasks.overDueCount }}
+        </td>
+        <td>{{ user.sentTasks.overDueTasks.totalCount }}</td>
+      </tr>
+      </tbody>
+    </table>
+    <not-found *ngIf="reports && reports.length == 0 && !loading"></not-found>
+    <loading *ngIf="loading"></loading>
+  </ng-container>
+</layout-with-filters>

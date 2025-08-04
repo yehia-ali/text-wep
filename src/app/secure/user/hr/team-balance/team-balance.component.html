@@ -1,0 +1,90 @@
+<layout-with-filters [meta]="meta" (pageChange)="changePage($event)">
+  <ng-container filters>
+    <div class="filters flex aie jcsb gap-x-4">
+      <div class="d-flex aic jcsb gap-x-1 mt-1">
+        <div class="w-15r overflow-hidden">
+          <label class="fs-11 bold">{{ 'team_members' | translate }}</label>
+          <ng-select class="w-100 custom-dropdown" [items]="teamMembers$ | async" [placeholder]="'select_user' | translate" 
+                     (ngModelChange)="service.selectedUser.next($event); service.hasChanged.next(true)" bindLabel="name" bindValue="id" appendTo="body" [multiple]="false" [closeOnSelect]="true">
+          </ng-select>
+  
+        </div>
+        <div class="d-flex flex-column">
+          <app-levels-filter
+          (valueChanged)="
+            service.loading.next(true);
+            service.levels.next($event);
+            service.hasChanged.next(true)
+          "
+          [tree]="true"
+          [showLabel]="true"
+          [labelTitle]="'level_filter'"
+          [classes]="'w-15r py-1'"
+        ></app-levels-filter>
+  
+        </div>
+        <div class="d-flex flex-column">
+          <year-filter class="w-15r" (onChange)="service.year.next($event); service.hasChanged.next(true)" [showLabel]="true" [label]="'year'"  [selectedDate]="selectedYearSubject"/>
+        </div>
+        <div class="d-flex flex-column">
+          <input-label [key]="'manager' | translate" [classes]="'mb-0'" [showIcon]="true" [icon]="'assets/images/icons/user-square.svg'" />
+          <select-user [classes]="'w-15r'" (getSelectedUsers)="service.managers.next($event); service.hasChanged.next(true)" [text]="'select_manager'" [selectedUsers]="service.managers.value"/>
+        </div>
+      </div>
+      <button (click)="exportFile()" class="btn rounded bg-success white py-75 px-2 fs-14 d-flex aic gap-x-1" aria-label="Export">
+        {{'export' | translate}}
+      </button>
+
+    </div>
+  </ng-container>
+
+  <ng-container content>
+    <table *ngIf="balances && balances.length > 0 && !loading" class="table" id="attendance">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">{{ 'employeeName' | translate }}</th>
+        <th class="text-left">{{ 'job_title' | translate }}</th>
+        <th class="text-left">{{ 'annual_leaves_balance' | translate }}</th>
+        <th class="text-left">{{ 'annual_leaves_balance_used' | translate }}</th>
+        <th class="text-left">{{ 'unpaid_leaves_balance' | translate }}</th>
+        <th>{{ 'action' | translate }}</th>
+
+        <!-- <ng-container *ngIf="leaveTypes && leaveTypes.size > 0">
+          <th *ngFor="let leaveType of leaveTypes">{{ leaveType }}</th>
+        </ng-container> -->
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let balance of balances | paginate: {itemsPerPage: meta?.pageSize, currentPage: meta?.currentPage, totalItems: meta?.totalItems}; trackBy: trackBy" class="border-bottom">
+        <td class="text-left">
+            <app-img-title [userId]="balance.userId" [imgSrc]="balance.userPic" [title]="balance.userName"></app-img-title>
+        </td>
+        <td><div class="text-left">{{ balance.jobTitle || '-' }}</div></td>
+        <td class="text-left">{{ balance.total }}</td>
+        <td class="text-left">{{ balance.balance }}</td>
+        <td class="text-left">{{ balance.used }}</td>
+        <td>
+          <div class="img pointer" (click)="viewBalance(balance)">
+            <img src="assets/images/icons/eye-view.svg" alt="view icon">
+          </div>
+        </td>
+        <!-- <ng-container *ngIf=" leaveTypes && leaveTypes.size> 0">
+          <ng-container *ngFor="let leaveType of leaveTypes">
+            <td>
+              <div *ngIf="getBalanceForLeaveType(balance, leaveType).total !== 0; else noBalance">
+                {{ getBalanceForLeaveType(balance, leaveType).used }}
+                {{ getBalanceForLeaveType(balance, leaveType).total }}
+              </div>
+              <ng-template #noBalance>-</ng-template>
+            </td>
+          </ng-container>
+        </ng-container> -->
+      </tr>
+      </tbody>
+    </table>
+    <div class="mt-5 pt-5" *ngIf="balances && balances.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+    <loading *ngIf="loading"></loading>
+  </ng-container>
+</layout-with-filters>

@@ -1,0 +1,17 @@
+@use "vars" as *;
+
+.ngx-file-drop__content {
+  color: $primary !important
+}
+
+.ngx-file-drop__drop-zone {
+  border: 3px dotted $primary !important;
+  height: 12rem !important;
+  position: relative;
+  border-radius: 30px;
+}
+
+.ngx-file-drop__content {
+  height: 12rem !important;
+  flex-direction: column !important;
+}

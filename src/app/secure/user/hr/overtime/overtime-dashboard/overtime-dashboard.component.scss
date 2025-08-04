@@ -1,0 +1,41 @@
+:host ::ng-deep{
+  .layout-with-filters{
+    //  height: 87vh !important;
+     max-width: 100% !important;
+   }
+  mat-form-field{
+    width: 100%;
+  }
+  .mdc-text-field--filled:not(.mdc-text-field--disabled){
+    background-color: transparent;
+    border-radius: 0.5rem;
+    width: 100%;
+    color: #707070;
+    border: 1px solid #e7e7e7;
+  }
+  .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-text-field__input,
+  .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input{
+    border: 0 !important;
+  }
+}
+.total-hours{
+  background: linear-gradient(93.27deg, #7B55D3 0%, rgba(123, 85, 211, 0.9) 56.67%, rgba(123, 85, 211, 0.8) 76.35%, rgba(123, 85, 211, 0.85) 100%);
+  color: #fff;
+
+}
+.leaves{
+  overflow: auto;
+}
+
+.bg-pending{
+  color: #606060;
+  background-color: #ECECED;
+}
+.bg-approved{
+  color: #29CC99;
+  background-color: rgba($color: #29CC99, $alpha: 0.25);
+}
+.bg-rejected{
+  color: #D32F2F;
+  background-color: rgba($color: #D32F2F, $alpha: 0.25);
+}

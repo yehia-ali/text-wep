@@ -1,0 +1,56 @@
+<div class="task-details" [dir]="dir">
+  <div class="dialog-content">
+    <ng-container *ngIf="details$ | async as vote">
+      <div class="top-section py-2 px-3 flex aic jcsb gap-x-2 border-bottom bg-white">
+        <div class="start auto flex aic gap-x-1">
+          <priority [priority]="vote.priority" [size]="20"></priority>
+          <p class="fs-17 bold">{{ vote.title }}</p>
+        </div>
+        <div class="end flex aic gap-x-2">
+          <vote-status [state]="vote.voteStateId"></vote-status>
+        </div>
+      </div>
+
+      <div class="content py-2 px-3 relative" magicScroll="">
+        <div class="users-date flex aifs jcsb gap-x-5 w-100">
+          <div class="creator">
+            <p class="fs-17 bold">{{ 'created_by' | translate }}</p>
+            <div class="flex aic mt-1">
+              <user-image [id]="19587" [img]="vote.creatorImageUrl"></user-image>
+              <p class="ml-1">{{ vote.creatorName }}</p>
+            </div>
+          </div>
+
+          <div class="start-date">
+            <p class="fs-17 bold date">{{ 'start_date' | translate }}</p>
+            <p>{{ vote.startDate | arabicDate: 'withTime' }}</p>
+          </div>
+
+          <div class="end-date">
+            <p class="fs-17 bold date">{{ 'end_date' | translate }}</p>
+            <p>{{ vote.endDate | arabicDate:'withTime' }}</p>
+          </div>
+        </div>
+
+        <div *ngIf="vote.isAnonymous" class="bg-light-warning p-1 rounded flex-center mt-4 anonymous mx-auto">{{ 'voting_anonymously' | translate }}</div>
+
+        <div *ngIf="vote.description" class="description mt-4">
+          <p class="fs-17 bold">{{ 'description' | translate }}</p>
+          <p [innerHTML]="vote.description"></p>
+        </div>
+      </div>
+
+    </ng-container>
+    <loading class="a-center" *ngIf="service.loading.value"/>
+  </div>
+  <div class="buttons" mat-dialog-actions align="end">
+    <div class="flex">
+      <button class="px-4 mr-2 dark-color clickable-btn rounded cancel-btn"
+              [mat-dialog-close]="{value: false}">{{ 'close' | translate }}
+      </button>
+      <button mat-raised-button color="primary" class="px-4 fs-15" [mat-dialog-close]="{value: true}">
+        {{ 'go_to_vote' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

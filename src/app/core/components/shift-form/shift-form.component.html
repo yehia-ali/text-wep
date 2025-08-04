@@ -1,0 +1,339 @@
+<div class="create-task" dir="auto">
+  <h2 class="flex aic jcsb black">
+    <p>
+      {{
+        data.isEdit ? ("edit_shift" | translate) : ("create_shift" | translate)
+      }}
+    </p>
+    <i class="bx bx-x fs-35 pointer danger" mat-dialog-close></i>
+  </h2>
+
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <!-- shift name -->
+      <div class="flex-grid aife gap-y-1 mb-2">
+        <div class="col-lg-12">
+          <div class="flex aic gap-x-1">
+            <input-label key="shift_name_type" [control]="f['shiftName']"  [showIcon]="true" [icon]="'assets/images/icons/text-block.svg'"/>
+          </div>
+          <div>
+            <input
+            type="text"
+            class="input"
+            formControlName="shiftName"
+            maxlength="150"
+          />
+          <input-error [control]="f['shiftName']" />
+          </div>
+        </div>
+      </div>
+      <!-- crossDay -->
+       <div class="mb-2">
+        <toggle-switch
+          class="mb-2"
+          id="crossDay"
+          [label]="'extended_shift'"
+          formControlName="crossDay"
+        ></toggle-switch>   
+       </div>
+       <!-- start time  &&  end time -->
+    <div class="flex-grid aife gap-y-1 mb-2">
+      <!-- start time -->
+      <div class="col-lg-6">
+        <div class="flex aic gap-x-1">
+          <input-label key="start_time" [showIcon]="true" [icon]="'assets/images/icons/timer-clock.svg'"/>
+        </div>
+        <div>
+          <input
+            [ngxTimepicker]="timeFrom"
+            class="input"
+            [(ngModel)]="from"
+            [ngModelOptions]="{ standalone: true }"
+            readonly
+          />
+          <ngx-material-timepicker
+            #timeFrom
+            [minutesGap]="5"
+          ></ngx-material-timepicker>
+        </div>
+      </div>
+      <!-- end time -->
+      <div class="col-lg-6">
+        <div class="flex aic gap-x-1">
+          <input-label [key]="form.get('crossDay')?.value ? 'end_time_next_day' : 'end_time'" [showIcon]="true" [icon]="'assets/images/icons/timer-clock.svg'" />       
+        </div>
+        <div>
+          <input
+          [ngxTimepicker]="timeTo"
+          class="input"
+          [disabled]="!from"
+          [(ngModel)]="to"
+          [ngModelOptions]="{ standalone: true }"
+          readonly
+        />
+        <ngx-material-timepicker
+          #timeTo
+          [minutesGap]="5"
+        ></ngx-material-timepicker>
+
+      </div>
+    </div>
+    </div>
+    <!-- allowance in minutes  &&  required working hours daily  &&  required working hours monthly -->
+      <div class="flex-grid  gap-y-1 mb-2">
+        <!-- allowance in minutes -->
+        <div class="col-lg-6">
+          <div class="flex">
+            <input-label key="late_checkin_margin" [control]="f['allowanceInMinutes']"  [showIcon]="true" [icon]="'assets/images/icons/timer.svg'"/>
+          </div>
+          <div class="flex aic position-relative">
+            <input
+              type="number"
+              class="input"
+              formControlName="allowanceInMinutes"
+            />
+          <span class="input-suffix">{{'m' | translate}}</span>
+
+        </div>
+        <input-error [control]="f['allowanceInMinutes']" />
+
+        </div>
+        <!-- required working hours daily -->
+        <div class="col-lg-6">
+          <input-label
+            key="daily_working_hours"
+            [control]="f['requiredWorkingHoursDaily']"
+            [showIcon]="true"
+            [icon]="'assets/images/icons/timer-clock.svg'"
+          />
+          <div class="flex aic position-relative">
+            <input
+              type="number"
+              class="input"
+              formControlName="requiredWorkingHoursDaily"
+            />
+            <span class="input-suffix">{{'h' | translate}}</span>
+          </div>
+          <input-error [control]="f['requiredWorkingHoursDaily']" />
+        </div>
+        <!-- required working hours monthly -->
+        <div class="col-lg-6">
+          <input-label
+            key="monthly_working_hours"
+            [control]="f['requiredWorkingHoursMonthly']"
+            [showIcon]="true"
+            [icon]="'assets/images/icons/timer-clock.svg'"
+          />
+          <div class="flex aic position-relative">
+            <input
+              type="number"
+              class="input"
+              formControlName="requiredWorkingHoursMonthly"
+            />
+            <span class="input-suffix">{{'h' | translate}}</span>
+          </div>
+          <input-error [control]="f['requiredWorkingHoursMonthly']" />
+        </div>
+      </div>
+
+      <div class="weekend mb-2">
+        <input-label key="weekend_days" [showIcon]="true" [icon]="'assets/images/icons/calendar-remove.svg'"/>
+        <div class="flex flex-wrap gap-y-1">
+          <div class="mr-1 shift-checkbox" [ngClass]="{'checked': weekends.includes('sunday')}">
+            <mat-checkbox
+              (change)="weekendChanged($event)"
+              [checked]="weekends.includes('sunday')"
+              value="sunday"
+              color="primary"
+              class="shift"
+              >{{ "sunday" | translate }}
+            </mat-checkbox>
+          </div>
+          <div class="mr-1 shift-checkbox" [ngClass]="{'checked': weekends.includes('monday')}">
+            <mat-checkbox
+              (change)="weekendChanged($event)"
+              [checked]="weekends.includes('monday')"
+              value="monday"
+              color="primary"
+              class="shift"
+              >{{ "monday" | translate }}
+            </mat-checkbox>
+          </div>
+          <div class="mr-1 shift-checkbox" [ngClass]="{'checked': weekends.includes('tuesday')}"  >
+            <mat-checkbox
+              (change)="weekendChanged($event)"
+              [checked]="weekends.includes('tuesday')"
+              value="tuesday"
+              color="primary"
+              class="shift"
+              >{{ "tuesday" | translate }}
+            </mat-checkbox>
+          </div>
+          <div class="mr-1 shift-checkbox" [ngClass]="{'checked': weekends.includes('wednesday')}">
+            <mat-checkbox
+              (change)="weekendChanged($event)"
+              [checked]="weekends.includes('wednesday')"
+              value="wednesday"
+              color="primary"
+              class="shift"
+              >{{ "wednesday" | translate }}
+            </mat-checkbox>
+          </div>
+          <div class="mr-1 shift-checkbox" [ngClass]="{'checked': weekends.includes('thursday')}">
+            <mat-checkbox
+              (change)="weekendChanged($event)"
+              [checked]="weekends.includes('thursday')"
+              value="thursday"
+              color="primary"
+              class="shift"
+              >{{ "thursday" | translate }}
+            </mat-checkbox>
+          </div>
+          <div class="mr-1 shift-checkbox" [ngClass]="{'checked': weekends.includes('friday')}">
+            <mat-checkbox
+              (change)="weekendChanged($event)"
+              [checked]="weekends.includes('friday')"
+              value="friday"
+              color="primary"
+              class="shift"
+              >{{ "friday" | translate }}
+            </mat-checkbox>
+          </div>
+          <div class="mr-1 shift-checkbox" [ngClass]="{'checked': weekends.includes('saturday')}">
+            <mat-checkbox
+              (change)="weekendChanged($event)"
+              [checked]="weekends.includes('saturday')"
+              value="saturday"
+              color="primary"
+              class="shift"
+              >{{ "saturday" | translate }}
+            </mat-checkbox>
+          </div>
+        </div>
+      </div>
+
+      <!-- map -->
+      <div class=" flex aic jcsb">
+        <div class="mr-2 mb-2">
+          <toggle-switch
+            id="map"
+            [label]="'prevent_checkin'"
+            [(ngModel)]="map"
+            (valueChange)="onCheckboxChange($event)"
+          ></toggle-switch>
+        </div>
+        <div class="mr-2 mb-2">
+          <toggle-switch
+            id="apsent"
+            [label]="'allow_apsent'"
+            [(ngModel)]="apsent"
+            (valueChange)="apsentChange($event)"
+          ></toggle-switch>
+        </div>
+        <div class="mr-2 mb-2">
+          <toggle-switch
+            id="late"
+            [label]="'allow_late'"
+            [(ngModel)]="late"
+            (valueChange)="lateChange($event)"
+          ></toggle-switch>
+        </div>
+      </div>
+
+      <div *ngIf="map">
+        <div class="mb-25">
+          <label class="fs-11 simibold mb-75" for="radius">
+            {{"search_location" | translate }}
+          </label>
+        </div>
+        <div class="flex-grid">
+          <div class="col-md-12 flex aic">
+            <div class="w-100 mb-2 mr-2">
+              <input #searchInput id="search-input" type="text" placeholder="{{'search' | translate}}" class="input" (input)="mapSearch()"/>
+            </div>
+            <div class="text-right mb-2">
+              <button mat-raised-button (click)="setCurrentLocation()"  color="primary" class="flex aic jcc">
+               <span class=" mr-1"> {{'my_location' | translate}}</span>
+               <i class="bx bx-current-location fs-23"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-lg-4 mb-2">
+            <div class="mb-25">
+              <label class="fs-11 simibold mb-75" for="radius">
+                {{"radius_meters" | translate }}
+              </label>
+            </div>
+            <input
+              type="number"
+              class="input"
+              [(ngModel)]="radius"
+              (input)="handleRadiusChange($event)"
+              formControlName="radius"
+              />
+          </div>
+          <div class="col-lg-4 mb-2">
+            <div class="mb-25">
+              <label class="fs-11 simibold mb-75" for="radius">
+                {{"lat" | translate }}
+              </label>
+            </div>
+            <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="this.lat" id="search-input" type="number" placeholder="{{'lat' | translate}}" class="input" (input)="handleLatLong($event)"/>
+          </div>
+          <div class="col-lg-4 mb-2">
+            <div class="mb-25">
+              <label class="fs-11 simibold mb-75" for="radius">
+                {{"long" | translate }}
+              </label>
+            </div>
+            <input [ngModelOptions]="{ standalone: true }" [(ngModel)]="this.lng" id="search-input" type="number" placeholder="{{'long' | translate}}" class="input" (input)="handleLatLong($event)"/>
+          </div>
+        </div>
+        <div style="width: 100%; height: 250px">
+          <google-map
+            [center]="circleCenter"
+            [zoom]="zoom"
+            [options]="options"
+            (mapClick)="handleMapClick($event)"
+          >
+            <map-marker
+              [position]="circleCenter"
+              [options]="markerOptions"
+            ></map-marker>
+            <map-circle
+              #mapCircle
+              [center]="circleCenter"
+              [radius]="radius"
+              [options]="circleOptions"
+            ></map-circle>
+          </google-map>
+        </div>
+      </div>
+      <!-- map -->
+    </form>
+  </div>
+
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex">
+      <button
+        mat-raised-button
+        color="primary"
+        class="px-4 fs-15 mr-2"
+        (click)="submit()"
+        [disabled]="form.invalid || loading || weekends.length == 0"
+      >
+        <submit-button
+          [text]="data.isEdit ? 'update' : 'add'"
+          [loading]="loading"
+        ></submit-button>
+      </button>
+      <button
+      class="px-4 dark-color clickable-btn rounded cancel-btn"
+      mat-dialog-close
+    >
+      {{ "cancel" | translate }}
+    </button>
+
+    </div>
+  </div>
+</div>

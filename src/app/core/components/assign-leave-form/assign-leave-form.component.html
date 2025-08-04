@@ -1,0 +1,39 @@
+<div class="add-leave dir">
+  <h2>{{ (data?.leaveData ? 'edit_leave' : 'assign_leave') | translate  }}</h2>
+  <div mat-dialog-content class="overflow-visible">
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-2">
+        <div class="col-lg-12" *ngIf="!data?.disableUser">
+          <input-label key="assignees"/>
+          <select-user text="assignees" [selectedUsers]="selectedUsers"
+                       (getSelectedUsers)="getUsers($event)"/>
+
+        </div>
+        <div  class="{{selectedLeaveType?.isPermission ? 'col-lg-12' : 'col-lg-6' }}" *ngIf="!(data?.leaveData)">
+          <div class="type">
+            <input-label key="leave_type" [control]="f['leaveTypeId']"/>
+            <ng-select (change)="selectType($event)" [items]="leaveTypes" bindLabel="name" bindValue="id" appendTo="body" formControlName="leaveTypeId" [clearSearchOnAdd]="true">
+            </ng-select>
+            <input-error [control]="f['leaveTypeId']"/>
+          </div>
+        </div>
+        <div class="{{data?.leaveData ? 'col-lg-12' : 'col-lg-6' }}" *ngIf="!selectedLeaveType?.isPermission">
+          <div class="days-number">
+            <input-label key="days_number" [control]="f['balance']"/>
+            <input type="number" formControlName="balance" class="input" min="0">
+            <input-error [control]="f['balance']"/>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <div mat-dialog-actions align="end">
+    <div class="flex w-100">
+      <button class="px-4 flex-50 mr-2 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>{{ 'cancel' | translate }}</button>
+      <button mat-raised-button color="primary" class="px-5 fs-15 flex-50" (click)="submit()" [disabled]="form.invalid || loading || (selectedUsers.length == 0 && !data?.disableUser)">
+        <submit-button [text]="(data?.leaveData ? 'edit_leave' : 'assign_leave')" [loading]="loading"></submit-button>
+      </button>
+    </div>
+  </div>
+</div>

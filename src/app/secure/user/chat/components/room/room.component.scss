@@ -1,0 +1,17 @@
+.input-field {
+  height: 5rem;
+}
+
+.room {
+  height: calc(100% - 11rem);
+  display: flex;
+  flex-direction: column-reverse;
+  &.withReply {
+    height: calc(100% - 16rem);
+  }
+}
+.no-header{
+  .room{
+    height: calc(100% - 5rem) !important;
+  }
+}

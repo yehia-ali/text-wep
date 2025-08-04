@@ -1,0 +1,133 @@
+<auth-layout>
+  <div class="bg-white relative register-content px-2 py-1" [ngClass]="{'create-space': createSpace}">
+    <div [ngClass]="{'flex-column-center w-100': (!createSpace || !live), '': createSpace}" class="content  bg-white">
+      <div class="form w-100 register">
+        <h2 class="black mb-2">{{ "lets_start" | translate }} </h2>
+        <form (submit)="submit()" [formGroup]="form" class="register">
+
+          <div class="flex-grid">
+            <div class="col-sm-6">
+              <input-label [control]="f['firstName']" key="first_name" [maxLength]="24"/>
+              <div class="relative input-icon">
+                <i class="bx bx-user fs-20"></i>
+                <input class="input" formControlName="firstName" maxlength="24" type="text"/>
+              </div>
+              <input-error [control]="f['firstName']"></input-error>
+            </div>
+            <div class="col-sm-6">
+              <input-label [control]="f['lastName']" key="last_name" [maxLength]="24"></input-label>
+              <div class="relative input-icon">
+                <i class="bx bx-user fs-20"></i>
+                <input class="input" formControlName="lastName" maxlength="24" type="text"/>
+              </div>
+              <input-error [control]="f['lastName']"></input-error>
+            </div>
+          </div>
+
+          <div class="email mt-1" *ngIf="!emailCheck">
+            <input-label [control]="f['email']" key="email"></input-label>
+            <div class="relative input-icon">
+              <i class="bx bx-envelope fs-20"></i>
+              <input class="input" formControlName="email" type="email"/>
+            </div>
+            <input-error [control]="f['email']"></input-error>
+          </div>
+
+          <div class="phone mt-1" *ngIf="!phoneCheck">
+            <input-label [control]="f['phone']" key="phone"></input-label>
+            <ngx-intl-tel-input [cssClass]="'input'" [enableAutoCountrySelect]="false" [enablePlaceholder]="false" [phoneValidation]="true"
+                                [preferredCountries]="[CountryISO.Egypt, CountryISO.SaudiArabia]"
+                                [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]" [searchCountryFlag]="true"
+                                [selectedCountryISO]="CountryISO.Egypt" [separateDialCode]="true" dir="auto" formControlName="phone"></ngx-intl-tel-input>
+            <input-error [control]="f['phone']"></input-error>
+          </div>
+
+          <div class="password mt-1">
+            <input-label [control]="f['password']" key="password"></input-label>
+            <input-password (getType)="passwordType = $event">
+            <div class="relative input-icon">
+              <i class="bx bx-lock fs-20"></i>
+              <input [maxlength]="16" [type]="passwordType" class="input" formControlName="password"/>
+            </div>
+            </input-password>
+            <input-error [control]="f['password']"></input-error>
+          </div>
+
+          <div class="register-type mt-1">
+            <mat-radio-group (ngModelChange)="registerType()" [(ngModel)]="createSpace" [ngModelOptions]="{ standalone: true }" color="primary">
+              <mat-radio-button [value]="false" class="mr-2">{{"join_space" | translate}}</mat-radio-button>
+              <mat-radio-button [value]="true">{{"create_space" | translate}}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <div *ngIf="!createSpace" class="manager-code mt-1">
+            <input-label [control]="f['managerCode']" key="manager_code"></input-label>
+            <div class="relative input-icon">
+              <i class="bx bx-log-in-circle fs-20"></i>
+              <input class="input" formControlName="managerCode" maxlength="50" type="text"/>
+            </div>
+            <input-error [control]="f['managerCode']"></input-error>
+          </div>
+
+          <div class="space-name mt-1" *ngIf="createSpace">
+            <input-label key="space_name_register" [control]="f['spaceName']"></input-label>
+            <div class="relative input-icon">
+              <i class="bx bx-buildings fs-20"></i>
+              <input formControlName="spaceName" type="text" class="input" maxlength="50"/>
+            </div>
+            <input-error [control]="f['spaceName']"></input-error>
+          </div>
+
+          <div *ngIf="createSpace && !live" class="packages mt-1">
+            <!-- <p class="fs-16 mb-1">{{ "select_plan" | translate }}</p> -->
+            <div class="flex-grid mt-2">
+              <div *ngFor="let item of packages" class="col-lg-4">
+                <div (click)="selectPackage(item)" [ngClass]="{ active: item.id == selectedId }" class="package border rounded mb-1 pointer">
+                  <div class="package-name fs-11 simibold flex aic jcsb">
+                    {{ item.name | translate }}
+                    <span class="fs-11 simibold  primary">
+                      {{ item.pricePerUser | arabicNumbers }} {{ "usd" | translate }}
+                      {{ item.limitedNumberOfUser | arabicNumbers }}
+                    </span>
+                  </div>
+                  <div class="">
+                    <p *ngIf="item.limitedNumberOfUser" class="muted fs-12">
+                      {{ "users_payment" | translate }}
+                    </p>
+                    <p *ngIf="!item.limitedNumberOfUser" class="muted fs-12">
+                      {{ "per_user" | translate }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="selectedId != 1 && createSpace && !live" class="number-of-users">
+            <input-label key="number_of_employees"></input-label>
+            <div class="flex aic jcsb gap-x-2">
+              <div class="start border rounded flex aic jcsb flex-50">
+                <div (click)="minus()" class="minus border-right px-1 py-0 pointer">-</div>
+                <input type="number" class="number-input fs-11" min="11" [(ngModel)]="numberOfEmployees" [ngModelOptions]="{standalone: true}"
+                      (ngModelChange)="calc($event)">
+                <div (click)="add()" class="add border-left px-1 py-0 pointer">+</div>
+              </div>
+              <div class="end flex-50 flex-column aife">
+                <p class="fs-11">{{'total_cost' | translate}} <span class="primary ">{{ total | arabicNumbers}}</span></p>
+                <p class="fs-11">{{'total_cost' | translate}} <span class="primary ">{{ total * 50 | arabicNumbers}}{{'EGP' | translate}}</span></p>
+              </div>
+            </div>
+            <p class="danger fs-11  mt-50" *ngIf="numberOfEmployees < 11 && selectedId != 1">{{'min_number' | translate}}</p>
+          </div>
+          <button [disabled]="loading" class="submit rounded w-100 mt-1 py-50" color="primary" mat-raised-button>
+            <submit-button [loading]="loading" text="register"></submit-button>
+          </button>
+        </form>
+        <p class="text-center pointer mt-2 fs-12 simibold">
+          {{ "have_account" | translate }}
+          <span (click)="goToLogin()" class="primary ">{{"login" | translate}}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</auth-layout>

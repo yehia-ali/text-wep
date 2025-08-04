@@ -1,0 +1,39 @@
+<div class="dir py-1">
+  <div class="flex-column jcc px-2 py-1 aic" style="overflow: visible;">
+    <div *ngIf="!otpMode">
+        <p class="black mb-2 simibold fs-25 text-center">{{ "update_phone" | translate }}</p>
+        <div class="phone">
+          <input-label key="phone"></input-label>
+          <ngx-intl-tel-input
+            [cssClass]="'input'"
+            [enableAutoCountrySelect]="false"
+            [enablePlaceholder]="false"
+            [phoneValidation]="true"
+            [preferredCountries]="[CountryISO.Egypt, CountryISO.SaudiArabia]"
+            [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+            [searchCountryFlag]="true"
+            [selectedCountryISO]="CountryISO.Egypt"
+            [separateDialCode]="true"
+            [(ngModel)]="phone"
+            dir="auto"
+            (ngModelChange)="phoneValidators()"
+          ></ngx-intl-tel-input>
+          <p *ngIf="phoneValidator" class="danger fs-11 mt-75 text-left">
+            <span class="" >{{'required' | translate}}</span>
+          </p>
+        </div>
+
+        <button [disabled]="loading" type="submit" class="submit rounded mt-2" color="primary" mat-raised-button (click)="next()">
+          <submit-button [loading]="loading" text="continue"></submit-button>
+        </button>
+      </div>
+      <div *ngIf="otpMode">
+        <p class="black mb-2 simibold fs-25 text-center">{{ "verification" | translate }}</p>
+
+        <input-label key="verification_message"></input-label>
+        <div dir="ltr">
+          <code-input (codeCompleted)="submit($event)" [codeLength]="6" [isCodeHidden]="false"></code-input>
+        </div>
+      </div>
+  </div>
+</div>

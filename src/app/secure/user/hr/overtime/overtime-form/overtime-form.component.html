@@ -1,0 +1,49 @@
+<div class="create-task" dir="auto">
+  <div class="flex aic jcsb px-2 pt-1">
+    <p class="fs-18 simibold">{{ 'create_over_request' | translate }}</p>
+    <i class='bx bx-x fs-20 pointer danger' mat-dialog-close></i>
+  </div>
+
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-2">
+        <div class="col-md-12">
+          <input-label key="title" [control]="f['title']"/>
+          <input maxLength="100" formControlName="title" class="input" (keypress)="checkLength('title',100,'max_length_100')"/>
+          <input-error [control]="f['title']"/>
+        </div>
+        <div class="col-md-12 flex aic">
+          <div class="mr-2">
+            <app-dropdown [startDropDown]="true"  (searchChanged)="searchTask($event)" (valueChanged)="valueChanged($event)" [title]="'task'" [items]="tasks" [iconName]="'bx-task'" [selectedValue]="selectedTask"/>
+          </div>
+          <div class="w-100">
+            <date-filter [width]="'width'" [hideLabel]="true" [clearable]="false" key="date" (valueChanged)="dateChange($event)"/>
+          </div>
+        </div>
+        <!-- Reason -->
+        <div class="col-md-12">
+          <input-label key="reason" [control]="f['reason']"/>
+          <textarea maxLength="500" formControlName="reason" class="input" rows="5" (keypress)="checkLength('reason',500,'max_length_500')"></textarea>
+          <input-error [control]="f['reason']"/>
+        </div>
+
+        <!--        Expected time     -->
+        <div class="col-lg-12">
+          <input-label key="time" [control]="f['expectedTime']"/>
+          <select-time [showDays]="true" (calcMinutes)="setTime($event)" [hours]="hours" [minutes]="minutes" [withMargin]="false"></select-time>
+          <input-error [control]="f['expectedTime']"/>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex">
+      <button class="px-4 mr-2 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>{{ 'cancel' | translate }}</button>
+      <button mat-raised-button color="primary" class="px-5 fs-15" (click)="submit()" [disabled]="form.invalid || loading">
+        <submit-button text="create" [loading]="loading"></submit-button>
+      </button>
+    </div>
+  </div>
+</div>

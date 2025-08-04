@@ -1,0 +1,8 @@
+.attendance-label {
+  &:not(:last-of-type) {
+    margin-bottom: 1rem;
+  }
+}
+.date {
+  width: 20rem;
+}

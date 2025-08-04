@@ -1,0 +1,75 @@
+<layout>
+  <div class="overflow-y-auto employee">
+    <div class="py-1 px-2" *ngIf="userData">
+      <app-img-title [userId]="userId" [title]="userData.name" [subTitle]="userData.jobTitle" [imgSrc]="userData.imageUrl" [imgSize]="50"></app-img-title>
+    </div>
+    <mat-tab-group (selectedTabChange)="onTabChange($event)">
+      <mat-tab [label]="'basic_info' | translate">
+        <ng-container *ngIf="activeTab === 0">
+          <basic-info></basic-info>
+        </ng-container>
+      </mat-tab>
+      <mat-tab [label]="'personal_info' | translate">
+        <ng-container *ngIf="activeTab === 1">
+          <personal-info></personal-info>
+        </ng-container>
+      </mat-tab>
+      <!-- <mat-tab [label]="'work_info' | translate">
+        <ng-container *ngIf="activeTab === 2">
+          <work-info></work-info>
+        </ng-container>
+      </mat-tab> -->
+      <mat-tab [label]="'insurance' | translate">
+        <ng-container *ngIf="activeTab === 2">
+          <insurance></insurance>
+        </ng-container>
+      </mat-tab>
+      <mat-tab [label]="'contracts' | translate">
+        <ng-container *ngIf="activeTab === 3">
+          <contracts></contracts>
+        </ng-container>
+      </mat-tab>
+      <mat-tab [label]="'bank_accounts' | translate">
+        <ng-container *ngIf="activeTab === 4">
+          <bank-accounts></bank-accounts>
+        </ng-container>
+      </mat-tab>
+
+      <mat-tab [label]="'leaves' | translate">
+        <ng-container *ngIf="activeTab === 5">
+          <leaves></leaves>
+        </ng-container>
+      </mat-tab>
+      <mat-tab [label]="'files' | translate">
+        <ng-container *ngIf="activeTab === 6">
+          <files></files>
+        </ng-container>
+      </mat-tab>
+      <!-- <mat-tab [label]="'penalties' | translate">
+        <ng-container *ngIf="activeTab === 7">
+          <penalties></penalties>
+        </ng-container>
+      </mat-tab> -->
+      <mat-tab [label]="'rewards' | translate">
+        <ng-container *ngIf="activeTab === 8">
+          <rewards></rewards>
+        </ng-container>
+      </mat-tab>
+      <mat-tab [label]="'kpis' | translate">
+        <ng-container *ngIf="activeTab === 9">
+          <kpis></kpis>
+        </ng-container>
+      </mat-tab>
+      <!-- <mat-tab [label]="'working_hours' | translate">
+        <ng-container *ngIf="activeTab === 9">
+          <working-hours></working-hours>
+        </ng-container>
+      </mat-tab> -->
+            <!-- <mat-tab [label]="'tax' | translate">
+        <ng-container *ngIf="activeTab === 2">
+          <tax></tax>
+        </ng-container>
+      </mat-tab> -->
+    </mat-tab-group>
+  </div>
+</layout>

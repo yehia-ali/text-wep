@@ -1,0 +1,148 @@
+<layout>
+  <div class="leaves-details relative h-100">
+    <ng-container *ngIf="details$ | async">
+      <div class="top-section flex aic jcsb p-2 border-bottom">
+        <div class="start flex aic gap-x-2">
+          <img src="assets/images/leave/time-off.svg" alt="" width="25" height="25">
+          <p>L-{{ details.id }}</p>
+          <h3 *ngIf="dir == 'ltr'">{{ details.leaves_type | titlecase }} {{ 'leave_request' | translate }}</h3>
+          <h3 *ngIf="dir == 'rtl'"> {{ 'leave_request' | translate }} {{ details.leaves_type }}</h3>
+        </div>
+        <div class="flex aic jcsb gap-x-1">
+          <div class="action flex aic">
+            <ng-container *ngIf="details.leaveStatus == 0">
+              <span class="rounded py-25 px-1 fs-14 bg-pending">{{ 'pending' | translate }}</span>
+            </ng-container>
+            <ng-container *ngIf="details.leaveStatus == 1">
+              <span class="rounded py-25 px-1 fs-14 bg-approved">{{ 'approved' | translate }}</span>
+            </ng-container>
+            <ng-container *ngIf="details.leaveStatus == 2">
+              <span class="rounded py-25 px-1 fs-14 bg-rejected">{{ 'rejected' | translate }}</span>
+            </ng-container>
+            <ng-container *ngIf="details.leaveStatus == 3">
+              <span class="rounded py-25 px-1 fs-14 bg-canceled">{{ 'canceled' | translate }}</span>
+            </ng-container>
+          </div>
+          <img src="assets/images/icons/history.svg" alt="history icon" class="convert-image-color pointer ml-1"
+               (click)="getHistory()">
+          <i class='bx bx-dots-vertical-rounded fs-25 pointer' *ngIf="details.isEmployee && details.leaveStatus == 0"
+             [matMenuTriggerFor]="more"></i>
+          <mat-menu #more="matMenu">
+            <button mat-menu-item class="fs-16" (click)="cancelRequest(details.id)">
+              {{ "cancel" | translate }}
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+      <div class="details-content p-2" magicScroll>
+        <div class="flex-grid gap-y-2">
+          <div class="col-xl-7 border-right">
+            <div class="users flex aic jcsb">
+              <div class="creator">
+                <h4>{{ 'manager' | translate }}</h4>
+                <div class="flex aic mt-1">
+                  <user-image [img]="details.manager_image_url" [id]="details.manager_id"></user-image>
+                  <p class="ml-1">{{ details.manager_name }}</p>
+                </div>
+              </div>
+
+              <div class="assignee">
+                <h4>{{ 'employee' | translate }}</h4>
+                <div class="flex aic mt-1">
+                  <user-image [img]="details.employee_image_url" [id]="details.employee_id"></user-image>
+                  <p class="ml-1">{{ details.employee_name }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-2" *ngIf="details.reason">
+              <h4>{{ 'reason' | translate }}</h4>
+              <p class="mt-1 contains-link word-break" [innerHTML]="details.reason" *ngIf="details.reason"></p>
+            </div>
+
+            <div class="mt-2" *ngIf="details.stateReason">
+              <h4 class="danger">{{ 'rejection_reason' | translate }}</h4>
+              <p class="mt-1 danger contains-link word-break" [innerHTML]="details.stateReason"
+                 *ngIf="details.stateReason"></p>
+            </div>
+
+            <div class="mt-2" *ngIf="details.leaveAttachments && details.leaveAttachments.length > 0">
+              <task-attachments [images]="details.leaveAttachments"></task-attachments>
+            </div>
+
+            <div class="leaves-timeline mt-2 mb-1 py-2 pr-2 pl-4 bg-gray rounded">
+              <div class="timeline relative">
+                <div class="start mb-1">
+                  <h4>{{ 'start_date' | translate }}</h4>
+                  <p class="fs-14">{{ details.start_date | arabicDate }}</p>
+                </div>
+
+                <div class="flex aic jcfe">
+                  <p class="ml-4 fs-18 bold days_num p-1 rounded">
+                    {{ details.leave_days }} {{ 'days' | translate }}
+                  </p>
+                </div>
+
+                <div class="end mt-1">
+                  <h4>{{ 'due_date' | translate }}</h4>
+                  <p class="fs-14">{{ details.end_date | arabicDate }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex aic mt-2" *ngIf="details.leaveStatus == 0 && details.isManager">
+              <button (click)=" approveRequest(details.id)"
+                      class="pointer white clickable-btn bg-primary text-white mr-1 w-100 rounded py-1">
+                {{ "approve" | translate }}
+              </button>
+
+              <button (click)="rejectRequest(details.id)" class="pointer clickable-btn bg-danger w-100 rounded py-1">
+                {{ "reject" | translate }}
+              </button>
+            </div>
+
+            <!--          <div class="statistics flex aic jcsb mt-2">
+                        <div *ngFor="let item of service.statistics.value">
+                          <div class="card leave-card border shadow rounded py-1" style="width: 150px;">
+                            <div class="card-body m-0 py-1 flex aic jcsb px-2" style="margin: 0 !important;">
+                              <div class="icon">
+                                <img src="assets/images/leave/{{item.icon}}" alt="" style="margin-bottom: -10px;" height="50"
+                                     width="50">
+                                <p class="fs-16 mt-1">{{ item.title | translate }}</p>
+                              </div>
+                              <div class="content text-center">
+                                <h2 class="bold fs-20">{{ item.value }}</h2>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>-->
+
+          </div>
+          <div class="col-xl-5 relative">
+            <div class="pl- chat-section">
+              <app-room [header]="false" [taskDetails]="true" *ngIf="!service.chatLoading.value"/>
+              <loading *ngIf="service.chatLoading.value"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <loading class="a-center" *ngIf="service.loading.value"/>
+
+  </div>
+</layout>
+
+
+<info-sidebar [open]="historyIsOpen">
+  <ng-container header>
+    <h2>{{ 'history' | translate }}</h2>
+  </ng-container>
+
+  <ng-container content>
+    <div class="p-2" *ngIf="details">
+      <history [history]="details.histories"></history>
+    </div>
+  </ng-container>
+</info-sidebar>

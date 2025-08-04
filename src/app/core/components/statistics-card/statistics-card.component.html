@@ -1,0 +1,16 @@
+<div class="statistics-card bg-white rounded-4 card-shadow p-2 h-100">
+  <h4>{{data.title | translate}} <small>{{data.total | arabicNumbers}} {{'total' | translate}}</small></h4>
+  <div class="total flex aic my-1">
+    <div class="bg-{{data?.classes[i]}}" *ngFor="let per of data?.percentages; let i = index" [ngStyle]="{'width': per + '%'}"></div>
+  </div>
+  <div class="flex jcsr aic w-100">
+    <div class="line flex aic" *ngFor="let line of data?.lines; let i = index" (click)="line.total && filter(line.name)" [ngClass]="{'pointer': line.total}">
+      <p class="mr-50 {{data?.classes[i]}}">{{line?.name | translate}}</p>
+      <div class="flex aic">
+        <p class="bold">{{(line?.total | arabicNumbers)}}</p>
+        <span class="mx-25">/</span>
+        <span>{{+data?.percentages[i]?.toFixed(1) | arabicNumbers}}%</span>
+      </div>
+    </div>
+  </div>
+</div>

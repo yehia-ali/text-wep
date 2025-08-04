@@ -1,0 +1,38 @@
+.top-section {
+  position: sticky;
+  top: 0;
+}
+
+.anonymous {
+  max-width: 70%;
+}
+
+.bg-archived {
+  background: #606060 !important;
+}
+
+.content {
+  height: calc(100vh - (7.1rem + 14rem));
+
+  .start-date, .end-date {
+    h4 {
+      margin-bottom: 18px;
+    }
+  }
+
+  .submit {
+    position: fixed;
+    inset-inline-end: 6rem;
+    bottom: 7rem;
+    z-index: 9;
+
+    button {
+      min-width: 15rem;
+      opacity: .9 !important;
+
+      &:hover {
+        opacity: 1 !important
+      }
+    }
+  }
+}

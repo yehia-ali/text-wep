@@ -1,0 +1,266 @@
+
+<layout>
+  <div class=" pt-1">
+    <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+      <div class="col-lg-3">
+        <search [newSearch]="true" (valueChanged)="search($event)"></search>
+      </div>
+      <div class="col-lg-3 text-right">
+        <a (click)="addProject()" style="display: inline-block;" [routerLink]="['./employee']" class="btn rounded bg-primary white py-75 px-1 fs-14">
+          {{'create_project' | translate}}
+        </a>
+      </div>
+    </div>
+    <div class="">
+      <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+        <loading ></loading>
+      </div>
+
+      <div class="table-container" *ngIf="projects.length > 0 && !loading">
+        <table class="w-100 rounded">
+          <thead>
+            <tr class="border-bottom fs-12 simibold">
+              <th class="text-left py-1">{{ "project" | translate }}</th>
+              <th class="text-left py-1">{{ "creator" | translate }}</th>
+              <th class="text-left py-1">{{ "start_date" | translate }}</th>
+              <th class="text-left py-1">{{ "end_date" | translate }}</th>
+              <th class="text-left py-1">{{ "remaining_time" | translate }}</th>
+              <th class="text-left py-1">{{ "status" | translate }}</th>
+              <th class="text-left py-1"></th>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <tbody>
+              <tr
+                *ngFor="
+                  let project of projects
+                    | paginate
+                      : {
+                          itemsPerPage: meta.pageSize,
+                          currentPage: meta.currentPage,
+                          totalItems: meta.totalItems
+                        };
+                  trackBy: trackBy
+                "
+                class="border-bottom pointer"
+                routerLink="/projects/details/{{ project.id }}"
+              >
+                <!--    project title    -->
+                <td class="pl-4">
+                  <div class="flex aic bold">
+                    <priority [priority]="project?.priority" class="mr-1"></priority>
+                    <!-- title -->
+                    <span class="text-left" *ngIf="project?.title?.length! <= 50">{{
+                      project?.title
+                    }}</span>
+
+                    <!-- trimmed title -->
+                    <span
+                      class="text-left"
+                      *ngIf="project?.title?.length! > 50"
+                      [matTooltip]="project.title"
+                      >{{ project?.title | slice : 0 : 50 }} ...</span
+                    >
+                  </div>
+                </td>
+
+                <!-- creator -->
+                <td class="text-left">
+                  <div class="flex aic">
+                    <div (click)="$event.stopImmediatePropagation()" class="start">
+                      <user-image
+                        [id]="project.projectCreatorId"
+                        [img]="project.creatorImageUrl"
+                      ></user-image>
+                    </div>
+                    <div class="info ml-1 w-18r">
+                      <p class="fs-15">{{ project.creatorName }}</p>
+                      <p class="mt-25 muted fs-13">{{ project.creatorJobTitle }}</p>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- start date -->
+                <td class="fs-15">
+                  {{ project.startDate | arabicDate }}
+                </td>
+
+                <!-- end date -->
+                <td class="fs-15">
+                  {{ project.endDate | arabicDate }}
+                </td>
+
+                <!-- remaining time -->
+                <td>
+                  <div class="flex-center">
+                    <time-left
+                      *ngIf="project.timeLeft"
+                      [bullet]="project.bullet"
+                      [label]="project.timeLeftLabel"
+                      [timeLeft]="project.timeLeft"
+                    ></time-left>
+                    <span *ngIf="!project.timeLeft">-</span>
+                  </div>
+                </td>
+
+                <!-- status -->
+                <td>
+                  <project-status
+                    (click)="
+                      $event.stopImmediatePropagation(); selectedProject = project
+                    "
+                    [matMenuTriggerFor]="(project.isCreator || null) && status"
+                    [state]="project.projectState"
+                  ></project-status>
+                </td>
+
+                <!-- actions -->
+                <td>
+                  <div
+                    (click)="$event.stopImmediatePropagation()"
+                    class="flex aic gap-x-2"
+                  >
+                    <div
+                      (click)="
+                        $event.stopImmediatePropagation();
+                        getMembers(project.id, project.isCreator)
+                      "
+                      [matTooltip]="'members' | translate"
+                      class="members action flex-center rounded-50 bg-gray pointer"
+                    >
+                      <div class="img">
+                        <img
+                          alt=""
+                          class="convert-image-color"
+                          src="assets/images/icons/users.svg"
+                          width="21"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      [matTooltip]="'tasks' | translate"
+                      class="tasks action flex-center rounded-50 bg-gray pointer"
+                      routerLink="/projects/tasks/{{ project.id }}"
+                    >
+                      <div class="img">
+                        <img
+                          alt=""
+                          class="convert-image-color"
+                          src="assets/images/icons/sub-tasks.svg"
+                          width="21"
+                        />
+                      </div>
+                    </div>
+                    <button
+                      (click)="
+                        $event.stopImmediatePropagation();
+                        projectId = project.id;
+                        selectedProject = project
+                      "
+                      *ngIf="project.isCreator"
+                      [matMenuTriggerFor]="menu"
+                      class="clickable-btn dir"
+                    >
+                      <i class="bx bx-dots-vertical-rounded fs-25"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="py-5 text-center" *ngIf="projects.length == 0 && !loading">
+        <not-found></not-found>
+      </div>
+    </div>
+    <div class="pagination-content flex-grid aic jcsb py-1 bg-white border-top border-bottom px-4" *ngIf="projects && projects.length > 0 && !loading">
+      <div class="flex aic col-lg-3">
+        <p class="fs-12 simibold">{{ 'pagination_per_page' | translate }} </p>
+        <p class="bold">{{meta.pageSize}}</p>
+        <p class="ml-50 primary fs-12" >{{ 'record' | translate }}</p>
+      </div>
+      <div class="col-lg-3 flex aic jcc">
+        <pagination-controls
+        (pageChange)="changePage($event)"
+        [maxSize]="7"
+        [directionLinks]="true"
+        [previousLabel]="'previous' | translate"
+        [nextLabel]="'next' | translate"
+                           >
+      </pagination-controls>
+      </div>
+
+      <p class="text-right pr-3 fs-12 simibold col-lg-3">{{ 'pagination_total_records' | translate }} <span
+        class="primary">{{ meta.totalItems | arabicNumbers }} {{ 'record' | translate }}</span>
+      </p>
+    </div>
+
+  </div>
+</layout>
+
+<mat-menu #menu="matMenu" xPosition="before">
+  <button (click)="editProject()" mat-menu-item>
+    {{ "edit" | translate }}
+  </button>
+  <button (click)="deleteProject()" mat-menu-item>
+    {{ "delete" | translate }}
+  </button>
+</mat-menu>
+
+<mat-menu #status="matMenu">
+  <button (click)="changeStatue(2)" mat-menu-item>
+    {{ "hold" | translate }}
+  </button>
+  <button (click)="changeStatue(1)" mat-menu-item>
+    {{ "project_open" | translate }}
+  </button>
+  <button (click)="changeStatue(3)" mat-menu-item>
+    {{ "project_completed" | translate }}
+  </button>
+  <button (click)="changeStatue(4)" mat-menu-item>
+    {{ "project_closed" | translate }}
+  </button>
+</mat-menu>
+
+<info-sidebar [open]="open">
+  <ng-container header>
+    <div class="flex aic jcsb w-100">
+      <h2 class="card-title">{{ "members" | translate }}</h2>
+      <i
+        (click)="reassignMembers()"
+        *ngIf="isCreator"
+        [matTooltip]="'reassign_members' | translate"
+        class="bx bxs-edit fs-22 pointer primary"
+      ></i>
+    </div>
+  </ng-container>
+
+  <ng-container content>
+    <div class="content h-100 p-2">
+      <ng-container *ngIf="members && members.length > 0">
+        <div
+          *ngFor="let member of members"
+          class="member-card rounded bg-gray p-1"
+        >
+          <div class="start flex aic">
+            <user-image [id]="member.id" [img]="member.imageUrl"></user-image>
+            <div class="user-info ml-1">
+              <p class="mb-25 fs-15">{{ member.name }}</p>
+              <p class="muted fs-14">
+                <span>{{ member.jobTitle }}</span>
+                <span *ngIf="member.jobTitle && member.departmentName">
+                  /
+                </span>
+                <span class="bold">{{ member.departmentName }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="members && members.length == 0">
+        <not-found></not-found>
+      </ng-container>
+    </div>
+  </ng-container>
+</info-sidebar>

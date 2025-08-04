@@ -1,0 +1,174 @@
+<div class="create-task">
+  <h2 mat-dialog-title class="black">{{data.formType | translate}} {{'template' | translate}}</h2>
+
+  <div mat-dialog-content magicScroll="" dir="auto" class="pb-2">
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-1">
+        <!--        title     -->
+        <div class="col-lg-6">
+          <input-label key="title" [control]="f['title']" [maxLength]="100"/>
+          <input type="text" class="input" formControlName="title" maxlength="100">
+          <input-error [control]="f['title']"></input-error>
+        </div>
+
+        <!--        task type     -->
+        <div class="col-lg-6">
+          <input-label [control]="f['taskGroupType']" key="task_type"/>
+          <ng-select [items]="types" [clearSearchOnAdd]="true" [clearOnBackspace]="true"
+                     bindLabel="name" bindValue="value" appendTo="body" formControlName="taskGroupType">
+          </ng-select>
+          <input-error [control]="f['taskGroupType']"></input-error>
+        </div>
+        <div class="col-lg-6" >
+          <input-label
+            key="stage"
+            [optional]="true"
+          />
+          <ng-select
+            [items]="stages"
+            [clearSearchOnAdd]="true"
+            [clearOnBackspace]="true"
+            [closeOnSelect]="false"
+            bindLabel="name"
+            bindValue="id"
+            appendTo="body"
+            [ngModelOptions]="{standalone: true}"
+            [(ngModel)]="selectedStage"
+
+          >
+          <ng-template ng-option-tmp let-item="item" let-index="index">
+            <div class="flex aic jcsb">
+              <span class="py-50 flex aic">
+                <input required="required" [readonly]="!item.editStage" (keypress)="$event.key =='Enter' ? item.editStage = false :''" type="text" class="input {{!item.editStage ? 'border-0': '' }} border-0" [(ngModel)]="item.name" [ngModelOptions]="{ standalone: true }" />
+              </span>
+              <span class="py-50 text-right" *ngIf="!item.editStage">
+                <i class="fs-18 warning mr-1 bx bx-edit" (click)="item.editStage = true"></i>
+                <i class="fs-18 danger mr-1 bx bx-trash" (click)="deleteStage(item)"></i>
+              </span>
+              <div class="flex aic relative" *ngIf="item.editStage">
+                <i class="bx bx-plus primary fs-18 px-1 absolute pointer" style="inset-inline-end: 0;" (click)="item.editStage = false"></i>
+              </div>
+            </div>
+          </ng-template>
+            <ng-template ng-footer-tmp>
+              <div class="">
+                <div class="flex aic pointer" *ngIf="!addStage" (click)="addStage = true">
+                  <i class="bx bx-plus primary fs-18"></i>
+                  <span class="fw-500">{{ 'add_stage' | translate }}</span>
+                </div>
+                <div class="flex aic relative" *ngIf="addStage">
+                  <i class="bx bx-plus primary fs-18 px-1 absolute pointer" style="inset-inline-end: 0;" (click)="saveStage()"></i>
+                  <input required="required" (keypress)="onAddStagePress($event)" type="text" class="input" [(ngModel)]="stageTitle" [ngModelOptions]="{ standalone: true }" />
+                </div>
+              </div>
+            </ng-template>
+          </ng-select>
+          <input-error [control]="f['projectId']" />
+        </div>
+
+        <!--      priority      -->
+        <div class="col-lg-6">
+          <input-label key="priority" [control]="f['priority']"></input-label>
+          <ng-select [items]="priorities"
+                     formControlName='priority' bindLabel="name" bindValue="value" appendTo="body">
+            <ng-template ng-option-tmp ng-label-tmp let-item="item">
+              <div class="flex aic">
+                <priority [priority]="item.value"></priority>
+                <span class="ml-1 fs-15">{{ item.name | translate}}</span>
+              </div>
+            </ng-template>
+          </ng-select>
+          <input-error [control]="f['priority']"></input-error>
+        </div>
+
+        <!--      category      -->
+        <div class="col-lg-6">
+          <input-label key="category" [control]="f['taskTemplateCategoryId']"></input-label>
+          <ng-select [items]="categories"
+                     formControlName='taskTemplateCategoryId' bindLabel="name" bindValue="id" appendTo="body">
+            <ng-template ng-option-tmp ng-label-tmp let-item="item">
+              <div class="flex aic">
+                <span class="ml-1 fs-15">{{ item.name | translate}}</span>
+              </div>
+            </ng-template>
+          </ng-select>
+          <input-error [control]="f['taskTemplateCategoryId']"></input-error>
+        </div>
+        <!--      description      -->
+
+        <div class="col-md-12">
+          <input-label
+            [optional]="true"
+            [control]="f['description']"
+            key="description"
+          />
+          <!-- <angular-editor formControlName="description" [config]="config" id="description2"></angular-editor> -->
+          <text-editor
+            [formGroup]="form"
+            [formControlName]="'description'"
+          ></text-editor>
+        </div>
+
+        <!--      description      -->
+        <!-- <div class="col-md-12">
+          <input-label [control]="f['description']" key="description"></input-label>
+          <angular-editor formControlName="description" [config]="config" id="description"></angular-editor>
+          <input-error [control]="f['description']"></input-error>
+        </div> -->
+
+        <!--      DOD      -->
+        <div class="col-md-12 mt-75">
+          <input-label
+            [optional]="true"
+            [control]="f['definitionOfDone']"
+            key="definitionOfDone"
+          />
+          <text-editor
+            [formGroup]="form"
+            [formControlName]="'definitionOfDone'"
+          ></text-editor>
+        </div>
+        <!--      todo      -->
+        <div class="col-lg-12 mb-1">
+          <create-task-todo
+            [propsState]="true"
+            (todoAdded)="getProps($event)"
+            [props]="props"
+            [label]="'questions'"
+          />
+        </div>
+
+        <!--        subtasks     -->
+        <div class="col-lg-12">
+          <input-label [optional]="true" key="todo_list"></input-label>
+          <div class="flex-grid gap-y-2" [ngClass]="{'mb-1': todos.length > 0}">
+            <ng-container *ngFor="let todo of todos; let i = index">
+              <div class="col-lg-6">
+                <div class="todo p-1 bg-gray flex jcsb rounded">
+                  <div class="text">{{todo.todoText}}</div>
+                  <div class="remove-todo danger pointer" (click)="removeTodo(todo, i)">
+                    <i class='bx bx-x'></i>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <div class="input-container relative rounded">
+            <input type="text" class="input" (keyup.enter)="addTodo()" maxlength="100" [(ngModel)]="todo"
+                   [ngModelOptions]="{standalone: true}">
+            <button type="button" class="clickable-btn add-todo flex-center bg-primary fs-20 white "
+                    (click)="addTodo()">+
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+  <div class="buttons" mat-dialog-actions align="end">
+    <button mat-raised-button class="px-4 mr-2 border-black" mat-dialog-close="">{{'cancel' | translate}}</button>
+    <button mat-raised-button color="primary" class="px-4 fs-15" (click)="submit()" [disabled]="form.invalid || loading">
+      <submit-button [text]="data.formType" [loading]="loading"></submit-button>
+    </button>
+  </div>
+</div>

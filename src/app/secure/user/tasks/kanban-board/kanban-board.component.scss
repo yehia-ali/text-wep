@@ -1,0 +1,117 @@
+$card-bg : rgba(162, 162, 162, 0.1);
+// @import url('/src/assets/styles/vars.scss');
+.kanban-layout{
+  height: calc(100vh - 18rem);
+  overflow: auto;
+  max-width: calc(100vw - 8.5rem);
+}
+.bg-gray{
+  background-color: $card-bg !important;
+  h4{
+    color: $card-bg;
+  }
+}
+
+:host ::ng-deep{
+  .cdk-drop-list{
+    height: calc(100vh - 23rem);
+    overflow-y: auto;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    background-color: $card-bg;
+    border : 1px dashed $card-bg;
+    &::-webkit-scrollbar-thumb {
+      background: rgba($color: #ccc, $alpha: 0.5);
+      border-radius: 10px;
+    }
+    *::-webkit-scrollbar-thumb:hover {
+      background: rgba($color: #7C5CCB, $alpha: 1);
+    }
+  }
+  .cdk-drop-list-dragging{
+    border-color: #7b58ca;
+    background-color: rgba($color: #7C5CCB, $alpha: 0.1);
+    box-shadow: 0 5px 5px -3px rgba($color:#7b58ca,$alpha: 0.2),
+    0 8px 10px 1px rgba($color:#7b58ca,$alpha: 0.14),
+    0 3px 14px 2px rgba($color:#7b58ca,$alpha: 0.12);
+  }
+  .cdk-drop-list-receiving , .cdk-drop-list-dragging{
+    border-color: #7b58ca;
+    // background-color: #fbfaff;
+  }
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba($color:#7b58ca,$alpha: 0.2),
+              0 8px 10px 1px rgba($color:#7b58ca,$alpha: 0.14),
+              0 3px 14px 2px rgba($color:#7b58ca,$alpha: 0.12);
+}
+
+// .kanban-card{
+//   min-width: 260px;
+//   width: 260px;
+// }
+
+.example-box
+{
+  border: 1px solid rgba($color: #7e7e7e, $alpha: 0.3);
+  border-radius: 0.35rem;
+  border-inline-start: 5px solid rgba($color: #7e7e7e, $alpha: 0.3);
+}
+.new-list{
+  border-inline-start-color: #7b58ca !important;
+}
+.inprogress-list{
+  border-inline-start-color: #F69E42 !important;
+}
+.over-list{
+  border-inline-start-color: #ea5455 !important;
+}
+.done-list{
+  border-inline-start-color: #29CC99 !important;
+}
+.waiting-list{
+  border-inline-start-color: #3f51b5 !important;
+}
+
+.aie{
+  align-items: end;
+}
+.more-tasks{
+  position: fixed;
+  height: 45px;
+  width: 45px;
+  z-index: 10;
+  border-radius: 50%;
+  bottom: 15px;
+  transition: ease-in 0.3s;
+  &:hover{
+    transform: rotate(180deg);
+    color: #7b58ca !important;
+    background-color: #fff !important;
+  }
+}
+
+.overlay-loading{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba($color:#fff,$alpha: 0.2);
+  z-index: 2222;
+}
+
+.clear-filters{
+  height: 30px;
+  width: 30px;
+  transition: ease-in 0.3s;
+  border-radius: 50%;
+  &:hover{
+    transform: rotate(-200deg);
+    background-color: #f7f7f7 !important;
+    color: #7b58ca !important;
+  }
+}

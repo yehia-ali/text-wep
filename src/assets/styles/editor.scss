@@ -1,0 +1,11 @@
+#insertImage-description, #insertVideo-description {
+  display: none;
+}
+
+.angular-editor-toolbar {
+  display: flex;
+
+  .angular-editor-toolbar-set:nth-of-type(3), .angular-editor-toolbar-set:nth-of-type(4), .angular-editor-toolbar-set:nth-of-type(5), .angular-editor-toolbar-set:nth-of-type(6), .angular-editor-toolbar-set:nth-of-type(7), .angular-editor-toolbar-set:nth-of-type(8), .angular-editor-toolbar-set:nth-of-type(9), .angular-editor-toolbar-set:nth-of-type(10), .angular-editor-toolbar-set:nth-of-type(11), .angular-editor-toolbar-set:last-of-type {
+    display: none !important;
+  }
+}

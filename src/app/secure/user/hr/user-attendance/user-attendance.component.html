@@ -1,0 +1,264 @@
+<layout>
+  <div class="attendance p-2 h-100 relative" magicScroll="">
+    <div class="flex aic jcsb gap-x-2 mb-1 select-date">
+      <div class="flex aic gap-x-2">
+        <div class="date-picker-card">
+          <div class="d-flex justify-content-between mb-2">
+            <div class="w-75">
+              <month-filter
+                (onChange)="setMonthAndYear($event); getAttendance()"
+                [max]="now"
+                [min]="joinDate"
+                [selectedDate]="now"
+                [displayLabel]="false"
+              >
+              </month-filter>
+            </div>
+            <button
+              *ngIf="showClearBtn"
+              class="clear-btn"
+              (click)="resetMonth()"
+              type="button"
+            >
+              <i class="bx bx-x"></i>
+            </button>
+          </div>
+
+          <div class="date-picker-card-footer">
+            <p>
+              {{ "from" | translate }} {{ startDate | date : "dd/MM/yyyy" }}
+              {{ "to" | translate }} {{ endDate | date : "dd/MM/yyyy" }}
+            </p>
+          </div>
+        </div>
+        <div class="overdue py-50 px-1">
+          <label class="fs-14">{{ "team_members" | translate }}</label>
+          <ng-select
+            class="w-22r"
+            [items]="teamMembers$ | async"
+            [placeholder]="'select_user' | translate"
+            [(ngModel)]="selectedUser"
+            (ngModelChange)="userChanged()"
+            bindLabel="name"
+            bindValue="id"
+            appendTo="body"
+            [multiple]="false"
+            [closeOnSelect]="true"
+          />
+        </div>
+      </div>
+      <div class="flex aic gap-x-2">
+        <button
+          (click)="exportToExcel()"
+          mat-button
+          color="primary"
+          mat-raised-button
+        >
+          {{ "export" | translate }}
+        </button>
+        <a
+          href="{{ exportUrl }}"
+          target="_blank"
+          mat-button
+          color="primary"
+          mat-raised-button
+        >
+          {{ "export_all_team" | translate }}
+        </a>
+      </div>
+    </div>
+
+    <ng-container *ngIf="!loading">
+      <table [ngClass]="{ 'h-100': loading }" class="w-100" id="attendance">
+        <thead>
+          <tr *ngIf="attendance" class="bg-custom-light">
+            <th class="text-left py-2 px-2" colspan="2">
+              {{ "name" | translate }} :
+              <span class="primary">{{ attendance?.list[0]?.userName }}</span>
+            </th>
+            <th class="text-left py-2 px-2" colspan="3">
+              {{ "position" | translate }} :
+              <span class="primary">{{ attendance?.list[0]?.position }}</span>
+            </th>
+            <th class="text-left py-2 px-2" colspan="2">
+              {{ "department" | translate }} :
+              <span class="primary">{{ attendance?.list[0]?.department }}</span>
+            </th>
+            <th class="text-left py-2 px-2" colspan="1">
+              {{ "total_deduction" | translate }} :
+              <span class="primary">{{ totalDetuction }}</span>
+            </th>
+          </tr>
+          <tr class="bg-light-primary-1">
+            <th class="px-2 py-2 text-left">{{ "date" | translate }}</th>
+            <th class="px-2 py-2 text-left" style="width: 10%">
+              {{ "check-in" | translate }}
+            </th>
+            <th class="px-2 py-2 text-left" style="width: 10%">
+              {{ "late_arrive" | translate }}
+            </th>
+            <th class="px-2 py-2 text-left" style="width: 10%">
+              {{ "check-out" | translate }}
+            </th>
+            <th class="px-2 py-2 text-left" style="width: 10%">
+              {{ "early" | translate }}
+            </th>
+            <th class="px-2 py-2 text-left" style="width: 10%">
+              {{ "total_hours" | translate }}
+            </th>
+            <th class="px-2 py-2 text-left" style="width: 10%">
+              {{ "deduction" | translate }}
+            </th>
+            <th class="px-2 py-2 text-left">{{ "notes" | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let item of attendance?.list"
+            class="{{
+              item.status == 1 || item.status == 2 || item.status == 3
+                ? 'bg-custom-light'
+                : item.status == 4
+                ? 'bg-light-danger'
+                : item.status == 7
+                ? 'bg-light-warning'
+                : item.status == 5 && item.deduction
+                ? 'bg-light-warning'
+                : 'bg-light-success'
+            }}"
+          >
+            <td class="px-2 py-1 text-left date border-bottom">
+              <p class="fs-14 bold">
+                {{ item.dayName | translate }} {{ item.date | arabicDate }}
+              </p>
+            </td>
+
+            <td class="px-2 py-1 check-in border-bottom text-left">
+              <p
+                *ngIf="item.checkIn"
+                (click)="openDialog(item, 'checkIn', 'update')"
+                class="pointer bold flex aic"
+              >
+                <i class="bx bx-edit fs-16 mr-50"></i>
+                {{ item.checkIn ? (item.checkIn | arabicTime) : "-" }}
+              </p>
+              <p
+                *ngIf="!item.checkIn"
+                (click)="openDialog(item, 'checkIn', 'create')"
+                class="black"
+              >
+                <i class="bx bx-plus-circle pointer fs-16"></i>
+              </p>
+            </td>
+
+            <td class="px-2 py-1 late border-bottom text-left">
+              <p>
+                {{
+                  item.lateCheckInValue
+                    ? (item.lateCheckInValue | convertMinutes : "minutes")
+                    : "-"
+                }}
+              </p>
+            </td>
+
+            <!-- <td class="px-2 py-1 checkout border-bottom text-left">
+              <p *ngIf="item.checkOut" (click)="openDialog(item , 'checkOut' , 'update')" class="pointer bold">{{ item.checkOut ? (item.checkOut | arabicTime) : "-" }}</p>
+              <p *ngIf="!item.checkOut" (click)="openDialog(item , 'checkOut' , 'create')" class="black">-</p>
+            </td> -->
+            <td class="px-2 py-1 check-in border-bottom text-left">
+              <p
+                *ngIf="item.checkOut"
+                (click)="openDialog(item, 'checkOut', 'update')"
+                class="pointer bold flex aic"
+              >
+                <i class="bx bx-edit fs-16 mr-50"></i>
+                {{ item.checkOut ? (item.checkOut | arabicTime) : "-" }}
+              </p>
+              <p
+                *ngIf="!item.checkOut"
+                (click)="openDialog(item, 'checkOut', 'create')"
+                class="black"
+              >
+                <i class="bx bx-plus-circle pointer fs-16"></i>
+              </p>
+            </td>
+            <td class="px-2 py-1 early border-bottom text-left">
+              <p>
+                {{
+                  item.lateCheckOutValue
+                    ? (item.lateCheckOutValue | convertMinutes : "minutes")
+                    : "-"
+                }}
+              </p>
+            </td>
+
+            <td class="px-2 py-1 total-hours border-bottom text-left">
+              <p>
+                {{
+                  item.totalHours
+                    ? (item.totalHours | convertMinutes : "hour")
+                    : "-"
+                }}
+              </p>
+            </td>
+            <td class="px-2 py-1 note border-bottom text-left text-black">
+              <p>
+                {{
+                  item.deduction
+                    ? item.deduction + " " + ("day" | translate)
+                    : "-"
+                }}
+              </p>
+            </td>
+            <td class="px-2 py-1 note border-bottom text-left text-black">
+              <p>{{ item.comment ? (item.comment | translate) : "" }}</p>
+            </td>
+          </tr>
+        </tbody>
+        <loading *ngIf="loading"></loading>
+      </table>
+    </ng-container>
+  </div>
+</layout>
+
+<ng-template #dialogTemplate>
+  <div class="dir">
+    <div class="d-flex justify-content-center">
+      <h4 class="fs-18 bold black mb-2">{{ "edit_login_time" | translate }}</h4>
+    </div>
+    <mat-dialog-content class="d-flex justify-content-center">
+      <timepicker
+        class="custom-time-picker d-flex justify-content-center"
+        [minuteStep]="1"
+        [(ngModel)]="attendanceDate"
+        (ngModelChange)="onDateChange($event)"
+      ></timepicker>
+    </mat-dialog-content>
+    <div class="d-flex justify-content-center mb-2 mt-2">
+      <a
+        *ngIf="title == 'update'"
+        (click)="updateAttendance()"
+        style="display: inline-block"
+        class="btn rounded bg-primary white py-75 px-2 fs-14"
+      >
+        {{ "save" | translate }}
+      </a>
+      <button
+        *ngIf="title == 'create'"
+        (click)="createAttendance()"
+        style="display: inline-block"
+        class="btn rounded bg-primary white py-75 px-2 fs-14"
+      >
+        {{ "create" | translate }}
+      </button>
+      <button
+        (click)="closeDialog()"
+        type="button"
+        class="bg-white primary py-1 px-2 border-primary rounded pointer ml-1"
+        mat-button
+      >
+        {{ "cancel" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,34 @@
+#chart {
+  padding: 0;
+  max-width: 450px;
+  margin: 0 auto;
+  height: 200px !important;
+
+}
+.small-chart{
+  margin: 0 auto;
+  max-width: 150px;
+  height: 110px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.apexcharts-canvas {
+  // width: 250px !important;
+  height: 200px !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+.kpi-values{
+  max-width: 400px;
+  margin: 0 auto;
+  .kpi-start{
+    inset-inline-start:-46px
+  }
+  .kpi-end{
+    inset-inline-end:-46px
+  }
+}
+

@@ -1,0 +1,15 @@
+.new-card {
+  .total {
+    border-radius: 5rem;
+
+    & > div, .extra-hours > div {
+      height: 4px;
+    }
+    .extra-hours p {
+      position: absolute;
+      top: 0;
+      transform: translateY(-100%);
+      inset-inline-end: 0;
+    }
+  }
+}

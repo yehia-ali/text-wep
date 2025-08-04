@@ -1,0 +1,35 @@
+<div class="shift-users" dir="auto">
+  <div class="flex aic jcsb pb-1">
+    <!-- <h3>{{ 'users' | translate }}</h3> -->
+    <input type="text" [(ngModel)]="searchQuery" (input)="filterUsers()" placeholder="{{'search' | translate}}" class="input mx-2 mt-2 w-20r">
+    <div class="pt-2 px-2">
+      <button mat-raised-button color="primary" (click)="addUsers()">{{ 'add_users' | translate }}</button>
+    </div>
+  </div>
+
+  <div mat-dialog-content class="relative">
+    <ng-container *ngIf="users.length > 0 && !loading">
+      <div class="border-bottom py-1" *ngFor="let user of users">
+        <div class="flex jcsb aic">
+          <div class="flex aic gap-x-1">
+            <user-image [img]="user?.imageUrl"></user-image>
+            <div class="info">
+              <div class="info-text">{{ user.name }}</div>
+              <div class="info-text muted fs-14">{{ user.jobTitle }}</div>
+            </div>
+          </div>
+
+          <div class="end img pointer" (click)="removeUser(user.id)" *ngIf="!data.isDefault">
+            <i class="bx bx-trash fs-25 danger line-height"></i>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <not-found *ngIf="users && users.length == 0 && !loading"></not-found>
+    <loading *ngIf="loading"></loading>
+  </div>
+
+  <div mat-dialog-actions align="end" dir="auto">
+    <button class="px-4 py-50 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>{{ 'close' | translate }}</button>
+  </div>
+</div>

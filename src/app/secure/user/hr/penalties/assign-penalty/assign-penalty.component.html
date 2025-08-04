@@ -1,0 +1,126 @@
+<div class="late-form p-2" [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
+  <p class="mb-3 fs-18 simibold black" *ngIf="data.assign">
+    {{ "assign_penalty" | translate }}
+  </p>
+
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group mb-3">
+          <input-label
+            key="employee"
+            [control]="f['employeeControl']"
+            [showIcon]="true"
+            [icon]="'assets/images/icons/users.svg'"
+          />
+          <div class="select-user">
+            <div class="user">
+              <select-user
+                [classes]="'w-100'"
+                text="choose_empoyee"
+                [multi]="false"
+                (getSelectedUsers)="getUser($event)"
+              />
+            </div>
+          </div>
+          <input-error [control]="f['employeeControl']"></input-error>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="form-group mb-3">
+          <input-label
+            key="penalty"
+            [control]="f['penaltyTypeId']"
+            [showIcon]="true"
+            [icon]="'assets/images/icons/text-block.svg'"
+          />
+          <ng-select
+            [items]="penaltyTypesList"
+            [clearable]="false"
+            [bindLabel]="currentLang === 'ar' ? 'nameAr' : 'name'"
+            [bindValue]="'id'"
+            formControlName="penaltyTypeId"
+            class="late-select"
+            (change)="getLastDeduction(userId, f['penaltyTypeId'].value)"
+            [placeholder]="'choose_a_penalty' | translate"
+          >
+          </ng-select>
+          <input-error [control]="f['penaltyTypeId']"></input-error>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="form-group mb-3">
+          <input-label
+            key="repetition"
+            [control]="f['Repetition']"
+            [showIcon]="true"
+            [icon]="'assets/images/icons/number.svg'"
+          />
+          <p>{{repetition[deductionsInfo?.level] ? repetition[deductionsInfo?.level].name : deductionsInfo?.level || 0}}</p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="form-group mb-3">
+          <input-label
+            key="deduction_days_number"
+            [showIcon]="true"
+            [icon]="'assets/images/icons/number.svg'"
+          />
+          <p>{{deductionsInfo?.deductionAmount || 0}} {{deductionsInfo?.deductionAmount> 1 ? 'days' : 'day'}}</p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="form-group mb-3">
+          <input-label
+            key="implementation_month"
+            [control]="f['PenaltyDate']"
+            [showIcon]="true"
+            [icon]="'assets/images/icons/calendar-icon.svg'"
+          />
+          <month-filter
+            (onChange)="selectMonth($event)"
+            [min]="minDate"
+            [displayLabel]="false"
+          >
+          </month-filter>
+          <input-error [control]="f['PenaltyDate']"></input-error>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="form-group mb-3">
+          <input-label
+            key="description"
+            [control]="f['description']"
+            [showIcon]="true"
+            [icon]="'assets/images/icons/list.svg'"
+          />
+          <textarea
+            formControlName="description"
+            class="input"
+            rows="5"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="text-right">
+      <button
+        (click)="submit()"
+        type="submit"
+        class="bg-primary white py-1 px-2 border-primary rounded pointer"
+        mat-button
+      >
+        {{ "add" | translate }}
+      </button>
+      <button
+        (click)="dialogRef.close()"
+        type="button"
+        class="bg-white primary py-1 px-2 border-primary rounded pointer ml-1"
+        mat-button
+      >
+        {{ "cancel" | translate }}
+      </button>
+    </div>
+  </form>
+</div>

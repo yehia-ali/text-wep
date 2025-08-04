@@ -1,0 +1,54 @@
+<div class="dir py-2">
+  <div class="flex aic jcsb px-2 mb-2">
+    <p class="fs-18 black simibold">{{'link_kpi_to_task' | translate}}</p>
+    <i class="bx bx-x fs-20 pointer" (click)="dialogRef.close()"></i>
+  </div>
+  <div class="px-2" *ngIf="!loading && itemsList.length > 0">
+    <div class="" *ngFor="let item of itemsList">
+      <div class="mb-2">
+        <app-img-title
+          [title]="item.userName"
+          [subTitle]="item.userJobTitle"
+          [userId]="item.userId"
+          [imgSrc]="item.userPic"
+        />
+      </div>
+
+      <div class="mb-2">
+        <span *ngIf="item.kpiCategories.length == 0">{{'assign_kpi_categeory_first' | translate}}</span>
+        <ng-select
+          *ngIf="item.kpiCategories.length > 0"
+          [items]="item.kpiCategories"
+          bindLabel="categoryName"
+          bindValue="employeeCategoryId"
+          class="icon-input"
+          [multiple]="false"
+          [(ngModel)]="item.selectedCategory"
+          (change)="onCategoryChange($event, item)"
+          [compareWith]="compareCategories"
+        ></ng-select>
+      </div>
+      <div>
+      <span *ngIf="item.selectedCategory?.kpis.length == 0">{{'assign_kpi_categeory_first' | translate}}</span>
+        <ng-select
+          *ngIf="item.selectedCategory?.kpis.length > 0"
+          [items]="item.selectedCategory?.kpis || []"
+          bindLabel="kpiName"
+          bindValue="employeeKpiId"
+          class="icon-input"
+          [multiple]="false"
+          [(ngModel)]="item.selectedKpi"
+          [compareWith]="compareKpis"
+        ></ng-select>
+      </div>
+    </div>
+
+    <div class="text-right mt-2">
+      <button class="btn bg-primary rounded py-75 px-1 white" (click)="submit()">{{'save' | translate}}</button>
+    </div>
+  </div>
+  <div class="flex aic jcc py-5" *ngIf="loading || itemsList.length == 0">
+    <loading *ngIf="loading" [centerd]="true"/>
+    <not-found *ngIf="!loading && itemsList.length == 0" />
+  </div>
+</div>

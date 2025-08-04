@@ -1,0 +1,28 @@
+export interface TaskInbox {
+  creatorId: number,
+  creatorName: string,
+  creatorProfilePicture: string,
+  creatorjob: string
+  endDate: string,
+  endedTaskRepeatedCounter: number,
+  isOverDue: boolean,
+  isRepeated: boolean,
+  isSubTasks: boolean,
+  parentTaskGroupId: number,
+  percentage: number,
+  priority: number,
+  rate: number,
+  startDate: string,
+  taskGroupId: number,
+  taskId: number,
+  taskRepeatedPeriod: number,
+  taskStateDate: string,
+  taskStateId: number,
+  title: string,
+  timeLeft: any,
+  timeLeftLabel: string,
+  bullet: string,
+  start?: string,
+  end?: string,
+  expectedTime: number
+}

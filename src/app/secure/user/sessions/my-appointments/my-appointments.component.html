@@ -1,0 +1,51 @@
+<layout>
+  <div class="user-profile h-100">
+    <div class="header bg-primary white pt-5 px-5">
+      <h2>{{'my_appointments' | translate}}</h2>
+    </div>
+    <div class="flex h-100">
+      <div class="content py-3 px-3" magicScroll="">
+        <div class="flex-grid gap-y-3">
+          <div class="col-xl-6 ">
+            <calendar (selectedDateChanged)="getMyAppointments($event)" [selectedDate]="selectedDate" [currentDate]="currentDate" />
+            <div class="flex-center mt-3">
+              <button mat-raised-button color="primary" class="px-5 py-1" (click)="addAppointment()">{{'add_appointment' | translate}}</button>
+            </div>
+          </div>
+          <div class="col-xl-6 pb-1">
+            <div class="flex-center">
+              <button (click)="!disablePreviousDay && previousDay()" class="clickable-btn img left" [ngClass]="{'disabled-img': disablePreviousDay}">
+                <img src="assets/images/icons/chev-left.svg" alt="chev left icon">
+              </button>
+              <p class="text-center bold selected-date">{{selectedDate | arabicDate:'long'}}</p>
+              <button (click)="nextDay()" class="clickable-btn img right">
+                <img src="assets/images/icons/chev-right.svg" alt="chev right icon">
+              </button>
+            </div>
+            <div class="appointments mt-4 flex-column gap-y-2 relative" [ngClass]="{'flex-center': appointments().length == 0}">
+              <ng-container *ngIf="appointments().length > 0 && !loading">
+                <div class="flex-grid gap-y-2">
+                  <div class="col-lg-4 col-md-6" *ngFor="let appointment of appointments()">
+                    <div class="flex aic gap-x-1">
+                      <div class="flex-auto">
+                        <session-card [sessionData]="appointment" />
+                      </div>
+                      <div class="img pointer" (click)="appointment.sessionDateStatus == 0 && deleteAppointment(appointment)"
+                           [ngClass]="{'disabled-img': appointment.sessionDateStatus == 1}">
+                        <img src="assets/images/icons/remove.svg" alt="remove icon" width="15">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="appointments().length == 0 || loading">
+                <loading *ngIf="loading" />
+                <not-found *ngIf="appointments().length == 0 && !loading" />
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</layout>

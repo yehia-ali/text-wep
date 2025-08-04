@@ -1,0 +1,314 @@
+<div class="">
+  <layout >
+    <div class="pt-1 kpis-bank-list">
+      <div class="px-2 flex aic jcsb mb-1">
+        <h5 class="">{{'kpis_bank_categories' | translate}}</h5>
+        <div class="flex aic jce gap-x-1">
+          <button (click)="createOrUpdate(false)" type="submit" class="btn rounded bg-primary white py-75 px-2 fs-14">
+            {{'create_kpi_category' | translate}}
+          </button>
+
+          <button (click)="createOrUpdate(true)" type="submit" class="btn rounded bg-primary white py-75 px-2 fs-14 ">
+            {{'create_kpi' | translate}}
+          </button>
+        </div>
+      </div>
+      <div class="table-container kpi-bank">
+        <table class="table table-bordered" *ngIf="!loading && itemsList.length > 0">
+          <thead>
+            <tr class="bg-gray fs-15 fw-500">
+              <th class="text-left kpis-1-col-width">{{'kpi_category_name' | translate}}</th>
+              <th class="text-left kpis-two-2span-col-width text-left">{{'description' | translate}}</th>
+              <!-- <th class="text-left kpis-3-col-width">{{'department' | translate}}</th> -->
+              <th class="text-left kpis-4-col-width">{{'weight' | translate}}</th>
+              <th class="text-left kpis-5-col-width">{{'target' | translate}}</th>
+              <th class="text-left" *ngIf="!isKpiAdmin && !isAdmin">{{'status' | translate}}</th>
+              <th class="text-right">{{'procedures' | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let row of itemsList | paginate: {itemsPerPage: limit, currentPage: page, totalItems: totalItems}">
+              <tr class="border-bottom kpi-row" (click)="showItem(row , false)">
+                <td class="text-left">
+                  <div class="flex aic"(click)="$event.stopPropagation()" >
+                    <div class="flex" *ngIf="row?.isApproved" (click)="row.isExpand = !row.isExpand;getKpis(row)">
+                      <i *ngIf="!row.isExpand" class="pointer px-25 fs-19 primary bx bx-chevron-right"></i>
+                      <i *ngIf="row.isExpand" class="pointer px-25 fs-19 primary bx bx-chevron-up"></i>
+                    </div>
+                    <span>
+                      {{ row?.name }}
+                    </span>
+                  </div>
+                </td>
+                <td class="text-left pointer">{{ (row?.describtion && row?.describtion.length > 35  ? (row?.describtion | slice:0:35) + '...' : row?.describtion) || '-' }}</td>
+                <!-- <td class="text-left">{{ row?.department || '-' }}</td> -->
+                <td class="text-left pointer">{{ row?.weight }}</td>
+                <td class="text-left pointer">{{ row?.target }}</td>
+                <td class="text-left pointer" *ngIf="!isKpiAdmin && !isAdmin">
+                  <span *ngIf="row?.isApproved" class="bg-light-success rounded-5 py-25 px-1">{{'active' | translate}}</span>
+                  <span *ngIf="!row?.isApproved" class="chip-light-gray rounded-5 py-25 px-1">{{'pending' | translate}}</span>
+                </td>
+                <td class="text-right pl-0" (click)="$event.stopPropagation()">
+                  <div class="flex aic jce gap-x-2">
+                    <div class="flex aic jce gap-x-50" *ngIf="!row?.isApproved && (isKpiAdmin || isAdmin)">
+                      <a type="submit" (click)="approve(row?.id)" class="success fw-500 pointer" mat-button>{{'approve' | translate}}</a>
+                      <a type="submit" (click)="deleteItem(row)" class="danger fw-500 pointer ml-1" mat-button>{{'reject' | translate}}</a>
+                    </div>
+                    <div  *ngIf="(!row?.isApproved && loggedInUserId == row?.creatorId) || isKpiAdmin || isAdmin">
+                      <button [matMenuTriggerFor]="menu" class="clickable-btn">
+                        <i class='bx bx-dots-vertical-rounded fs-25'></i>
+                      </button>
+                      <mat-menu #menu="matMenu">
+                        <button mat-menu-item dir="auto" (click)="showItem(row , false)">{{'view' | translate}}</button>
+                        <button mat-menu-item dir="auto" *ngIf="row.isApproved" (click)="createOrUpdate(true , false, row?.id)">{{'create_kpi' | translate}}</button>
+                        <button mat-menu-item dir="auto" ngClass="" *ngIf="isKpiAdmin || isAdmin || (loggedInUserId == row?.creatorId && !row?.isApproved)" (click)="createOrUpdate(false , true , row )">{{'edit' | translate}}</button>
+                        <button mat-menu-item dir="auto" *ngIf="(isKpiAdmin || isAdmin)" (click)="getLogs(row?.id , 1)">{{'history' | translate}}</button>
+                        <button mat-menu-item dir="auto" *ngIf="(isKpiAdmin || isAdmin) || (loggedInUserId == row?.creatorId && !row?.isApproved)" (click)="deleteItem(row)">{{'delete' | translate}}</button>
+                      </mat-menu>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="row.isExpand">
+                <td colspan="6" class="px-0 py-0 bg-gray">
+                  <table class="table table-sm bg-gray" *ngIf="row?.kpis && row?.kpis?.length > 0">
+                    <thead class="bg-gray">
+                      <tr class="border-bottom">
+                        <th class="text-left kpis-1-col-width text-left pl-4 pr-50">
+
+                          {{'kpi_name' | translate}}
+                        </th>
+                        <th class="text-left kpis-2-col-width" >{{'description' | translate}}</th>
+                        <th class="text-left kpis-3-col-width">{{'department' | translate}}</th>
+                        <th class="text-left kpis-4-col-width">{{'KPI_Repetition' | translate}}</th>
+                        <th class="text-left kpis-4-col-width">{{'over_achievement' | translate}}</th>
+                        <th class="text-left kpis-4-col-width">{{'weight' | translate}}</th>
+                        <th class="text-left kpis-5-col-width">{{'target' | translate}}</th>
+                        <th class="text-left" *ngIf="!isKpiAdmin && !isAdmin">{{'status' | translate}}</th>
+                        <th class="text-right" colspan="2">{{'procedures' | translate}}</th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-light-violet">
+                      <tr *ngFor="let kpi of row?.kpis" (click)="showItem(kpi , true)">
+                        <td class="text-left pr-50">
+                          <div class="flex aic ">
+                            <i class='bx bx-info-circle mr-1 pointer relative bx-tool-tip fs-18 ' [matTooltip]="equation" *ngIf="kpi.valueTypeId" (mouseover)="getEquation(kpi)">
+                            </i>
+                            <span>{{ kpi?.name }}</span>
+                          </div>
+                        </td>
+                        <td class="text-left">{{ (kpi?.describtion && kpi?.describtion.length > 35  ? (kpi?.describtion | slice:0:35) + '...' : kpi?.describtion) || '-' }}</td>
+                        <td class="text-left">
+                          <ng-container>
+                            <span *ngFor="let item of kpi?.departmentNames; let isFirst = first; let isLast = last">
+                              {{ item }}
+                              <span *ngIf="!isLast" class="bold fs-16">, </span>
+                            </span>
+
+                          </ng-container>
+
+                          <span *ngIf="kpi?.departmentNames.length == 0">-</span>
+                        </td>
+                        <td class="text-left">{{ EvaluationFrequency[kpi?.evaluationFrequency - 1]?.name }}</td>
+                        <td class="text-left">{{ kpi?.isOverAchive ? ('yes' | translate) : ('no' | translate) }}</td>
+                        <td class="text-left">{{ kpi?.weight }}</td>
+                        <td class="text-left">{{ kpi?.target }}</td>
+                        <td class="text-left pointer" *ngIf="!isKpiAdmin && !isAdmin">
+                          <span *ngIf="kpi?.isApproved" class="bg-light-success rounded-5 py-25 px-1">{{'active' | translate}}</span>
+                          <span *ngIf="!kpi?.isApproved" class="chip-light-gray rounded-5 py-25 px-1">{{'pending' | translate}}</span>
+                        </td>
+                        <td class="text-right" (click)="$event.stopPropagation()">
+                          <div class="flex aic gap-x-2 jce">
+                            <div class="flex aic jce gap-x-50" *ngIf="!kpi?.isApproved && (isKpiAdmin || isAdmin)">
+                              <a type="submit" (click)="approve(kpi?.id , true)" class="success fw-500 pointer" mat-button>{{'approve' | translate}}</a>
+                              <a type="submit" (click)="deleteItem(kpi , true)" class="danger fw-500 pointer ml-1" mat-button>{{'reject' | translate}}</a>
+                            </div>
+                            <ng-container  *ngIf="(!kpi?.isApproved && loggedInUserId == kpi?.creatorId) || isKpiAdmin || isAdmin">
+                              <button [matMenuTriggerFor]="menu" class="clickable-btn">
+                                <i class='bx bx-dots-vertical-rounded fs-25'></i>
+                              </button>
+                              <mat-menu #menu="matMenu">
+                                <button mat-menu-item dir="auto" (click)="showItem(kpi , true)">{{'view' | translate}}</button>
+                                <button mat-menu-item dir="auto" *ngIf="isKpiAdmin || isAdmin || (loggedInUserId == kpi?.creatorId && !kpi?.isApproved)" (click)="createOrUpdate(true , true , kpi )" class=" fw-500 pointer">{{'edit' | translate}}</button>
+                                <button mat-menu-item dir="auto" *ngIf="isKpiAdmin || isAdmin " (click)="getLogs(kpi?.id , 2)">{{'history' | translate}}</button>
+                                <button mat-menu-item dir="auto" (click)="deleteItem(kpi , true)">{{'delete' | translate}}</button>
+                              </mat-menu>
+                            </ng-container>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p class="text-center py-1" *ngIf="row?.kpis.length == 0">{{'no_data_found' | translate}}</p>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination-content flex aic jcsb py-1 bg-white border-top border-bottom px-2" >
+        <div class="flex aic">
+          <p class="fs-12 simibold">{{ 'pagination_per_page' | translate }} </p>
+          <input type="number" style="width:50px" class="input ml-75 limit text-center py-50 px-0" min="1" [(ngModel)]="limit" (ngModelChange)="changeLimit()">
+          <p class="ml-50 primary fs-12" >{{ 'record' | translate }}</p>
+        </div>
+        <pagination-controls
+          (pageChange)="pageChanged($event)"
+          [maxSize]="7"
+          [directionLinks]="true"
+          [previousLabel]="'previous' | translate"
+          [nextLabel]="'next' | translate"
+                             >
+        </pagination-controls>
+        <p class="fs-12 simibold pr-3">{{ 'pagination_total_records' | translate }} <span
+          class="primary">{{ totalItems | arabicNumbers }} {{ 'record' | translate }}</span>
+        </p>
+      </div>
+    </div>
+    <div class="flex aic jcc py-5" *ngIf="loading || itemsList.length == 0">
+      <loading *ngIf="loading" [centerd]="true"/>
+      <not-found *ngIf="!loading && itemsList.length == 0" />
+    </div>
+  </layout>
+</div>
+
+<ng-template #dialogTemplate>
+  <div class="p-2 dir">
+    <div class="mb-2">
+      <p class="fs-18 simibold">
+        {{selectedItem?.name}}
+      </p>
+    </div>
+    <div class="mb-2" *ngIf="selectedItem?.describtion">
+      <div class="label flex aic jcsb">
+        <span class="fs-11 simibold mb-75" for="name">
+          <i class="mr-50 bx bx-align-justify"></i>
+          <span>{{'description' | translate}}</span>
+        </span>
+      </div>
+      <p class="">
+        {{selectedItem?.describtion}}
+      </p>
+    </div>
+    <div class="flex-grid jcs">
+      <div class="col-lg-6 mb-2">
+        <div class="">
+          <span class="fs-11 simibold mb-75" for="name">
+            <i class="mr-50 bx bx-dumbbell"></i>
+            <span>{{'weight' | translate}}</span>
+          </span>
+        </div>
+        <p class="">
+          {{selectedItem?.weight}}
+        </p>
+      </div>
+
+      <div class="col-lg-6 mb-2">
+        <div class="">
+          <span class="fs-11 simibold mb-75" for="name">
+            <i class="mr-50 bx bx-target-lock"></i>
+            <span>{{'target' | translate}}</span>
+          </span>
+        </div>
+        <p class="">
+          {{selectedItem?.target}}
+        </p>
+      </div>
+
+      <div class="col-lg-12 mb-2" *ngIf="selectedItem?.valueType">
+        <div class="">
+          <span class="fs-11 simibold mb-75" for="name">
+            <i class="mr-50 bx bx-category"></i>
+            <span>{{'value_type' | translate}}</span>
+          </span>
+        </div>
+        <p class="p-1 rouunded bg-light-violet flex jcsb mt-50 rounded">
+          <span>{{enLanguage ? selectedItem?.valueType.valueTypeEn : selectedItem?.valueType.valueTypeAr}}</span>
+          <span>{{enLanguage ? selectedItem?.valueType.unitEn : selectedItem?.valueType.unitAr}}</span>
+          <span>{{enLanguage ? selectedItem?.valueType.dataSourceEn : selectedItem?.valueType.dataSourceAr}}</span>
+        </p>
+      </div>
+      <div class="col-lg-6 mb-2" *ngIf="selectedItem?.dateFrom">
+        <div class="">
+          <span class="fs-11 simibold mb-75" for="name">
+            <i class="mr-50 bx bx-calndar"></i>
+            <span>{{'date_from' | translate}}</span>
+          </span>
+        </div>
+        <p class="">
+          {{selectedItem?.dateFrom | arabicDate}}
+        </p>
+      </div>
+      <div class="col-lg-6 mb-2" *ngIf="selectedItem?.dateTo">
+        <div class="">
+          <span class="fs-11 simibold mb-75" for="name">
+            <i class="mr-50 bx bx-calndar"></i>
+            <span>{{'date_to' | translate}}</span>
+          </span>
+        </div>
+        <p class="">
+          {{selectedItem?.dateTo | arabicDate}}
+        </p>
+      </div>
+      <div class="col-lg-6 mb-2" *ngIf="selectedItem?.departmentNames && selectedItem?.departmentNames.length > 0">
+        <div class="">
+          <span class="fs-11 simibold mb-75" for="name">
+            <i class="mr-50 bx bx-buildings"></i>
+            <span>{{'departments' | translate}}</span>
+          </span>
+        </div>
+        <p class="">
+          <span class="mr-1" *ngFor="let item of selectedItem?.departmentNames">{{item}}</span>
+        </p>
+      </div>
+      <div class="col-lg-6 mb-2" *ngIf="selectedItem?.evaluationFrequency">
+        <div class="">
+          <span class="fs-11 simibold mb-75" for="name">
+            <i class="mr-50 bx bx-repost"></i>
+            <span>{{'repeat' | translate}}</span>
+          </span>
+        </div>
+        <p class="">
+          {{  EvaluationFrequency[selectedItem?.evaluationFrequency - 1].name}}
+        </p>
+      </div>
+    </div>
+
+    <div class="text-right mt-2" *ngIf="!selectedItem?.kpi">
+      <!-- createOrUpdate(true , false, row?.id) -->
+      <button (click)="createOrUpdate(true , false, selectedItem?.id)" type="submit" class="btn rounded bg-primary white py-75 px-2 fs-14 ">
+        {{'create_kpi' | translate}}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<info-sidebar [open]="historyIsOpen" *ngIf="historyIsOpen">
+  <ng-container header>
+    <h2>{{ 'history' | translate }}</h2>
+  </ng-container>
+  <ng-container content>
+    <div class="flex aic jcc w-100" *ngIf="historyloading" >
+      <loading [centerd]="true"/>
+    </div>
+
+    <div class="timeline ml-3 mb-4" *ngIf="itemLogs.length > 0">
+      <ng-container *ngFor="let item of itemLogs">
+          <div class="history relative">
+              <div class="date mt-1 fs-15">
+                  {{item.createdDate | arabicDate}}
+              </div>
+              <div class="log mt-1">
+                  <div  class="mb-2">
+                      <p class="fs-12 simibold mb-50">{{enLanguage ? item.actionEn : item.actionAr}}</p>
+                      <p class="muted fs-12 simibold">{{item?.createdDate | arabicTime}}</p>
+                  </div>
+              </div>
+          </div>
+      </ng-container>
+      <div class="relative h-100" *ngIf="itemLogs?.length == 0 && !historyloading">
+        <not-found/>
+      </div>
+  </div>
+  </ng-container>
+</info-sidebar>

@@ -1,0 +1,12 @@
+<auth-layout img="forgot-password-v2">
+  <div class="form w-100 h-100v flex-column jcc px-2">
+    <h2>{{ "verification" | translate }}</h2>
+    <p class="fs-15 mb-3">{{ "verification_message" | translate }} {{phone}}</p>
+    <div class="relative forgot-password-code">
+      <code-input (codeCompleted)="submit($event)" [codeLength]="6" [isCodeHidden]="false"></code-input>
+    </div>
+    <p class="text-center mt-3 pointer">
+      <span (click)="toLogin()" class="primary bold">{{ "back_login" | translate }}</span>
+    </p>
+  </div>
+</auth-layout>

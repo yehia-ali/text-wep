@@ -1,0 +1,20 @@
+:host ::ng-deep{
+  mat-form-field{
+    &.mat-form-field-invalid{
+      .mdc-text-field {
+        border: 1px solid #EA5455;
+      }
+    }
+    width: 100%;
+    .mdc-text-field {
+      background: transparent !important;
+      border: 1px solid #e7e7e7;
+      border-radius: 4px;
+      height: 41px;
+      .mat-mdc-icon-button{
+        top: -9px;
+      }
+    }
+  }
+
+}

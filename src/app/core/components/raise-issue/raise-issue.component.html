@@ -1,0 +1,91 @@
+<div class="raise-issue" dir="auto">
+    <h3>{{'raise_issue' | translate}}</h3>
+
+    <div mat-dialog-content>
+        <div class="module">
+            <input-label key="module"/>
+            <p class="border p-1 rounded">{{'consulting' | translate}}</p>
+        </div>
+
+        <div class="subject mt-2">
+            <form [formGroup]="form">
+                <input-label [control]="form.controls['subject']" key="subject" [maxLength]="250"/>
+                <input type="text" formControlName="subject" class="input" maxlength="250">
+                <input-error [control]="form.controls['subject']"></input-error>
+            </form>
+        </div>
+
+        <div class="message mt-2">
+            <input-label key="message"/>
+            <div class="border p-1 rounded">
+                <div class="id flex aic jcsb mb-1">
+                    <p>{{'id' | translate}}</p>
+                    <p>S-{{session.id}}</p>
+                </div>
+                <div class="title flex aic jcsb mb-1">
+                    <p>{{'title' | translate}}</p>
+                    <p>{{session.title}}</p>
+                </div>
+                <div class="user flex aic jcsb mb-1">
+                    <p>{{session.isConsultant ? ('user' | translate) : ('consultant' | translate)}}</p>
+                    <p>{{session.isConsultant ? session.attendeeUserName : session.consulaltantUserName}}</p>
+                </div>
+                <div class="date flex aic jcsb mb-1">
+                    <p>{{'session_date' | translate}}</p>
+                    <p>{{session.startDate | arabicDate}}</p>
+                </div>
+                <div class="date flex aic jcsb">
+                    <p>{{'session_cost' | translate}}</p>
+                    <p>{{session.price | arabicNumbers}} {{'egp' | translate}}</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="record mt-2">
+          <input-label key="sound_description"/>
+            <record (soundDescription)="sound = $event"/>
+        </div>
+
+        <div class="attachments mt-2">
+            <input-label key="attachments"/>
+            <div class="flex-grid gap-y-1" [ngClass]="{'mb-1': attachments.length > 0}">
+                <div class="col-lg-6" *ngFor="let attachment of attachments; let i = index">
+                    <div class="attachment-card p-1 bg-gray rounded flex jcsb aic">
+                        <div class="start flex aic">
+                            <p *ngIf="attachment.name.length <= 20">{{attachment.name}}</p>
+                            <p *ngIf="attachment.name.length > 20">{{attachment.name | slice:0:20}}...</p>
+                        </div>
+                        <div class="end img pointer" (click)="removeFile(i)">
+                            <i class='bx bx-x danger fs-23'></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <label class="mt-50 pointer">
+                <ngx-file-drop
+                        (onFileDrop)="dropped($event)"
+                        [multiple]="true"
+                        accept="image/*, video/*, audio/*">
+                    <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                        <ng-container (click)="openFileSelector()">
+                            <div class="img mb-50">
+                                <img src="assets/images/icons/attachments.svg" width="25" alt="">
+                            </div>
+                            <span>{{'drop_files' | translate}}</span>
+                            <span>{{'up_to_5_mb' | translate}}</span>
+                        </ng-container>
+                    </ng-template>
+                </ngx-file-drop>
+            </label>
+        </div>
+
+
+    </div>
+
+    <div mat-dialog-actions align="end">
+        <button mat-raised-button color="primary" class="border border-dark px-3 mr-1 shadow-0" [disabled]="loading" (click)="send()">{{'send' | translate}}</button>
+        <button mat-raised-button mat-dialog-close="" class="border border-dark px-2 shadow-0">{{'cancel' |translate}}</button>
+    </div>
+
+</div>

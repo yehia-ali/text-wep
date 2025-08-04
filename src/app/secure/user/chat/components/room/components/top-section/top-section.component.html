@@ -1,0 +1,32 @@
+<ng-container *ngIf="selectedRoom">
+  <div class="top-section bg-gray flex aic jcsb px-2 border-bottom">
+    <div class="start flex aic gap-x-1">
+      <div class="img">
+        <logo *ngIf="selectedRoom.type == 'group' && (selectedRoom.subType == 'task' || selectedRoom.subType == 'group')"/>
+        <user-image [img]="user?.avatar" [id]="user?.id" *ngIf="selectedRoom.subType == 'private'"></user-image>
+      </div>
+      <p>
+        <ng-container *ngIf="selectedRoom.subType != 'private'">
+          {{selectedRoom.name}}
+        </ng-container>
+        <ng-container *ngIf="selectedRoom.subType == 'private'">
+          {{user?.name}}
+        </ng-container>
+      </p>
+    </div>
+
+    <div class="end" *ngIf="!taskDetails">
+      <div class="img pointer" [matTooltip]="'go_to_task' | translate" (click)="getTask()" *ngIf="selectedRoom.subType == 'task' && selectedRoom.type == 'group'">
+        <img src="assets/images/main-sidebar/tasks.svg" alt="tasks icon" class="convert-image-color" width="25">
+      </div>
+      <ng-container *ngIf="selectedRoom.subType == 'group' && selectedRoom.type == 'group'">
+        <app-group-members></app-group-members>
+      </ng-container>
+      <!--      <div class="img pointer" [matTooltip]="'go_to_task' | translate" (click)="showUsers()" *ngIf="selectedRoom.subType == 'private' && selectedRoom.type == 'private'">-->
+      <!--        <img src="assets/images/sidebar/tasks.svg" alt="" class="convert-image-color" width="25">-->
+      <!--      </div>-->
+    </div>
+  </div>
+  <task-group-details *ngIf="open" [open]="open" [task]="taskId" [reporters]="reporters" [isChat]="true"></task-group-details>
+  <loading *ngIf="loading"/>
+</ng-container>

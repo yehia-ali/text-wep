@@ -1,0 +1,11 @@
+<div class="dashboard-card py-2 px-2 bg-white rounded-4 pointer card-shadow h-100" (click)="routeMe(item.link, item.title)">
+  <div class="img mb-1">
+    <i class="bx {{item.color}} {{item.image}} fs-25 rounded-50 p-2"></i>
+  </div>
+  <h2 class="bold">{{item.number | arabicNumbers}}</h2>
+  <h4 class="flex aic fs-14 simibold">
+    {{item.title | translate}}
+    <span *ngIf="item.title == 'requests' && item.number > 0" class="red-dot bg-danger rounded-50 ml-1"></span>
+  </h4>
+
+</div>

@@ -1,0 +1,114 @@
+<not-found *ngIf="notFound"></not-found>
+<div class="task-statistics"  *ngIf="!notFound">
+  <h3 class="lighter">{{ label | translate }}</h3>
+  <div class="flex-grid aic jcc py-2">
+    <div class="col-lg-6" >
+      <apx-chart
+        [series]="chartOptions?.series"
+        [chart]="chartOptions?.chart"
+        [labels]="chartOptions?.labels"
+        [colors]="chartOptions?.colors"
+        [legend]="chartOptions?.legend"
+        [dataLabels]="chartOptions?.dataLabels"
+        [responsive]="chartOptions?.responsive"
+        [title]="chartOptions?.title"
+        [subtitle]="chartOptions?.subtitle"
+        [plotOptions]="chartOptions.plotOptions"
+      ></apx-chart>
+    </div>
+<!--    <div class="col-lg-6">-->
+<!--      <apx-chart-->
+<!--        [series]="lineChartOptions.series"-->
+<!--        [chart]="lineChartOptions.chart"-->
+<!--        [xaxis]="lineChartOptions.xaxis"-->
+<!--        [dataLabels]="lineChartOptions.dataLabels"-->
+<!--        [plotOptions]="lineChartOptions.plotOptions"-->
+<!--        [yaxis]="lineChartOptions.yaxis"-->
+<!--        [stroke]="lineChartOptions.stroke"-->
+<!--        [legend]="lineChartOptions.legend"-->
+<!--        [grid]="lineChartOptions.grid"-->
+<!--        [fill]="lineChartOptions.fill"-->
+<!--        [colors]="lineChartOptions.colors"-->
+<!--      ></apx-chart>-->
+<!--    </div>-->
+  </div>
+
+  <div class="task-card border rounded-4 mb-2">
+    <div class="flex aic jcsb border-bottom py-1 px-2">
+      <div class="flex aic gap-x-1 bold primary pointer" (click)="filter('new')">
+        <div class="bullet big bg-primary "></div>
+        {{ 'new' | translate }}
+      </div>
+      <p class="bold primary">{{ data?.newTasks?.totalCount }} {{ 'tasks' | translate }}</p>
+    </div>
+    <div class="numbers py-1 px-2 flex aic jcsb">
+      <div class="flex aifs gap-x-1 pointer" (click)="filter('new_ontime')">
+        <div class="bullet bg-primary top-1"></div>
+        <div>
+          <p class="line-height mb-50 bold">{{ 'on_time' | translate }}</p>
+          <p class="bold primary">{{ data?.newTasks?.onTimeCount }} {{ 'tasks' | translate }} - <span class="dark">{{ data?.newTasks?.onTimePercentage }}%</span></p>
+        </div>
+      </div>
+      <div class="flex gap-x-1 pointer"  (click)="filter('new_overDue')">
+        <div class="bullet bg-light-primary top-1"></div>
+        <div>
+          <p class="line-height mb-50 bold">{{ 'overdue' | translate }}</p>
+          <p class="bold primary">{{ data?.newTasks?.overDueCount }} {{ 'tasks' | translate }} - <span class="dark">{{ data?.newTasks?.overDuePercentage }}%</span></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="task-card border rounded-4 mb-2">
+    <div class="flex aic jcsb border-bottom py-1 px-2">
+      <div class="flex aic gap-x-1 warning bold pointer" (click)="filter('in_progress')">
+        <div class="bullet big bg-warning"></div>
+        {{ 'in_progress' | translate }}
+      </div>
+      <p class="bold warning">{{ data?.inprogressTasks?.totalCount }} {{ 'tasks' | translate }}</p>
+    </div>
+    <div class="numbers py-1 px-2 flex aic jcsb">
+      <div class="flex gap-x-1  pointer" (click)="filter('in_progress_ontime')">
+        <div class="bullet bg-warning top-1"></div>
+        <div>
+          <p class="line-height mb-50 bold">{{ 'on_time' | translate }}</p>
+          <p class="bold warning">{{ data?.inprogressTasks?.onTimeCount }} {{ 'tasks' | translate }} - <span class="dark">{{ data?.inprogressTasks?.onTimePercentage }}%</span></p>
+        </div>
+      </div>
+      <div class="flex gap-x-1  pointer" (click)="filter('in_progress_overDue')">
+        <div class="bullet bg-warning-light top-1"></div>
+        <div>
+          <p class="line-height mb-50 bold">{{ 'overdue' | translate }}</p>
+          <p class="bold warning">{{ data?.inprogressTasks?.overDueCount }} {{ 'tasks' | translate }} - <span class="dark">{{ data?.inprogressTasks?.overDuePercentage }}%</span></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="task-card border rounded-4 mb-2 pointer" (click)="filter('completed')">
+    <div class="flex aic jcsb border-bottom py-1 px-2">
+      <div class="flex aic gap-x-1 bold success">
+        <div class="bullet big bg-success"></div>
+        {{ 'completed' | translate }}
+      </div>
+      <p class="bold success">{{ data?.completedTasks?.totalCount }} {{ 'tasks' | translate }}</p>
+    </div>
+    <div class="numbers py-1 px-2 flex aic jcsb">
+      <div class="flex gap-x-1 pointer" (click)="filter('completed_ontime')">
+        <div class="bullet bg-success top-1"></div>
+        <div>
+          <p class="line-height mb-50 bold">{{ 'on_time' | translate }}</p>
+          <p class="bold success">{{ data?.completedTasks?.onTimeCount }} {{ 'tasks' | translate }} - <span class="dark">{{ data?.completedTasks?.onTimePercentage }}%</span></p>
+        </div>
+      </div>
+      <div class="flex gap-x-1 pointer" (click)="filter('completed_overDue')">
+        <div class="bullet bg-success-light top-1"></div>
+        <div>
+          <p class="line-height mb-50 bold">{{ 'overdue' | translate }}</p>
+          <p class="bold success">{{ data?.completedTasks?.overDueCount }} {{ 'tasks' | translate }} - <span class="dark">{{ data?.completedTasks?.overDuePercentage }}%</span></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

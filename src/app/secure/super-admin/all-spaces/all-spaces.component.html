@@ -1,0 +1,193 @@
+<user-navbar/>
+<div class="p-2">
+  <layout-with-filters (limitChanged)="limitChanged($event)" (pageChange)="changePage($event)" [admin]="true" [limit]="service.limitValue"
+                       [meta]="meta">
+    <ng-container filters>
+      <spaces (emitChange)="getSpaces()" (export)="exportToExcel()" [service]="service"></spaces>
+      <div *ngIf="selectedSpaces.length > 0" class="mt-1">
+        <button class="mr-50" (click)="changeMultiSpacesStatus(true)" mat-raised-button color="primary">{{('activate' | translate) + ' ' + selectedSpaces.length}}</button>
+        <button (click)="changeMultiSpacesStatus(false)" mat-raised-button color="primary">{{('deactivate' | translate) + ' ' + selectedSpaces.length}}</button>
+      </div>
+    </ng-container>
+
+    <ng-container content>
+      <table *ngIf="spaces && spaces.length > 0 && !loading" class="table" id="spaces-table">
+        <thead class="bg-gray border-bottom">
+        <tr>
+          <th class="text-center">
+            <span class="me-1"><mat-checkbox (change)="toggleSelectAll($event.checked)" color="primary"></mat-checkbox></span>
+            {{ 'id' | translate }}
+          </th>
+          <th class="text-left">
+            <div class="flex aic">
+              <p class="mr-50">{{ 'name' | translate }}</p>
+              <sorting (down)="sort(3 , 0)" (up)="sort(3 , 1)"></sorting>
+            </div>
+          </th>
+          <th class="text-center">{{ 'creation_date' | translate }}</th>
+          <th class="text-left">{{ 'last_activity' | translate }}</th>
+          <th class="text-left">
+            <div class="flex aic">
+              <p class="mr-50">{{ 'owner_name' | translate }}</p>
+              <sorting (down)="sort(4 , 0)" (up)="sort(4 , 1)"></sorting>
+            </div>
+          </th>
+          <th class="text-left">{{ 'owner_phone_number' | translate }}</th>
+          <th class="text-center">{{ 'owner_email' | translate }}</th>
+          <th class="text-center">{{ 'country' | translate }}</th>
+          <th class="text-center">{{ 'package_name' | translate }}</th>
+          <th class="text-center">{{ 'status' | translate }}</th>
+          <th class="text-center">
+            <div class="flex-center">
+              <p class="mr-50">{{ 'end_date' | translate }}</p>
+              <sorting (down)="sort(2 , 1)" (up)="sort(2 , 0)"></sorting>
+            </div>
+          </th>
+          <th class="text-center">
+            <div class="flex aic">
+              <p class="mr-50">{{ 'total_price' | translate }}</p>
+              <sorting (down)="sort(5 , 1)" (up)="sort(5 , 0)"></sorting>
+            </div>
+          </th>
+          <th>
+            <div class="flex-center">
+              <p class="mr-50">{{ 'package_users' | translate }}</p>
+              <sorting (down)="sort(1 , 1)" (up)="sort(1 , 0)"></sorting>
+            </div>
+          </th>
+
+          <th>
+            <div class="flex-center">
+              <p class="mr-50">{{ 'active_users' | translate }}</p>
+              <sorting (down)="sort(1 , 1)" (up)="sort(1 , 0)"></sorting>
+            </div>
+          </th>
+          <th>{{ 'is_active' | translate }}</th>
+          <th></th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr
+          *ngFor="let space of spaces | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy"
+          class="border-bottom">
+
+          <!-- id -->
+          <td class="text-center">
+            <p class="fs-13">
+              <span class="me-1"><mat-checkbox (change)="selectSpace(space.spaceId)" [checked]="selectedSpaces.includes(space.spaceId)"  color="primary"></mat-checkbox></span>
+              {{ space.spaceId }}</p>
+          </td>
+
+          <!--    name    -->
+          <td class="text-left">
+            <p class="bold primary flex aic">
+              <i class="bx bx-file blue fs-18 pointer mr-1" (click)="showLogs(space.spaceId)"></i>
+              <span>{{ space.spaceName }}</span>
+            </p>
+          </td>
+
+          <!--    creation date    -->
+          <td>
+            <div class="flex-center">
+              <p>{{ space.creationDate ? (space.creationDate | arabicDate) : '-' }}</p>
+            </div>
+
+          </td>
+
+          <!--    owner name    -->
+          <td class="text-left">
+            <p>{{ space.lastTaskDate ? (space.creationDate | arabicDate) : '-' }}</p>
+          </td>
+          <!--    owner name    -->
+          <td class="text-left">
+            <p>{{ space.ownerName }}</p>
+          </td>
+
+          <!--    owner phone number    -->
+          <td class="text-left">
+              <a class="mr-50 bx bxl-whatsapp fs-18 success" (click)="createLog(space , 'whatsapp')" [href]="'https://wa.me/' + '+' +(space.ownerPhoneNumber | slice:2)" target="_blank"></a>
+              <a class="mr-50 bx bx-phone fs-18 blue" (click)="createLog(space , 'call')" [href]="'tel:' + '+' + (space.ownerPhoneNumber | slice:2)"></a>
+              <span class="bold">{{space.ownerPhoneNumber}}</span>
+            <!-- <p>{{ space.ownerPhoneNumber }}</p> -->
+          </td>
+
+          <!--    owner email    -->
+          <td class="text-center">
+
+            <a class="bold"  [href]="'mailto:' + space.ownerEmail"  (click)="createLog(space , 'email')">
+              <i class="mr-50 bx bx-envelope fs-18 blue"></i>
+              {{ space.ownerEmail || '-' }}
+            </a>
+          </td>
+
+          <!--    country    -->
+          <td class="text-center">
+            <p *ngIf="space.countryEnName">{{ dir == 'rtl' ? space.countryArName : space.countryEnName }}</p>
+            <p *ngIf="!space.countryEnName">-</p>
+          </td>
+
+          <!--    payment gateway    -->
+          <!--        <td class="text-center">-->
+          <!--          <p>{{space.paymentGetaway}}</p>-->
+          <!--        </td>-->
+
+          <!--    package name    -->
+          <td class="text-center">
+            <p>{{ (space.paymentPackageName | translate) || '-' }}</p>
+          </td>
+
+          <!--    package status    -->
+          <td>
+            <div class="flex-center">
+              <div *ngIf="space.paymentSubscriptionStatus == 1" class="chip bg-primary white flex-center rounded-5">{{ 'paid' | translate }}</div>
+              <div *ngIf="space.paymentSubscriptionStatus == 0" class="chip bg-danger white flex-center rounded-5">{{ 'unpaid' | translate }}</div>
+            </div>
+          </td>
+
+          <!--    orderEndDate    -->
+          <td>
+            <p>{{ (space.paymentSubscribtionEndDate ? (space.paymentSubscribtionEndDate | arabicDate) : '-') }}</p>
+          </td>
+
+          <!--    orderTotalPrice    -->
+          <td>
+            <p>{{ space.paymentSubscribtionTotalPrice ? space.paymentSubscribtionTotalPrice + ' ' + ('EGP' | translate) : '-' }}</p>
+          </td>
+
+          <!--    active users    -->
+          <td>
+            <p>{{ space.paymentSubscribtionTotalNumberOfUsers }}</p>
+          </td>
+
+          <!--    active users    -->
+          <td>
+            <p>{{ space.numberOfActiveUser }}</p>
+          </td>
+
+          <!--    active users    -->
+          <td>
+            <mat-slide-toggle (change)="toggleSpace($event, space.spaceId, space)" [checked]="space.isActive" class="example-margin" color="primary">
+            </mat-slide-toggle>
+            <p class="print">
+              <span *ngIf="space.isActive">{{ 'active' | translate }}</span>
+              <span *ngIf="!space.isActive">{{ 'inactive' | translate }}</span>
+            </p>
+          </td>
+
+          <td>
+            <i (click)="goToSpace(space)" [matTooltip]="'go_to_space' | translate" [ngClass]="{'bx-rotate-180': dir == 'rtl'}"
+               class='bx bx-right-arrow-circle fs-25 pointer primary'></i>
+          </td>
+
+          <td (click)="spaceConfiguration(space)" [matTooltip]="'space_configuration' | translate">
+            <i class='bx bxs-edit fs-23 primary pointer'></i>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <not-found *ngIf="spaces && spaces.length == 0 && !loading"></not-found>
+      <loading *ngIf="loading"></loading>
+    </ng-container>
+  </layout-with-filters>
+</div>

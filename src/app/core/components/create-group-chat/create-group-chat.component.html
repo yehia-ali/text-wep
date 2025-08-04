@@ -1,0 +1,27 @@
+<div dir="auto">
+  <h2 mat-dialog-title class="black">{{ 'create_group_chat' | translate}}</h2>
+  <div mat-dialog-content>
+    <div class="flex aifs gap-x-2">
+<!--      <upload-image (file)="uploadImage($event)" [img]="filePath"></upload-image>-->
+      <form [formGroup]="form" class="flex-auto">
+        <input-label [control]="form.controls['name']" [key]="'group_name'"/>
+        <input formControlName="name" class="input">
+        <input-error [control]="form.controls['name']"></input-error>
+      </form>
+    </div>
+    <select-user text="users" classes="w-100 mt-1" (getSelectedUsers)="usersToAdd =  $event"/>
+
+  </div>
+
+  <div mat-dialog-actions>
+    <div class="flex w-100 mt-1 mb-1 gap-x-1 jcfe">
+      <button mat-dialog-close=""
+              class="px-2 dark-color clickable-btn rounded cancel-btn">{{'cancel' | translate}}</button>
+      <div class="submit-btn">
+        <button mat-raised-button color="primary" class="w-100 flex-auto rounded bg-primary white" [disabled]="form.invalid || loading || usersToAdd?.length == 0" (click)="createGroupChat()">
+          <submit-button text='create' [loading]="loading"/>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

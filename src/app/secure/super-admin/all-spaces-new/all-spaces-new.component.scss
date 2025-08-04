@@ -1,0 +1,72 @@
+:host ::ng-deep {
+  .search,
+  .ng-select {
+    width: 100%;
+  }
+
+  label {
+    font-size: 11px;
+  }
+}
+
+.table-container {
+  border-radius: 8px; /* Apply border-radius to the container */
+  overflow: hidden; /* Ensure overflow is hidden to apply border-radius */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse; /* Ensure there is no space between table cells */
+  border-spacing: 0; /* Ensure no spacing between cells */
+}
+
+th {
+  border: none;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+tbody {
+  padding-bottom: 5px;
+  tr {
+    border-bottom: 1px solid #ddd; /* Border for table rows */
+  }
+
+  td {
+    padding-block: 10px;
+    padding-inline: 15px; /* Add horizontal padding */
+    border: none;
+    font-size: 12px;
+  }
+}
+
+td,
+th {
+  padding-inline: 15px; /* Ensure consistent padding */
+  border: none; /* Remove default border */
+}
+
+tr:last-child {
+  border-bottom: none; /* Remove border from the last row */
+}
+
+.btn {
+  display: inline-block;
+  height: 41.2px;
+}
+.aie {
+  align-items: end;
+}
+
+.table-filter-content {
+  height: calc(100vh - 110px);
+}
+.table-container {
+  max-height: calc(100vh - 265px);
+  height: calc(100vh - 265px);
+  overflow: auto;
+}
+.pagination-content {
+  margin-top: -5px;
+}

@@ -1,0 +1,122 @@
+<div class="row justify-content-between">
+  <div class="col-md-6 d-flex align-items-center gap-x-2">
+    <h2 class="fs-18 black bold">{{'leaves' | translate}}</h2>
+    <div class="flex aic gap-x-1">
+      <year-filter 
+      [classes]="'w-12r'"
+      [showLabel]="false"
+      [selectedDate]="selectedYearSubject"
+      (onChange)="service.year.next($event); service.hasChanged.next(true)">
+    </year-filter>
+    </div>
+  </div>
+  <div class="col-md-2 d-flex align-items-center gap-x-1 justify-content-end">
+    <button (click)="leaveRequest()" class="btn rounded bg-primary white py-1 px-2 fs-12">
+      {{'leave_request' | translate}}
+    </button>
+  </div>
+</div>
+<div class="flex-grid-center my-1 gap-y-2">
+  <div class="col-md-3" *ngFor="let item of statistics">
+    <div class="card bg-white relative leave-card rounded py-1">
+      <i class="bx bx-info-circle leave-info  pointer fs-18" (click)="openDialog()"></i>
+      <div class="card-body flex-grid-center mx-0">
+        <div class="col-sm-12 icon d-flex align-items-center gap-x-1">
+          <div class="image-container" [style.background-color]="item.background">
+            <img src="assets/images/leave/{{item.icon}}" alt="">
+          </div>
+          <div class="d-flex flex-column">
+            <h4 class="bold fs-40 black line-height-35">{{ item.value }}</h4>
+            <p class="fs-16">{{ item.title | translate }}</p>
+  
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<layout-with-filters (pageChange)="service.page.next($event); service.hasChanged.next(true)" [meta]="meta" [hasCard]="true">
+  <ng-container filters>
+    <h2 class="pt-50 pl-1">{{'leave_dashboard' | translate}}</h2>
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': requests.length == 0 || loading}" class="table w-100 relative">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th style="width: 32.5%;" class="text-left">{{ 'leaves_type' | translate }}</th>
+        <th style="width: 10%;" class="text-left">{{ 'leave_days' | translate }}</th>
+        <th style="width: 12.5%;" class="text-left">{{ 'start_date' | translate }}</th>
+        <th style="width: 12.5%;" class="text-left">{{ 'end_date' | translate }}</th>
+        <th style="width: 32.5%;" class="text-left">{{ 'leave_status' | translate }}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="requests.length > 0 && !loading">
+      <tr *ngFor="let item of requests | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy"
+          class="border-bottom pointer"
+          routerLink="details/{{item.id}}">
+        <td class="text-left">{{ item.leaves_type }}</td>
+        <td class="text-left">{{ item.leave_days }}</td>
+        <td class="text-left">{{ item.start_date | arabicDate }}</td>
+        <td class="text-left">{{ item.end_date | arabicDate}}</td>
+        <td class="text-left">
+          <ng-container *ngIf="item.leaveStatus == 0">
+            <span class="rounded py-25 px-1 fs-14 bg-pending">{{ 'pending' | translate }}</span>
+          </ng-container>
+          <ng-container *ngIf="item.leaveStatus == 1">
+            <span class="rounded py-25 px-1 fs-14 bg-approved">{{ 'approved' | translate }}</span>
+          </ng-container>
+          <ng-container *ngIf="item.leaveStatus == 2">
+            <span class="rounded py-25 px-1 fs-14 bg-rejected">{{ 'rejected' | translate }}</span>
+          </ng-container>
+          <ng-container *ngIf="item.leaveStatus == 3">
+            <span class="rounded py-25 px-1 fs-14 bg-canceled">{{ 'canceled' | translate }}</span>
+          </ng-container>
+        </td>
+      </tr>
+      </tbody>
+      <not-found *ngIf="requests.length == 0 && !loading" class="a-center"></not-found>
+      <loading *ngIf="loading"></loading>
+    </table>
+  </ng-container>
+</layout-with-filters>
+
+<ng-template #dialogTemplate >
+  <div class="dir">
+    <div class="flex w-100 jcsb">
+      <h4 >{{'leaves_balance' | translate}}</h4>
+      <i class="bx bx-x fs-25 danger pointer p-1" (click)="dialog.closeAll()"></i>
+    </div>
+    <ng-container>
+      <div class="aic flex jcc py-2 h-50v" *ngIf="loading">
+        <loading ></loading>
+      </div>
+      <table *ngIf="userBalances.length > 0 && !loading" [ngClass]="{'h-100': userBalances.length == 0 || loading}" class="table w-100 relative mb-2">
+        <thead class="">
+        <tr>
+          <th class="px-2 simibold text-left">{{ 'leave_type' | translate }}</th>
+          <th class="px-2 simibold primary">{{ 'total' | translate }}</th>
+          <th class="px-2 simibold warning">{{ 'used' | translate }}</th>
+          <th class="px-2 simibold success">{{ 'balance' | translate }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of userBalances">
+          <td class="px-2 simibold text-left">{{ item.name }}</td>
+          <td class="px-2 simibold primary">{{ item.accruals}}</td>
+          <td class="px-2 simibold warning">{{ item.accruals - item.balance}}</td>
+          <td class="px-2 simibold success">{{ item.balance}}</td>
+        </tr>
+        </tbody>
+        <loading *ngIf="loading"></loading>
+      </table>
+      <div class="h-40v">
+        <not-found *ngIf="userBalances.length == 0 && !loading" class="a-center"></not-found>
+
+      </div>
+
+    </ng-container>
+  </div>
+</ng-template>

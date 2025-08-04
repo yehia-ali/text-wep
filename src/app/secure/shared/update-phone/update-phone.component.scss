@@ -1,0 +1,16 @@
+.submit {
+  width: 100%;
+}
+.rounded-circel{
+  border-radius: 50px;
+}
+.rounded-pill{
+  border-radius: 100px;
+  display: inline-block;
+}
+.switch{
+  transition: ease all 0.2s;
+  &:hover{
+    background-color: rgba($color: #7B58CA, $alpha: 0.1);
+  }
+}

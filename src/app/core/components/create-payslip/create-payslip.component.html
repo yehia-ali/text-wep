@@ -1,0 +1,273 @@
+<div class="create-task" dir="auto">
+  <h4 *ngIf="!data.user" class="bold">{{ 'generate_payslip' | translate }}</h4>
+
+  <div mat-dialog-content>
+    <div class="row">
+      <div class="px-1" [ngClass]="{'col-lg-8': !data.user, 'col-lg-12': data.user}">
+        <div *ngIf="!!selectedUser && !data.multi">
+          <div class="info-card">
+            <div class="info-card-body">
+              <div class="info-card-header d-flex justify-content-between mb-1">
+                <div class="d-flex gap-5">
+                <div class="img" *ngIf="!data.multi">
+                  <user-image [img]="selectedUser.imageUrl" />
+                </div>
+                <div>
+                  <p class="line-height">{{ selectedUser.name }}</p>
+                  <p class="fs-13 muted">{{ selectedUser.jobTitle }}</p>
+                </div>
+              </div>
+              <div>
+                <button class="clear-btn" *ngIf="!data.user" (click)="selectedUser = null" type="button">
+                  <i class="bx bx-x"></i>
+                </button>
+              </div>
+              </div>
+              <div class="info-card-footer">
+                <div class="row">
+                  <div class="col-lg-6 px-1">
+                    <div class="d-flex gap-3">
+                      <img src="assets/images/icons/calendar-icon.svg" alt="user" class="icon">
+                      <p class="fs-13">{{'joining_date' | translate}} {{joinDate | date:'dd/MM/yyyy'}}</p>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 px-1">
+                    <ng-container *ngIf="details?.isPerHour else contractNormal">
+                      <p class="fs-13"> <span class="badge badge-success">{{'contract_by_hour' | translate}}</span></p>
+                    </ng-container>
+                    <ng-template #contractNormal>
+                      <div class="d-flex gap-3" >
+                      <img src="assets/images/icons/Status.svg" alt="user" class="icon">
+                      <p class="fs-13" >{{'status_of_employment' | translate}} <span class="badge badge-success" [ngClass]="{'badge-success': selectedUser.isActivated, 'badge-danger': !selectedUser.isActivated}">{{selectedUser.isActivated ? ('active' | translate) : ('inactive' | translate)}}</span></p>
+                    </div>
+                    </ng-template>
+                  </div>
+                  <!-- <div class="col-lg-4 px-1">
+                    <div class="d-flex gap-3">
+                      <img src="assets/images/icons/number.svg" alt="user" class="icon">
+                      <p class="fs-13">{{'number_of_days_calculated' | translate}} {{selectedUser.salary | arabicNumbers}}</p>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="select-user" *ngIf="!data.user && !selectedUser">
+          <div class="user mt-1 mb-2">
+            <select-user text="select_user" [multi]="data.multi" (getSelectedUsers)="getUser($event)" />
+          </div>
+        </div>
+  
+      </div>
+      <div class="px-1"  [ngClass]="{'col-lg-8': !data.user, 'col-lg-12': data.user}" *ngIf="data.multi && users.length > 0">
+        <div class="info-card" *ngFor="let user of users">
+          <div class="info-card-body">
+            <div class="info-card-header d-flex justify-content-between mb-1">
+              <div class="d-flex gap-5">
+              <div class="img">
+                <user-image [img]="user.imageUrl" />
+              </div>
+              <div>
+                <p class="line-height">{{ user.name }}</p>
+                <p class="fs-13 muted">{{ user.jobTitle }}</p>
+              </div>
+            </div>
+            <div>
+              <button class="clear-btn" (click)="removeUser(user)" type="button">
+                <i class="bx bx-x"></i>
+              </button>
+            </div>
+            </div>
+            <div class="info-card-footer">
+              <div class="row">
+                <div class="col-lg-6 px-1">
+                  <div class="d-flex gap-3">
+                    <img src="assets/images/icons/calendar-icon.svg" alt="user" class="icon">
+                    <p class="fs-13">{{'joining_date' | translate}} {{user.creationDate | date:'dd/MM/yyyy'}}</p>
+                  </div>
+                </div>
+                <div class="col-lg-6 px-1">
+                  <ng-container *ngIf="user?.isPerHour else contractNormal">
+                    <p class="fs-13"> <span class="badge badge-success">{{'contract_by_hour' | translate}}</span></p>
+                  </ng-container>
+                  <ng-template #contractNormal>
+                    <div class="d-flex gap-3" >
+                    <img src="assets/images/icons/Status.svg" alt="user" class="icon">
+                    <p class="fs-13" >{{'status_of_employment' | translate}} <span class="badge badge-success" [ngClass]="{'badge-success': user.isActivated, 'badge-danger': !user.isActivated}">{{user.isActivated ? ('active' | translate) : ('inactive' | translate)}}</span></p>
+                  </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 px-1">
+        
+        <div *ngIf="!data.user" class="info-card date-picker-card">
+          <div class="d-flex justify-content-between mb-2">
+            <div class="w-75">
+                <month-filter 
+                (onChange)="setMonthAndYear($event);calcDetails()" 
+                [max]="now"
+                [min]="joinDate"
+                [selectedDate]="now"
+                [displayLabel]="false"
+                >
+              </month-filter>
+                
+            </div>
+          <button *ngIf="month" class="clear-btn" (click)="month = null" type="button">
+            <i class="bx bx-x"></i>
+          </button>
+          </div>
+          <div class="date-picker-card-footer text-center">
+            <p class="fs-14 fw-bold">{{'from' | translate}} {{startDate | date:'dd/MM/yyyy'}} {{'to' | translate}} {{endDate | date:'dd/MM/yyyy'}}</p>
+          </div>
+    
+        </div>
+      </div>
+      <!-- *ngIf="selectedUser && statusOfContractHourly.length > 0" -->
+      <div class="col-lg-12" *ngIf="details?.isPerHour">
+        <div class="info-card">
+          <div class="row align-items-center"> 
+            <div class="col-lg-5">
+              <div class="d-flex align-items-center gap-5">
+                <img src="assets/images/icons/timer-clock.svg" alt="user" class="icon">
+                <p class="fs-13">{{'monthly_working_hours' | translate}} </p>
+                <div class="flex aic position-relative w-40">
+                  <input type="number" class="input" [(ngModel)]="monthlyWorkingHours" (input)="monthlyWorkingHoursChange()">
+                  <span class="input-suffix">{{'hour' | translate}}</span>
+                </div>
+      
+              </div>
+            </div>
+            <div class="col-lg-7">  
+               <div class="d-flex gap-3 align-items-center hint-info">
+                  <i class="bx bx-info-circle"></i>
+                  <span>{{'enter_the_number_of_hours_to_calculate_the_salary' | translate}}</span>
+              </div>
+            </div>
+          </div>
+          </div>
+          
+      </div>
+      <!-- <p *ngIf="data.user">{{details.endDate | arabicDate:'short'}}</p> -->
+    </div>
+    <ng-container *ngIf="!data.multi">
+
+
+      <div class="form border rounded">
+        <div class="d-flex">
+          <div class="flex-50 border-right">
+            <div class="flex aic jcsb border-bottom bg-gray p-1">
+              <p class="bold primary">{{ 'net_salary_details' | translate }} <img width="16" src="assets/images/icons/info.svg" alt="info" class="icon"></p>
+              <p class="bold primary"> {{ (details?.totalNet || 0) | arabicNumbers }}</p>
+            </div>
+            <div class="data p-2">
+              <ng-container *ngIf="details?.isPerHour else basicSalary">
+                <div class="flex aic jcsb" >
+                  <p >{{ 'hourly_salary' | translate }}</p>
+                  <p>{{ (details?.hourlyRate || 0) | arabicNumbers }}</p>
+                </div>
+              </ng-container>
+
+              <ng-template #basicSalary>
+                <div class="flex aic jcsb" >
+                  <p >{{ 'basic_salary' | translate }}</p>
+                  <p>{{ (details?.basic || 0) | arabicNumbers }}</p>
+                </div>
+              </ng-template>
+              <div class="flex aic jcsb my-1">
+                <p >{{ 'allowance' | translate }}</p>
+                <p class="success">{{ (details?.allowance || 0) | arabicNumbers }}</p>
+              </div>
+
+              <div class="flex aic jcsb">
+                <p >{{ 'extra_allowance' | translate }}</p>
+                <input type="text" class="input w-30 text-right" [disabled]="!selectedUser || data.user" [(ngModel)]="allowance"
+                  (input)="allowanceChange()">
+              </div>
+
+              <div class="flex aic jcsb my-1">
+                <p >{{ 'kpi_bonus' | translate }}</p>
+                <p>{{ (details?.earnedKpiBonus || 0) | arabicNumbers }}</p>
+                <!-- <ng-container *ngIf="details?.earnedKpiBonus">
+                </ng-container> -->
+                <!-- <ng-container *ngIf="!details?.earnedKpiBonus">
+                  <span style="color: transparent;">{{ '|' | translate }}</span>
+                </ng-container> -->
+              </div>
+
+              <div class="flex aic jcsb my-1" [class.visibility-hidden]="details?.isPerHour">
+                <p >{{ 'manual_penalties' | translate }} </p>
+                <p class="danger"> <span class="black" *ngIf="details?.manualPenalityDayCount"> (
+                  {{(details?.manualPenalityDayCount | arabicNumbers) }}  {{'days' | translate}})</span>
+                  
+                  {{ (details?.manualPenalityDeduction || 0 ) | arabicNumbers}}</p>
+              </div>
+
+              <div class="flex aic jcsb my-1" [class.visibility-hidden]="details?.isPerHour">
+                <p >{{ 'attendance_penalties' | translate }}</p>
+                <p class="danger"> <span class="black" *ngIf="details?.attendanceDeduction"> (
+                  {{(details?.attendanceDeduction | arabicNumbers) }}  {{'days' | translate}})</span>
+                  
+                  {{ (details?.attendanceDeductionValue || 0 ) | arabicNumbers}}</p>
+              </div>
+
+              <div class="flex aic jcsb">
+                <p>{{ 'extra_deduction' | translate }}</p>
+                <input type="text" class="input w-30 text-right" [disabled]="!selectedUser || data.user" [(ngModel)]="deduction"
+                  (input)="deductionChange()">
+              </div>
+
+            </div>
+          </div>
+          <div class="flex-50">
+            <div class="flex aic jcsb border-bottom bg-gray p-1">
+              <p class="bold">{{ 'gross_salary_details' | translate }} <img width="16" src="assets/images/icons/info.svg" alt="info" class="icon"></p>
+              <p class="bold"> {{ (details?.gross || 0) | arabicNumbers }}</p>
+            </div>
+            <div class="data p-2">
+              <div class="flex aic jcsb">
+                <p >{{ 'net_salary' | translate }} </p>
+                <p>{{ (details?.totalNet || 0) | arabicNumbers }}</p>
+              </div>
+
+              <div class="flex aic jcsb my-1" [class.visibility-hidden]="details?.isPerHour">
+                <p >{{ 'income_tax' | translate }}</p>
+                <p class="success">{{ (details?.taxes || 0) | arabicNumbers }}</p>
+              </div>
+              <div class="flex aic jcsb my-1" [class.visibility-hidden]="details?.isPerHour">
+                <p >{{ 'social_insurance' | translate }}</p>
+                <p class="success">{{ (details?.insurance || 0 ) | arabicNumbers}}</p>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    
+    </ng-container>
+
+  </div>
+
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex">
+      <button class="px-4 py-1 mr-2 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>{{ 'cancel' | translate
+        }}</button>
+      <button *ngIf="!data.multi && !data.user" mat-raised-button color="primary" class="px-5 fs-15" (click)="submit()"
+        [disabled]="loading || !selectedUser">
+        <submit-button text="create" [loading]="loading"></submit-button>
+      </button>
+      <button *ngIf="data.multi && !data.user" mat-raised-button color="primary" class="px-5 fs-15" (click)="createMulti()"
+        [disabled]="loading || !selectedUser">
+        <submit-button text="create" [loading]="loading"></submit-button>
+      </button>
+    </div>
+  </div>
+
+</div>

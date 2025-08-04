@@ -1,0 +1,61 @@
+<div class="attendance-card w-100 bg-gray flex-column jcc p-1">
+  <div class="flex aic jcsb">
+    <div class="flex aic jcsb w-100">
+      <div class="flex-grid w-100">
+        <div class="flex aic mb-50 col-lg-5">
+          <div class="img mr-1">
+            <img src="assets/images/icons/shift-icon.svg" width="25" alt="" class="icon convert-image-color">
+          </div>
+          <div class="end">
+            <p class="fs-11 bold">{{'working_shift' | translate}}</p>
+            <p class="fs-15">
+              {{ shiftStart | arabicTime }} - {{ shiftEnd | arabicTime }}
+            </p>
+          </div>
+        </div>
+        
+        <div class="flex aic col-lg-7" *ngIf="lastAttendance.status">
+          <div class="img mr-1">
+            <img src="assets/images/icons/date.svg" width="25" alt="" class="icon convert-image-color">
+          </div>
+          <div class="end">
+            <p class="fs-11 bold">
+              <ng-container *ngIf="lastAttendance.status == 1">{{'checked-in' | translate}}</ng-container>
+              <ng-container *ngIf="lastAttendance.status == 2">{{'checked-out' | translate}}</ng-container>
+              {{'on' | translate}}
+            </p>
+            <p class="fs-15" *ngIf="lastAttendance?.date">
+              {{lastAttendance.date | arabicDate:'long'}}
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="actions flex aic " *ngIf="lastAttendance" style="width: 200px; justify-content: end;">
+        <div class="flex aic jcc">
+          <div *ngIf="lastAttendance.status != 1"  class="check-in flex aic bg-success white rounded px-50 py-50 pointer" (click)="(lastAttendance.status == 2 || !lastAttendance.status) && check(1)">
+            <div class="img">
+              <img src="assets/images/icons/check-hand.svg" [ngClass]="{'bg-danger': lastAttendance.status == 1}" alt="">
+            </div>
+            <div class="text-center">
+              <p class="" >{{'check-in' | translate}}</p>
+            </div>
+          </div>
+
+          <div *ngIf="lastAttendance.status == 1" class="check-out flex aic bg-danger white rounded px-50 py-50 pointer" (click)="lastAttendance.status == 1 && check(2)">
+            <div class="img">
+              <img src="assets/images/icons/check-hand.svg" alt="">
+            </div>
+            <div class="text-center">
+              <!-- <p class="">{{'check-out' | translate}}</p> -->
+              <p style="width: 100px;">{{ workingHours}}</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+@use "src/assets/styles/vars" as *;
+
+section {
+  &:not(:last-of-type) {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.add-question {
+  width: 3.8rem;
+  height: 3.8rem;
+  border-radius: 50%;
+  background: $primary;
+}
+
+.remove-question {
+  width: 3.8rem;
+  height: 3.8rem;
+  border-radius: 50%;
+}
+
+.option-input {
+  border: 1px solid transparent;
+  padding: 1.1rem 1.5rem;
+  background: transparent;
+  border-radius: .5rem;
+  width: 100%;
+  &:focus {
+    color: #707070;
+    background: rgba(0, 0, 0, 0);
+    border: 1px solid $primary
+  }
+}

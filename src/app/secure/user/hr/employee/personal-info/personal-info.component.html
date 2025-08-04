@@ -1,0 +1,165 @@
+<div class="p-2">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="flex-grid">
+      <div class="col-lg-3 mb-2">
+        <div class="gender">
+          <genders [formControlName]="'genderId'" [icon]="'bx-male-female'"></genders>
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="birth-date">
+          <label class="fs-11 simibold mb-75" for="birth-date">
+            <i class="mr-50 bx bx-cake"></i>
+            <span>{{'birth_date' | translate}}</span>
+          </label>
+          <date-filter [width]="'width'" [hideLabel]="true" [clearable]="false" key="date" [selectedValue]="form.get('birthDay')?.value" (valueChanged)="dateChange($event, 'birthDay')"/>
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="religion">
+          <religions [formControlName]="'religonId'" ></religions>
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="idNumber">
+          <label class="fs-11 simibold mb-75" for="idNumber">
+            <i class="mr-50 bx bx-id-card"></i>
+            <span>{{'id_number' | translate}}</span>
+          </label>
+          <input id="idNumber" type="text" class="input" formControlName="idNumber" maxlength="14" (change)="changeValidation('idNumber')">
+          <input-error [control]="f['idNumber']"></input-error>  
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="passport">
+          <label class="fs-11 simibold mb-75" for="passport">
+            <i class="mr-50 bx bx-lock"></i>
+            <span>{{'passport' | translate}}</span>
+          </label>
+          <input id="passport" type="text" class="input" formControlName="passportNum">
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="nationality">
+          <countries [countryIcon]="'bx-flag'" [countryLabel]="'nationality'"  [formControlCountry]="'nationId'" [col]="'col-lg-12'" [noReagon]="true"></countries>
+        </div>
+      </div>
+
+      <div class="col-lg-6 mb-2">
+        <div class="country">
+          <countries [countryIcon]="'bx-globe'"  [regionIcon]="'bx-buildings'"  [formControlCountry]="'countryId'" [formControlRegion]="'regionId'"></countries>
+        </div>
+      </div>
+
+      <div class="col-lg-12 mb-2">
+        <div class="address">
+          <label class="fs-11 simibold mb-75" for="address">
+            <i class="mr-50 bx bx-map"></i>
+            <span>{{'address' | translate}}</span>
+          </label>
+          <input id="address" type="text" class="input" formControlName="address">
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="marital_status">
+          <label class="fs-11 simibold mb-75" for="marital_status">
+            <i class="mr-50 bx bx-male-female"></i>
+            <span>{{'marital_status' | translate}}</span>
+          </label>
+          <ng-select [items]="martialStatus"
+            bindLabel="name"
+            bindValue="value"
+            formControlName="matirialState">
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="children">
+          <label class="fs-11 simibold mb-75" for="children">
+            <i class="mr-50 bx bx-child"></i>
+            <span>{{'children' | translate}}</span>
+          </label>
+          <input id="children" type="text" class="input" formControlName="childCount">
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="driving_license">
+          <label class="fs-11 simibold mb-75" for="driving_license">
+            <i class="mr-50 bx bx-car"></i>
+            <span>{{'driving_license' | translate}}</span>
+          </label>
+          <input id="driving_license" type="text" class="input" formControlName="driverLicense">
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="ex_driving_license">
+          <label class="fs-11 simibold mb-75" for="ex_driving_license">
+            <i class="mr-50 bx bx-id-card"></i>
+            <span>{{'ex_driving_license' | translate}}</span>
+          </label>
+          <date-filter [width]="'width'" [hideLabel]="true" [clearable]="false" key="date" [selectedValue]="form.get('exDrivingLicense')?.value" (valueChanged)="dateChange($event, 'exDrivingLicense')"/>
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="email">
+          <label class="fs-11 simibold mb-75" for="email">
+            <i class="mr-50 bx bx-envelope"></i>
+            <span>{{'email' | translate}}</span>
+          </label>
+          <input id="email" type="text" class="input" formControlName="personalEmail">
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="military_service">
+          <label class="fs-11 simibold mb-75" for="military_service">
+            <i class="mr-50 bx bx-user"></i>
+            <span>{{'military_service' | translate}}</span>
+          </label>
+          <ng-select [items]="militaryState"
+            bindLabel="name"
+            bindValue="value"
+            formControlName="militaryState">
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="argent_name">
+          <label class="fs-11 simibold mb-75" for="argent_name">
+            <i class="mr-50 bx bx-alarm-exclamation"></i>
+            <span>{{'argent_name' | translate}}</span>
+          </label>
+          <input id="argent_name" type="text" class="input" formControlName="argentName">
+        </div>
+      </div>
+
+      <div class="col-lg-3 mb-2">
+        <div class="phone_argent">
+          <label class="fs-11 simibold mb-75" for="phone_argent">
+            <i class="mr-50 bx bx-alarm-exclamation"></i>
+            <span>{{'phone_argent' | translate}}</span>
+          </label>
+          <input id="phone_argent" type="text" class="input" formControlName="phoneArgent">
+        </div>
+      </div>
+
+
+    </div>
+    <div class="text-right" *ngIf="normalComponent">
+      <button type="submit" class="btn rounded bg-primary white py-75 px-2 fs-14">
+        {{'save' | translate}}
+      </button>
+    </div>
+  </form>
+</div>

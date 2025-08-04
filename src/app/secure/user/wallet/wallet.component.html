@@ -1,0 +1,98 @@
+<user-navbar/>
+<div class="p-2">
+  <router-outlet/>
+  <div class="user-balance mb-2">
+    <user-balance/>
+  </div>
+  <layout-with-filters [hasTitle]="true" [meta]="service.meta | async" (pageChange)="service.page.next($event); service.hasChanged.next(true)">
+    <ng-container filters>
+      <wallet-filter/>
+    </ng-container>
+
+    <ng-container content>
+      <div class="wallet relative h-100">
+        <div class="h-100" *ngIf="walletData.length > 0 && !loading">
+          <div class="wallet-data">
+            <div class="wallet-table">
+              <table class="relative table">
+                <thead class="bg-gray border-bottom">
+                <tr>
+                  <th>#</th>
+                  <th>{{'date' | translate}}</th>
+                  <th class="text-left">{{'account' | translate}}</th>
+                  <th class="text-center">
+                    <p>{{'money_out' | translate}}</p>
+                    <p class="lighter">"{{'debit' | translate}}"</p>
+                  </th>
+                  <th class="text-center">
+                    <p>{{'money_in' | translate}}</p>
+                    <p class="lighter">"{{'credit' | translate}}"</p>
+                  </th>
+                  <th>{{'balance' | translate}}</th>
+                  <th class="text-center">{{'type' | translate}}</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody *ngIf="service.meta | async as meta">
+                <ng-container
+                  *ngFor="let transaction of walletData | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy">
+                  <tr [ngClass]="{'border-bottom': !transaction.expand}">
+                    <td>{{transaction.transactionId}}</td>
+                    <td>{{transaction.creationDate | arabicDate}}</td>
+                    <td>
+                      <div class="flex aic gap-x-1">
+                        <user-image [imageUrl]="environment.publicImageUrl" [img]="transaction.transactionType == 1 ? transaction.walletFromPic : transaction.walletToPic"/>
+                        <p>{{transaction.transactionType == 1 ? transaction.walletFromName : transaction.walletToName}}</p>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <p *ngIf="transaction.transactionType == 0">
+                        {{transaction.amount | arabicNumbers}} {{'egp' | translate}}
+                      </p>
+                      <p *ngIf="transaction.transactionType != 0">
+                        -
+                      </p>
+                    </td>
+                    <td class="text-center">
+                      <p *ngIf="transaction.transactionType == 1">
+                        {{transaction.amount | arabicNumbers}} {{'egp' | translate}}
+                      </p>
+                      <p *ngIf="transaction.transactionType != 1">
+                        -
+                      </p>
+                    </td>
+                    <td>{{transaction.currentBalance | arabicNumbers}} {{'egp' | translate}}</td>
+                    <td class="text-center">
+                      <div class="badge px-1 py-25 rounded inline-block"
+                           [ngClass]="{'payment': transaction.paymentType == 0, 'recharge': transaction.paymentType == 1, 'transfer': transaction.paymentType == 3}">
+                        <p *ngIf="transaction.paymentType == 0">{{'payment' | translate}}</p>
+                        <p *ngIf="transaction.paymentType == 1">{{'added_Fund' | translate}}</p>
+                        <p *ngIf="transaction.paymentType == 3">{{'transfer' | translate}}</p>
+                      </div>
+                    </td>
+                    <td>
+                      <button (click)="transaction.expand = !transaction.expand" class="clickable-btn">
+                        <i class='bx bx-chevron-down fs-35' [ngClass]="{'bx-rotate-180': transaction.expand}"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="transaction-details border-bottom " [ngClass]="{'d-none': !transaction.expand}">
+                    <td colspan="8" class="text-center transaction-details-bg py-2">
+                      <p>
+                        {{'payment_for' | translate}} {{transaction.transactionNote}} {{'on' | translate}} {{transaction.creationDate | arabicDate:'withTime'}}
+                      </p>
+                    </td>
+                  </tr>
+                </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <not-found *ngIf="walletData.length == 0 && !loading"/>
+        <loading *ngIf="loading"/>
+      </div>
+
+    </ng-container>
+  </layout-with-filters>
+</div>

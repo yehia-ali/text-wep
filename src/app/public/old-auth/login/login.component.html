@@ -1,0 +1,51 @@
+<auth-layout img="login">
+  <div class="h-100v flex-column jcc py-2 px-2" magicScroll>
+    <h2 class="primary text-left">{{ "welcome_back" | translate }}! 👋</h2>
+    <form class="w-100" (submit)="submit()" [formGroup]="form">
+      <div class="phone mt-1">
+        <input-label [control]="f['phone']" key="phone"></input-label>
+        <ngx-intl-tel-input
+          [cssClass]="'input'"
+          [enableAutoCountrySelect]="false"
+          [enablePlaceholder]="false"
+          [phoneValidation]="true"
+          [preferredCountries]="[CountryISO.Egypt, CountryISO.SaudiArabia]"
+          [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+          [searchCountryFlag]="true"
+          [selectedCountryISO]="CountryISO.Egypt"
+          [separateDialCode]="true"
+          dir="auto"
+          formControlName="phone"
+        ></ngx-intl-tel-input>
+        <input-error [control]="f['phone']"></input-error>
+      </div>
+
+      <div class="password mt-2">
+        <input-label [control]="f['password']" key="password"></input-label>
+        <input-password (getType)="passwordType = $event">
+          <input [maxlength]="16" [type]="passwordType" class="input password" formControlName="password">
+        </input-password>
+        <input-error [control]="f['password']"></input-error>
+      </div>
+
+      <div class="forgot-password mt-1 flex jcfe">
+        <a class="fs-14inline-block" routerLink="/auth/forgot-password">
+          {{ "forgot_password" | translate }}
+        </a>
+      </div>
+
+      <button [disabled]="loading" type="submit" class="submit rounded" color="primary" mat-raised-button>
+        <submit-button [loading]="loading" text="login"></submit-button>
+      </button>
+    </form>
+    <div class="flex aic jcsb">
+      <p>
+        <span>{{ "dont_have_account" | translate }}</span>
+        <a class="primary bold ml-50" href="" routerLink="../register">
+          {{"create_account" | translate}}
+        </a>
+      </p>
+<!--      <p class="primary underline pointer bold" routerLink="/auth/qr-code">{{'login_by_qrcode' | translate}}</p>-->
+    </div>
+  </div>
+</auth-layout>

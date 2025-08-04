@@ -1,0 +1,193 @@
+<div class="dir pt-1">
+  <div class="flex jcsb aic mb-2 px-2">
+    <p class="fs-17 black simibold ">{{'kpis_bank' | translate}}</p>
+    <i class="bx bx-x fs-25 pointer" (click)="dialogRef.close()"></i>
+  </div>
+  <div class="h-100">
+    <div class="kpis-bank-list">
+      <div class="px-2 flex aic jcsb mb-1">
+        <div class="flex aic gap-x-1">
+          <search [width]="'w-15r'" [classes]="'py-50'" [newSearch]="true" [hideLabel]="true" (valueChanged)="search($event)"/>
+          <app-departments-filter (valueChanged)="department($event)"/>
+          <app-kpi-category-filter  (valueChanged)="kpiCategory($event)"/>
+        </div>
+        <button  class="btn rounded bg-primary white py-50 px-2 fs-12" (click)="assignKpis()">
+          {{'assign_kpis' | translate}}
+        </button>
+      </div>
+      <div class="table-container border-0">
+
+        <table class="table table-bordered" *ngIf="!loading && itemsList.length > 0">
+          <thead>
+            <tr class="bg-gray">
+              <th class="text-left kpis-1-col-width">
+                <mat-checkbox  class="mr-1 example-margin" color="primary" (change)="selectitemsList($event)" [checked]="allCategoriesChecked"/>
+                {{'kpi_category_name' | translate}}
+              </th>
+              <th class="text-left kpis-two-2span-col-width text-left">{{'description' | translate}}</th>
+              <!-- <th class="text-left kpis-3-col-width">{{'department' | translate}}</th> -->
+              <th class="text-left kpis-4-col-width"><span class="pr-50 danger fs-18 fw-500">*</span>{{'weight' | translate}}</th>
+              <th class="text-left kpis-5-col-width"><span class="pr-50 danger fs-18 fw-500">*</span>{{'target' | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let row of itemsList | paginate: {itemsPerPage: limit, currentPage: page, totalItems: totalItems}">
+              <tr class="border-bottom" >
+                <td class="text-left">
+                  <div class="flex aic" >
+                    <mat-checkbox class="mr-1 example-margin" color="primary" [checked]="row.isSelected" (change)="selectCategory($event, row , false)"/>
+                    <div class="flex" (click)="row.isExpand = !row.isExpand">
+                      <i *ngIf="!row.isExpand" class="pointer px-25 fs-19 primary bx bx-chevron-right"></i>
+                      <i *ngIf="row.isExpand" class="pointer px-25 fs-19 primary bx bx-chevron-up"></i>
+                    </div>
+                    <span>
+                      {{ row?.name }}
+                    </span>
+                  </div>
+                </td>
+                <td class="text-left pointer">{{ (row?.describtion && row?.describtion.length > 35  ? (row?.describtion | slice:0:35) + '...' : row?.describtion) || '-' }}</td>
+                <!-- <td class="text-left">{{ row?.department || '-' }}</td> -->
+                <td class="text-left">
+                  <div class="flex aic gap-x-1 " *ngIf="!row.weightEdit">
+                    <span class="tabel-weight-width bold">{{(row.weight | arabicNumbers)  + '%'}}</span>
+                    <i class="bx bx-edit fs-18 primary pointer" (click)="row.weightEdit = !row.weightEdit"></i>
+                  </div>
+                  <div class="flex aic gap-x-1 " *ngIf="row.weightEdit">
+                    <div>
+                      <input type="text" [(ngModel)]="row.weight" class="input w-8r px-25 py-25"/>
+                    </div>
+                    <i class="bx bx-check fs-18 success pointer" (click)="row.weightEdit = !row.weightEdit"></i>
+                  </div>
+                </td>
+                <td class="text-left">
+                  <div class="flex aic gap-x-1 " *ngIf="!row.targetEdit">
+                    <span class="tabel-weight-width bold">{{ row.target | arabicNumbers}}</span>
+                    <i class="bx bx-edit fs-18 primary pointer" (click)="row.targetEdit = !row.targetEdit"></i>
+                  </div>
+                  <div class="flex aic gap-x-1 " *ngIf="row.targetEdit">
+                    <div>
+                      <input type="text" [(ngModel)]="row.target" class="input w-8r px-25 py-25"/>
+                    </div>
+                    <i class="bx bx-check fs-18 success pointer" (click)="row.targetEdit = !row.targetEdit"></i>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="row.isExpand">
+                <td colspan="4" class="px-0 py-0 bg-gray">
+                  <table class="table table-sm bg-gray" *ngIf="row?.kpis && row?.kpis?.length > 0">
+                    <thead class="bg-gray">
+                      <tr class="border-bottom">
+                        <th class="text-left pl-4 pr-50">{{'kpi_name' | translate}}</th>
+                        <th class="text-left" >{{'description' | translate}}</th>
+                        <th class="text-left">{{'department' | translate}}</th>
+                        <th class="text-left"><span class="pr-50 danger fs-18 fw-500">*</span>{{'date_from' | translate}}</th>
+                        <th class="text-left"><span class="pr-50 danger fs-18 fw-500">*</span>{{'date_to' | translate}}</th>
+                        <th class="text-left"><span class="pr-50 danger fs-18 fw-500">*</span>{{'rater' | translate}}</th>
+                        <th class="text-right"><span class="pr-50 danger fs-18 fw-500">*</span>{{'weight' | translate}}</th>
+                        <th class="text-right"><span class="pr-50 danger fs-18 fw-500">*</span>{{'target' | translate}}</th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-light-violet">
+
+                      <tr class="border-bottom" *ngFor="let kpi of row?.kpis">
+                        <td class="text-left pl-4 pr-50" >
+                          <div class="flex aic pl-1">
+                            <mat-checkbox class="mr-1 example-margin" color="primary" [checked]="kpi.isSelected" (change)="selectCategory($event, kpi, row)"/>
+                            <span>{{ kpi?.name }}</span>
+                          </div>
+                        </td>
+                        <td class="text-left">{{ (kpi?.describtion && kpi?.describtion.length > 35  ? (kpi?.describtion | slice:0:35) + '...' : kpi?.describtion) || '-' }}
+                        </td>
+                        <td class="text-left">
+                          <ng-container>
+                            <span *ngFor="let item of kpi?.departmentNames; let isFirst = first; let isLast = last">
+                              {{ item }}
+                              <span *ngIf="!isLast" class="bold fs-16">, </span>
+                            </span>
+                          </ng-container>
+
+                          <span *ngIf="kpi?.departmentNames.length == 0">-</span>
+                        </td>
+                        <td class="text-left">
+                          <p-calendar
+                            [(ngModel)]="kpi.dateFrom"
+                            [showIcon]="true"
+                            inputId="icondisplay"
+                            />
+                        </td>
+                        <td class="text-left">
+                          <p-calendar
+                            [(ngModel)]="kpi.dateTo"
+                            [showIcon]="true"
+                            inputId="icondisplay" />
+                        </td>
+                        <td class="text-left">
+                          <select-user
+                            *ngIf=" kpi.valueTypeId != 6 && kpi.valueTypeId != 7 && kpi.valueTypeId != 8"
+                            [multi]="false"
+                            (getSelectedUsers)="kpi.raterId = $event[0].id"
+                            [selectedUsers]="kpi.selectedRater"
+                            text="rater"/>
+                        </td>
+                        <td class="text-left">
+                          <div class="flex aic gap-x-1 " *ngIf="!kpi.weightEdit">
+                            <span class="tabel-weight-width bold">{{(kpi.weight | arabicNumbers)  + '%'}}</span>
+                            <i class="bx bx-edit fs-18 primary pointer" (click)="kpi.weightEdit = !kpi.weightEdit"></i>
+                          </div>
+                          <div class="flex aic gap-x-1 " *ngIf="kpi.weightEdit">
+                            <div>
+                              <input type="text" [(ngModel)]="kpi.weight" class="input w-8r px-25 py-25"/>
+                            </div>
+                            <i class="bx bx-check fs-18 success pointer" (click)="kpi.weightEdit = !kpi.weightEdit"></i>
+                          </div>
+                        </td>
+                        <td class="text-left">
+                          <div class="flex aic gap-x-1 " *ngIf="!kpi.targetEdit">
+                            <span class="tabel-target-width bold">{{ kpi.target | arabicNumbers}}</span>
+                            <i class="bx bx-edit fs-18 primary pointer" (click)="kpi.targetEdit = !kpi.targetEdit"></i>
+                          </div>
+                          <div class="flex aic gap-x-1 " *ngIf="kpi.targetEdit">
+                            <div>
+                              <input type="text" [(ngModel)]="kpi.target" class="input w-8r px-25 py-25"/>
+                            </div>
+                            <i class="bx bx-check fs-18 success pointer" (click)="kpi.targetEdit = !kpi.targetEdit"></i>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <p class="text-center py-1" *ngIf="row?.kpis.length == 0">{{'no_data_found' | translate}}</p>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+
+        <div class="flex aic jcc py-5" *ngIf="loading || itemsList.length == 0">
+          <loading *ngIf="loading" [centerd]="true"/>
+          <not-found *ngIf="!loading && itemsList.length == 0" />
+        </div>
+      </div>
+      <div class="pagination-content flex aic jcsb py-1 bg-white border-top border-bottom px-2" >
+        <div class="flex aic">
+          <p class="fs-12 simibold">{{ 'pagination_per_page' | translate }} </p>
+          <input type="number" style="width:50px" class="input ml-75 limit text-center py-50 px-0" min="1" [(ngModel)]="limit" (ngModelChange)="changeLimit()">
+          <p class="ml-50 primary fs-12" >{{ 'record' | translate }}</p>
+        </div>
+        <pagination-controls
+          (pageChange)="pageChanged($event)"
+          [maxSize]="7"
+          [directionLinks]="true"
+          [previousLabel]="'previous' | translate"
+          [nextLabel]="'next' | translate"
+                             >
+        </pagination-controls>
+        <p class="fs-12 simibold pr-3">{{ 'pagination_total_records' | translate }} <span
+          class="primary">{{ totalItems | arabicNumbers }} {{ 'record' | translate }}</span>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>

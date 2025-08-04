@@ -1,0 +1,95 @@
+import {SubTask} from "./sub-task";
+
+export interface TaskDetails {
+  actualTime: number,
+  assigneeId: number,
+  assigneeImageUrl: string,
+  assigneeJob: string,
+  assigneeName: string,
+  definitionOfDone: string,
+  description: string,
+  endDate: string,
+  endTimeForRepeat: string,
+  repeatedPeriodNumber: number,
+  repetitionSelectedDays: any,
+  rateDate: string,
+  canUpdateRate: boolean,
+  endedTaskRepeatedCounter: number,
+  estimatedTime: number,
+  expectedTime: number,
+  haveReporters: boolean,
+  haveSubTasks: boolean,
+  isRepeated: boolean,
+  isSubTasks: boolean,
+  latitude: number,
+  link: string,
+  longitude: number,
+  managerId: number,
+  parentPathList: any
+  parentTaskGroupId: number,
+  percentage: any,
+  priority: number,
+  rate: number,
+  rateReason: string
+  soundDescription: string,
+  startDate: string,
+  stateReason: string,
+  stopedRepeat: boolean,
+  taskGroupAttachments: {
+    id: number,
+    filePath: string,
+    fileName: string,
+    fileType: number
+  }[]
+  taskGroupCreatorId: number,
+  taskGroupCreatorImageUrl: string,
+  taskGroupCreatorJob: string,
+  taskGroupCreatorName: string,
+  taskGroupId: number,
+  taskGroupType: number,
+  taskId: number,
+  taskRepeatedPeriod: number,
+  taskStateId: number,
+  title: string,
+  taskTodosList: [{
+    id: number,
+    todoText: string,
+    isChecked: boolean
+  }],
+  creator: boolean,
+  isAssignee: boolean,
+  isManager: boolean,
+  hasStarted: boolean,
+  max: number,
+  taskStopedRepeated: number,
+  stopedRepeatDate: string,
+  workingHours: {
+    actual: string,
+    actualMinutes: string,
+    actualPercentage: any,
+    required: string,
+    requiredMinutes: string,
+    requiredPercentage: any,
+    extraHours: string,
+    extraMinutes: string,
+    extraTimePercentage: any,
+  } | any,
+  reporters: [{
+    id: number,
+    reporterId: number,
+    reporterJobTitle: string,
+    reporterName: string,
+    reporterProfilePicture: string
+    taskGroupId: number,
+    image: string,
+    name: string
+    jobTitle: string
+  }],
+  reportersImagesUrls: [string],
+  histories: any,
+  timeLogHistory: any,
+  subTasks: SubTask[]
+  inLocation: boolean,
+  logsFlag: boolean,
+  logsMinuts: number
+}

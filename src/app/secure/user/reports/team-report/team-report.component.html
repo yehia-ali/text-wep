@@ -1,0 +1,124 @@
+<layout-with-filters (pageChange)="changePage($event)" [meta]="meta" [admin]="true"
+                     (limitChanged)="limitChange($event)" [limit]="service.limitValue">
+  <ng-container filters>
+    <div class="filter px-50 flex aic jcsb">
+      <div class="flex aic gap-x-2">
+        <search [key]="service.searchValue" (valueChanged)="search($event, service.search)"></search>
+        <div class="average-rate w-19r">
+          <input-label key="average_rate"/>
+          <ng-select [items]="list" [multiple]="true" [closeOnSelect]="false" [(ngModel)]="averageRate" (ngModelChange)="clientsideFilter('averageRate', $event)"
+                     bindLabel="name" bindValue="value" appendTo="body">
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+              {{item.name}}
+            </ng-template>
+            <ng-template ng-label-tmp let-item="item" let-clear="clear">
+              <span class="fs-14 px-50 rounded-50">{{item.name}}</span>
+            </ng-template>
+          </ng-select>
+        </div>
+        <!--<div class="performance-rate w-15">
+          <label>{{'performance_rate' | translate}}</label>
+          <ng-select [items]="list" [(ngModel)]="performanceRate" (ngModelChange)="clientsideFilter('performanceRate', $event)"
+                     bindLabel="name" bindValue="value" appendTo="body">
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+              {{item.name}}
+            </ng-template>
+            <ng-template ng-label-tmp let-item="item" let-clear="clear">
+              <span class="fs-14">{{item.name}}</span>
+            </ng-template>
+          </ng-select>
+        </div>-->
+        <month-filter (onChange)="getReport()" [start_date_key]="service.startDateFrom" [end_date_key]="service.startDateTo" [selectedDate]="service.selectedDate"></month-filter>
+      </div>
+      <button mat-raised-button class="bg-success export" (click)="exportToExcel()">{{'export' | translate}}</button>
+    </div>
+  </ng-container>
+  <ng-container content>
+    <table *ngIf="reports && reports.length > 0 && !loading" class="table" id="team-report">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">{{'member' | translate}}</th>
+        <th>
+          <div class="flex-center">
+            <p class="mr-50">{{'inbox_tasks' | translate}}</p>
+            <sorting (up)="sort('taskTotalCount', true)" (down)="sort('taskTotalCount', false)"></sorting>
+          </div>
+        </th>
+        <th>{{'working_hours' | translate}}</th>
+        <th>
+          <div class="flex-center">
+            <p class="mr-50">{{'expected_hours' | translate}}</p>
+            <sorting (up)="sort('workingHours', true, 'required')"
+                     (down)="sort('workingHours', false, 'required')"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <p class="mr-50">{{'actual_hours' | translate}}</p>
+            <sorting (up)="sort('workingHours', true, 'actual')"
+                     (down)="sort('workingHours', false, 'actual')"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <p class="mr-50">{{'average_rate' | translate}}</p>
+            <sorting (up)="sort('averageRate', true)" (down)="sort('averageRate', false)"></sorting>
+          </div>
+        </th>
+        <th>
+
+          <div class="flex-center">
+            <p class="mr-50">{{'performance_rate' | translate}}</p>
+            <sorting (up)="sort('performanceRate', true)" (down)="sort('performanceRate', false)"></sorting>
+          </div>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="border-bottom"
+          *ngFor="let report of reports | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy">
+        <td>
+          <div class="flex aic">
+            <user-image [img]="report.imageUrl" [id]="report.id"></user-image>
+            <div class="info ml-75 text-left">
+              <p class="fs-16 primary">{{report.name}}</p>
+              <p class="muted fs-13">{{report.jobTitle}}</p>
+            </div>
+          </div>
+        </td>
+        <td>{{report.taskTotalCount | arabicNumbers}}</td>
+        <td>{{report.shiftWorkingHoursMonthly | arabicNumbers}} {{'hour' | translate}}</td>
+        <td>
+          <span class="mr-50"
+                *ngIf="(report.required > 2 && language == 'ar') || language == 'en' || report.actual == 0">{{report.required | arabicNumbers}}</span>
+          <span *ngIf="report.required > 0">{{(report.required | defineDays) + '_hour' | translate}}</span>
+        </td>
+        <td>
+          <span class="mr-50"
+                *ngIf="(report.actual > 2 && language == 'ar') || language == 'en' || report.actual == 0">{{report.actual | arabicNumbers}}</span>
+          <span *ngIf="report.actual > 0">{{(report.actual | defineDays) + '_hour' | translate}}</span>
+        </td>
+        <td>
+          <div class="flex-center">
+            <rate [rate]="report.averageRate" type="small"></rate>
+          </div>
+        </td>
+        <td>
+          <div class="flex-center">
+            <div class="start line-height"
+                 [ngClass]="{'success': report.performanceRate > 0, 'danger': report.performanceRate < 0}">{{report.performanceRate | arabicNumbers}}
+              %
+            </div>
+            <div class="end ml-50">
+              <i class='bx bxs-up-arrow success fs-15' *ngIf="report.performanceRate > 0"></i>
+              <i class='bx bxs-down-arrow danger fs-15' *ngIf="report.performanceRate < 0"></i>
+            </div>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <not-found *ngIf="reports && reports.length == 0 && !loading"></not-found>
+    <loading *ngIf="loading"></loading>
+  </ng-container>
+</layout-with-filters>

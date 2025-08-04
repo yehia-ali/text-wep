@@ -1,0 +1,47 @@
+<div class="task-requests">
+  <layout>
+    <div class="task-requests h-100 relative" magicScroll="">
+      <div class="requests" *ngIf="requests.length > 0 && !loading">
+        <div class="task-request px-3 py-2 border-bottom flex aic pointer" (click)="getTask(request.taskId)" *ngFor="let request of requests; trackBy: trackBy">
+          <div class="start flex aic flex-33">
+            <priority [priority]="request?.priority"></priority>
+            <h4 class="ml-2">
+              <span *ngIf="request.title.length <= 20">{{request?.title}}</span>
+              <span *ngIf="request.title.length > 20" [matTooltip]="request.title">{{request?.title | slice:0:20}}
+                ...</span>
+            </h4>
+          </div>
+
+          <div class="middle flex aic flex-auto fs-13">
+            <!--      creator   -->
+            <user-image [img]="request.creatorProfilePicture"></user-image>
+            <p class="ml-1">{{request?.creatorName}}</p>
+
+            <i class='bx bx-arrow-back primary fs-23 mx-1' [ngClass]="{'bx-rotate-180': dir == 'ltr'}"></i>
+            <!--      assignee   -->
+            <user-image [img]="request.assigneeProfilePicture"></user-image>
+            <p class="ml-1">{{request?.assigneeName}}</p>
+          </div>
+
+          <div class="end flex aic jcfe flex-10" (click)="$event.stopImmediatePropagation()">
+            <div class="reject bg-danger rounded-50 action flex-center pointer" [matTooltip]="'reject' | translate"
+                 (click)="rejectTaskRequest(request.taskId)">
+              <i class='bx bx-x white fs-24'></i>
+            </div>
+            <div class="img forward bg-primary mx-2 rounded-50 action flex-center pointer px-25 pt-25 pb-25" [matTooltip]="'forward' | translate" (click)="forward(request)">
+              <img src="assets/images/icons/forward.svg" alt="forward" class="forward-image">
+            </div>
+            <div class="approve bg-success rounded-50 action flex-center pointer" [matTooltip]="'approve' | translate"
+                 (click)="approveTaskRequest(request.taskId, request.taskGroupId,request.assigneeId)">
+              <i class='bx bx-check white fs-24'></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <not-found *ngIf="!loading && requests.length == 0"></not-found>
+      <loading *ngIf="loading"></loading>
+
+    </div>
+  </layout>
+</div>

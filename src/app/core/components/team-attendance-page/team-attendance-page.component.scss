@@ -1,0 +1,26 @@
+.sticky {
+  position: sticky;
+  top: -5px;
+  z-index: 20;
+}
+
+thead {
+  top: -20px !important;
+}
+
+
+.pagination-content {
+  height: 58px;
+}
+
+.limit {
+  width: 5rem;
+  padding: 1.1rem .5rem;
+}
+.fixed-pagination {
+  position: fixed;
+  bottom: 25px;
+  width: 82vw;
+  padding: 1rem;
+  inset-inline-start: 16vw;
+}

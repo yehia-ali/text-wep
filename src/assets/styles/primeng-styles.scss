@@ -1,0 +1,115 @@
+@import url('assets/styles/primeng-styles/dropdown.scss');
+
+.p-splitbutton{
+  .p-tieredmenu.p-tieredmenu-overlay
+  {
+    left: auto;
+    inset-inline-start: 0;
+    min-width: 200px;
+    max-width: 350px;
+    font-size: 14px;
+    .p-menuitem-content{
+      padding: 8px;
+    }
+  }
+  *{font-size: 16px;}
+  .p-menuitem-text{
+    line-height: 1.5;
+  }
+  .p-splitbutton-menubutton{
+   border-start-end-radius: 4px;
+   border-end-end-radius: 4px;
+   border-end-start-radius: 0px;
+   border-start-start-radius: 0px;
+  }
+  .p-splitbutton-defaultbutton{
+   padding-inline: 5px;
+   border-start-end-radius: 0;
+   border-end-end-radius: 0;
+   border-end-start-radius: 4px;
+   border-start-start-radius: 4px;
+  }
+}
+.p-calendar{
+
+  .p-datepicker:not(.p-disabled) table td span:not(.p-highlight):not(.p-disabled):hover {
+    background-color: #7B58CA !important;
+    color: #fff !important;
+  }
+  .p-datepicker .p-highlight {
+    background-color: #7B58CA !important;
+    color: #fff !important;
+  }
+  .p-datepicker table td.p-datepicker-today > span {
+    background-color: rgba($color: #7B58CA, $alpha: 0.1);
+    color: #7B58CA;
+  }
+  .p-datepicker{
+    td,th{
+      text-align: center;
+    }
+    background: transparent;
+  }
+  .p-datepicker-group-container{
+    // position: fixed;
+    background-color: white;
+  }
+  width: 100%;
+  input{
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+}
+.p-datepicker
+{
+  .datepicker-year{
+    padding-inline: 5px;
+  }
+  .p-ampm-picker{
+    margin-inline-start:10px;
+  }
+  left: auto !important;
+  inset-inline-start: 0;
+  .p-datepicker-header{
+    direction: ltr;
+  }
+}
+
+.create-task-sp .p-splitbutton , .end-sp .p-splitbutton {
+  .p-menuitem-text {
+    font-size: 14px;
+  }
+  .p-tieredmenu.p-tieredmenu-overlay {
+    left: auto;
+    inset-inline-end: 0 !important;
+    inset-inline-start: auto !important;
+  }
+  box-shadow: var(--mdc-protected-button-container-elevation, 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12));
+  .p-splitbutton-defaultbutton {
+    padding-inline: 8px;
+    padding-block: 4px;
+  }
+}
+
+.dark-mode{
+  .p-calendar{
+    .p-inputtext{
+      background-color: #283046;
+      border-color: #404656;
+    }
+    .p-datepicker-group-container{
+      .p-datepicker-header{
+        background-color: #283046;
+        border-color: #404656;
+        *{
+          color: #fff;
+        }
+      }
+      table td , table th{
+        color: #fff;
+      }
+      position: fixed;
+      background-color: #283046;
+    }
+  }
+}

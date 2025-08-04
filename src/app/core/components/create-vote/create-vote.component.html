@@ -1,0 +1,107 @@
+<h2 mat-dialog-title>
+  {{'create_vote' | translate}}
+</h2>
+
+<div mat-dialog-content magicScroll="" dir="auto" class="pb-2">
+  <form [formGroup]="form">
+    <div class="flex-grid gap-y-1">
+      <!--   Title   -->
+      <div class="col-lg-12">
+        <input-label [control]="f['title']" key="title" [maxLength]="100"></input-label>
+        <input type="text" class="input" maxlength="100" formControlName="title">
+        <input-error [control]="f['title']"></input-error>
+      </div>
+
+      <!--   priority   -->
+      <div class="col-lg-6">
+        <input-label [control]="f['priority']" key="priority"></input-label>
+        <ng-select [items]="priorities" [clearable]="false" formControlName='priority' bindLabel="name"
+                   bindValue="value" appendTo="body">
+          <ng-template ng-option-tmp ng-label-tmp let-item="item">
+            <div class="flex aic">
+              <priority [priority]="item.value"></priority>
+              <span class="ml-1 fs-15">{{ item.name | translate}}</span>
+            </div>
+          </ng-template>
+        </ng-select>
+        <input-error [control]="f['priority']"></input-error>
+      </div>
+
+      <!--   Assignees   -->
+      <div class="col-lg-6">
+        <p class="mb-25 fs-14" [ngClass]="{'danger': usersLength < 2}">{{'assignees' | translate}}</p>
+        <select-user text="assignee" (getSelectedUsers)="selectUsers($event)"/>
+        <p class="danger fs-14 mt-75" *ngIf="usersLength < 2">{{'more_than_2' | translate}}</p>
+      </div>
+
+      <!--   Start Date  -->
+      <div class="col-lg-6">
+        <input-label key="start_date" [control]="f['startDate']"></input-label>
+        <input [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" class="input" formControlName="startDate" [min]="now">
+        <input-error [control]="f['startDate']"></input-error>
+      </div>
+
+      <!--   End Date  -->
+      <div class="col-lg-6" [ngStyle]="{'pointer-events': !!f['startDate'].value ? 'unset': 'none'}">
+        <input-label key="end_date" [control]="f['endDate']"></input-label>
+        <input [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2" class="input" formControlName="endDate" [min]="f['startDate'].value">
+        <input-error [control]="f['endDate']"></input-error>
+      </div>
+
+      <!--   anonymous  -->
+      <div class="col-lg-6">
+        <input-label key="anonymous" [control]="f['isAnonymous']"></input-label>
+        <ng-select [clearable]="false"
+                   [items]="[{name: translate.instant('yes'), value: true}, {name: translate.instant('no'), value: false}]"
+                   formControlName='isAnonymous' bindLabel="name" bindValue="value" appendTo="body">
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            {{item.name | translate}}
+          </ng-template>
+          <ng-template ng-label-tmp let-item="item" let-clear="clear">
+            <span class="fs-14">{{item.name | translate}}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+
+      <!--   share report  -->
+      <div class="col-lg-6">
+        <input-label key="share_report_with_assignees" [control]="f['isReportPublic']"></input-label>
+        <ng-select [clearable]="false"
+                   [items]="[{name: translate.instant('yes'), value: true}, {name: translate.instant('no'), value: false}]"
+                   formControlName='isReportPublic' bindLabel="name" bindValue="value" appendTo="body">
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            {{item.name | translate}}
+          </ng-template>
+          <ng-template ng-label-tmp let-item="item" let-clear="clear">
+            <span class="fs-14">{{item.name | translate}}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+
+      <!--   Description  -->
+      <div class="col-lg-12 mb-1 mt-75">
+        <input-label [optional]="true" [control]="f['description']" key="description"></input-label>
+        <textarea class="input" rows="4" formControlName="description"></textarea>
+      </div>
+
+      <!--   Questions   -->
+      <div class="col-lg-12">
+        <vote-questions (questionsForm)="this.questionsForm = $event" (heightChanged)="scrollBottom()"/>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions>
+  <div class="flex jcfe w-100">
+    <button class="px-4 mr-2 dark-color clickable-btn rounded cancel-btn"
+            mat-dialog-close="">{{'cancel' | translate}}</button>
+    <button mat-raised-button color="primary" class="px-4 fs-15" (click)="submit()" [disabled]="form.invalid || this.questionsForm.invalid || loading || usersLength < 2">
+      <submit-button [text]="!data?.add ? 'save' :  'create'" [loading]="loading"></submit-button>
+    </button>
+  </div>
+</div>
+
+
+<owl-date-time #dt1></owl-date-time>
+<owl-date-time #dt2></owl-date-time>

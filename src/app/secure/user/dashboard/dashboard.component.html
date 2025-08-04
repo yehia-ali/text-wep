@@ -1,0 +1,160 @@
+<user-navbar />
+<div class="">
+  <div class="new-dashboard" style="overflow: auto;">
+    <div class="p-2" style="overflow: auto;">
+      <!-- notification -->
+      <!-- <div class="rounded-4 card-shadow w-100 flex aic jcsb mb-2 px-2 py-1 bg-light-success "
+        *ngIf="lastAttendance?.status == 1">
+        <div class="">
+          <div class="flex" *ngIf="lastAttendance.status">
+            <div class="img mr-1">
+              <i class="bx bx-calendar fs-20"></i>
+            </div>
+            <div class="end">
+              <p class="fs-11 bold">
+                <ng-container *ngIf="lastAttendance.status == 1">{{'checked-in' | translate}}</ng-container>
+                <ng-container *ngIf="lastAttendance.status == 2">{{'checked-out' | translate}}</ng-container>
+                {{'on' | translate}}
+              </p>
+              <p class="fs-15" *ngIf="lastAttendance?.date">
+                {{lastAttendance.date | arabicDate:'long'}} ,
+                <span class="simibold">{{lastAttendance.date | arabicTime}}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <!-- notification -->
+      <!-- start new dashboard -->
+      <div class="">
+        <div class="flex-grid acs">
+          <div class="col-lg-4 mb-3">
+            <div class="rounded-4 card-shadow p-2 welcome-bg h-100 flex-column jcsb">
+              <div class="flex aic jcsb w-100 mb-2">
+                <div>
+                  <h2 class="start bold white mb-0">{{ "hello" | translate }} {{ user.name }} 🎉</h2>
+                </div>
+                <app-img-title [imgSrc]="user.imageUrl" [imgSize]="50"></app-img-title>
+              </div>
+              <div class="flex aic jcsb w-100">
+                <div class="white flex jcsb">
+                  <i class="bx bx-calendar mr-1 fs-20 mt-50"></i>
+                  <div>
+                    <h3 class="white fs-16 bold mb-0">{{'working_shift' | translate}}</h3>
+                    <span>{{user.checkIn | arabicTime}}</span> - <span>{{user.checkOut | arabicTime}}</span>
+                  </div>
+                </div>
+                <div class="rounded-4 card-shadow white"
+                  *ngIf="lastAttendance?.status">
+                  <div class="">
+                    <div class="flex" *ngIf="lastAttendance.status">
+                      <div class="img mr-1">
+                        <i class="bx bx-calendar fs-20"></i>
+                      </div>
+                      <div class="end">
+                        <p class="fs-16 bold">
+                          <ng-container *ngIf="lastAttendance.status == 1">{{'checked-in' | translate}}</ng-container>
+                          <ng-container *ngIf="lastAttendance.status == 2">{{'checked-out' | translate}}</ng-container>
+                          {{'on' | translate}}
+                        </p>
+                        <p class="fs-15" *ngIf="lastAttendance?.date">
+                          {{lastAttendance.date | arabicDate:'long'}} ,
+                          <span class="simibold">{{lastAttendance.date | arabicTime}}</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="actions flex aic " *ngIf="lastAttendance" style="width: 200px; justify-content: end;">
+                  <div class="flex aic jcc">
+                    <div *ngIf="lastAttendance.status != 1"
+                      class="check-in flex aic bg-white success rounded px-75 py-1 pointer shadow"
+                      (click)="(lastAttendance.status == 2 || !lastAttendance.status) && check(1)">
+                      <div class="img">
+                        <i class='bx bx-play-circle fs-25 mr-50'></i>
+                      </div>
+                      <div class="text-center">
+                        <p class="">{{'check-in' | translate}}</p>
+                      </div>
+                    </div>
+
+                    <div *ngIf="lastAttendance.status == 1"
+                      class="check-out flex aic bg-white danger rounded px-75 py-1 pointer shadow"
+                      (click)="lastAttendance.status == 1 && check(2)">
+                      <div class="img">
+                        <i class='bx bx-pause-circle fs-25 mr-50'></i>
+                      </div>
+                      <div class="text-center">
+                        <p style="width: 100px;">{{ totalShiftTime}}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                </div> -->
+
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-8 mb-3">
+            <div class="flex-grid h-100">
+              <div class="{{isManager ? 'col-lg-20' : 'col-lg-6'}} h-100" *ngFor="let item of cards">
+                <dashboard-card [item]="item" *ngIf="item.show"></dashboard-card>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 mb-3">
+            <meeting-card></meeting-card>
+          </div>
+
+          <div class="col-lg-8 mb-3">
+            <working-hours [workingHours]="workingHours"></working-hours>
+          </div>
+
+          <!-- charts -->
+        <div class="mb-3 {{isManager ? 'col-lg-4' : 'col-lg-6'}} ">
+          <dashboard-chart chartTitle="my_report">
+            <doughnut-chart></doughnut-chart>
+          </dashboard-chart>
+        </div>
+        <div class="mb-3 col-lg-4 " *ngIf="isManager">
+          <dashboard-chart chartTitle="team_report">
+            <doughnut-chart></doughnut-chart>
+          </dashboard-chart>
+        </div>
+        <!-- charts -->
+        <div class="mb-3 {{isManager ? 'col-lg-4' : 'col-lg-6'}} ">
+          <div class="w-100 item-{{i + 1}}" *ngFor="let data of statistics;let i = index">
+            <statistics-card [data]="data"></statistics-card>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- end new dashboard -->
+
+
+    </div>
+  </div>
+
+  <div class="dashboard-calendar">
+    <mat-form-field appearance="fill" class="example-form-field">
+      <mat-label class="fs-15">{{"date_range" | translate}}</mat-label>
+      <mat-date-range-input [rangePicker]="rangePicker">
+        <input matStartDate placeholder="Start date" [(ngModel)]="startDate" />
+        <input matEndDate placeholder="End date" [(ngModel)]="endDate" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #rangePicker>
+        <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>
+            {{ "cancel" | translate }}
+          </button>
+          <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateChanged()">
+            {{ "apply" | translate }}
+          </button>
+        </mat-date-range-picker-actions>
+      </mat-date-range-picker>
+    </mat-form-field>
+  </div>

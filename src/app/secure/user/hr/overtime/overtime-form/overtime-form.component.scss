@@ -1,0 +1,20 @@
+:host ::ng-deep{
+  mat-form-field{
+    width: 100%;
+  }
+  .mdc-text-field--filled:not(.mdc-text-field--disabled){
+    background-color: transparent;
+    border-radius: 0.5rem;
+    width: 100%;
+    color: #707070;
+    border: 1px solid #e7e7e7;
+  }
+  .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-text-field__input,
+  .mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input{
+    border: 0 !important;
+  }
+}
+
+textarea {
+  resize: none;
+}

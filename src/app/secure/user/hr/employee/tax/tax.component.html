@@ -1,0 +1,31 @@
+<div class="p-2">
+  <div class="flex-grid">
+    <div class="col-lg-4 mb-2">
+      <div class="subject_tax">
+        <label class="fs-11 simibold mb-75" for="subject_tax">
+          <i class="mr-50 bx bx-text"></i>
+          <span>{{ "subject_tax" | translate }}</span>
+        </label>
+        <ng-select
+          [items]="ganders"
+          bindLabel="gander"
+          bindValue="id"
+          [(ngModel)]="ganders"
+        >
+        </ng-select>
+        <!-- <input-error [control]="f['nameAr']"/> -->
+      </div>
+    </div>
+
+    <div class="col-lg-4 mb-2">
+      <div class="tax_deduction">
+        <label class="fs-11 simibold mb-75" for="tax_deduction">
+          <i class="mr-50 bx bx-lock"></i>
+          <span>{{ "tax_deduction" | translate }}</span>
+        </label>
+        <input id="tax_deduction" type="text" class="input" />
+        <!-- <input-error [control]="f['nameAr']"/> -->
+      </div>
+    </div>
+  </div>
+</div>

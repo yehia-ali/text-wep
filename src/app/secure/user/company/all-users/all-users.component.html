@@ -1,0 +1,64 @@
+<layout-with-filters [meta]="meta" (pageChange)="pageChanged($event)" [admin]="true" (limitChanged)="limitChanged($event)" [limit]="service.limit.value">
+  <ng-container filters>
+    <all-users-filter (export)="exportToExcel()"/>
+  </ng-container>
+  <ng-container content>
+    <table *ngIf="users && users.length > 0 && !loading" class="table" id="users">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th>
+          <div class="flex aic">
+            <mat-checkbox class="mr-1 example-margin" color="primary" (change)="selectAllUsers($event)" [checked]="allChecked"></mat-checkbox>
+            <div class="title">{{'user' | translate}}</div>
+          </div>
+        </th>
+        <th class="text-left">{{'phone' | translate}}</th>
+        <th class="text-left">{{'department' | translate}}</th>
+        <th class="text-left">{{'manager' | translate}}</th>
+        <th>{{'joining_date' | translate}}</th>
+        <th class="text-left">{{'code' | translate}}</th>
+        <th class="text-center">{{'role' | translate}}</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr
+        *ngFor="let user of users | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy"
+        class="border-bottom">
+        <td>
+          <div class="flex aic">
+            <mat-checkbox class="mr-1 example-margin" color="primary" [checked]="user.isSelected" (change)="selectUser($event, user)"></mat-checkbox>
+            <user-image [img]="user.imageUrl" [id]="user.isActivated ? user.id : 0"></user-image>
+            <div class="ml-1 text-left">
+              <p class="primary bold fs-14">{{user.name}}</p>
+              <p class="job-title fs-11 muted">{{user.jobTitle}}</p>
+            </div>
+          </div>
+        </td>
+        <td class="text-left">{{user.phoneNumber}}</td>
+        <td class="text-left">{{user.departmentName}}</td>
+        <td class="text-left">{{user.managerName}}</td>
+        <th style="width: 13rem">{{user.creationDate | arabicDate:'typicalDate'}}</th>
+        <td class="text-left">{{user.memberCode}}</td>
+        <td class="text-center">
+          <div class="flex-column gap-y-1" *ngIf="user.profileRoles.length > 0">
+            <div class="flex-center gap-x-1" *ngFor="let role of user.profileRoles">
+              <p>{{role.roleName | translate}}</p>
+              <!-- <i class='bx bx-x danger fs-22 pointer' *ngIf="role.roleName == 'SpaceAdmin' || role.roleName == 'SpacelimitedUser'" (click)="removeRole(user, role.roleName)"></i> -->
+              <i class='bx bx-x danger fs-22 pointer' *ngIf="role.roleName != 'SpaceSuperAdmin' && role.roleName !== 'SpaceManager' && role.roleName != 'KPIRater'" (click)="removeRole(user, role.roleName)"></i>
+            </div>
+          </div>
+          <p class="text-center" *ngIf="user.profileRoles.length < 1">-</p>
+        </td>
+        <td>
+          <div class="img pointer" (click)="editUser(user)">
+            <img src="assets/images/icons/edit1.svg" alt="edit icon">
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <not-found *ngIf="users && users.length == 0 && !loading"></not-found>
+    <loading *ngIf="loading"></loading>
+  </ng-container>
+</layout-with-filters>

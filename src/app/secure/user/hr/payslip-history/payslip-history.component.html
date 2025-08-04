@@ -1,0 +1,73 @@
+<layout-with-filters (pageChange)="changePage($event)" [meta]="meta">
+  <ng-container filters>
+    <div class="flex-grid">
+      <div class="col-md-3">
+        <search [width]="'w-100'" [newSearch]="true" [key]="service.search.value" (valueChanged)="search($event)"/>
+      </div>
+      <div class="col-md-3">
+        <app-date-range
+        [startDate]="startDate"
+        [endDate]="endDate"
+        (valueChanged)="dateChange($event)">
+      </app-date-range>
+      </div>
+
+    </div>
+
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': list.length == 0 }" class="table w-100 relative">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">{{ 'employee' | translate }}</th>
+        <th>{{ 'date' | translate }}</th>
+        <th>{{ 'basic_salary' | translate }}</th>
+        <th>{{ 'total_allowance' | translate }}</th>
+        <th>{{ 'target_kpi_bonus' | translate }} </th>
+        <th>{{ 'total_deductions' | translate }} </th>
+        <th>{{ 'gross_salary' | translate }}</th>
+        <th>{{ 'net_salary' | translate }}</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody *ngIf="list.length > 0 && !loading">
+      <tr *ngFor="let item of list | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}" class="border-bottom">
+        <td class="text-left">
+          <div class="flex aic gap-x-1">
+            <app-img-title [imgSrc]="item?.employeePic" [title]="item?.employeeName" [subTitle]="item?.employeeNJobTitle" [userId]="item?.employeeId"/>
+          </div>
+        </td>
+        <td>
+          <div class="info">
+            <p>{{ item?.date | arabicDate:'short' }}</p>
+          </div>
+        </td>
+        <td>
+          <p>{{ item?.basic }}</p>
+        </td>
+        <td>
+          <p>{{ item?.totalAllowance }}</p>
+        </td>
+        <td>
+          <p>{{ item?.earnedKpiBonus || '-' }}</p>
+        </td>
+        <td>
+          <p>{{ item?.totalDeductions }}</p>
+        </td>
+
+        <td>
+          <p>{{ item?.gross }}</p>
+        </td>
+        <td>
+          <p>{{ item?.totalNet }}</p>
+        </td>
+      </tr>
+      </tbody>
+      <not-found *ngIf="list.length == 0 && !loading" class="a-center"></not-found>
+     <div class="py-5">
+      <loading *ngIf="loading"></loading>
+     </div>
+    </table>
+  </ng-container>
+</layout-with-filters>

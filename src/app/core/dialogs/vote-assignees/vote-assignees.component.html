@@ -1,0 +1,32 @@
+<div class="vote-assignees" dir="auto">
+  <div class="flex aic jcsb">
+    <h3>{{'assignees' | translate}}</h3>
+    <i class='bx bx-x danger fs-30 pointer' mat-dialog-close=""></i>
+  </div>
+
+  <div class="status flex-center gap-x-2 mt-2">
+    <div class="vote-filter bg-gray voters" (click)="filter(4)" [ngClass]="{'bg-primary white': voteState == 4}">{{'voters' | translate}}</div>
+    <div class="vote-filter bg-gray unvoters" (click)="filter(3)" [ngClass]="{'bg-primary white': voteState == 3}">{{'unvoters' | translate}}</div>
+  </div>
+
+  <div mat-dialog-content class="border-top my-2 relative" [ngClass]="{'pt-3': assignees.length == 0}">
+    <ng-container *ngIf="assignees.length > 0">
+      <div class="border-bottom py-1" *ngFor="let assignee of assignees">
+        <div class="flex aic jcsb">
+          <div class="start flex aic gap-x-1">
+            <user-image [img]="assignee.assigneeImageUrl"></user-image>
+            <div class="info">
+              <div class="info-text">{{ assignee.assigneeName }}</div>
+              <div class="info-text muted fs-14">{{ assignee.assigneeJob }}</div>
+            </div>
+          </div>
+          <div class="end">
+            <vote-status [state]="assignee.voteStateId"></vote-status>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <not-found *ngIf="assignees && assignees.length == 0 && !loading"></not-found>
+    <loading *ngIf="loading"></loading>
+  </div>
+</div>

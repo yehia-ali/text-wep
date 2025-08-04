@@ -1,0 +1,118 @@
+<auth-layout img="login">
+  <div class="flex-column jcc px-2 py-1 aic" style="overflow: visible;">
+    <h2 class="black mb-2">{{ "welcome_back" | translate }}</h2>
+    <!-- <h2 class="primary text-left">{{ "welcome_back" | translate }}! 👋</h2> -->
+    <p class="{{disabelEditBtn ?'bg-light disabeld no-drop':'bg-light-violet pointer'}} rounded-pill px-1 py-50 mb-2 fs-11 simibold flex aic" (click)="disabelEditBtn ? '' : otpMode = false" *ngIf="loginData && otpMode">
+      <span>{{loginData}}</span>
+      <i class="bx fs-14 ml-50 bx-edit primary"></i>
+    </p>
+    <p class="{{disabelEditBtn ?'bg-light disabeld no-drop':'bg-light-violet pointer'}} rounded-pill px-1 py-50 mb-1 fs-11 simibold flex aic"  (click)="disabelEditBtn ? '' : verificationSuccessful = false" *ngIf="loginPhone && verificationSuccessful">
+      <span>{{loginPhone}}</span>
+      <i class="bx fs-14 ml-50 bx-edit primary"></i>
+    </p>
+
+    <form class="w-100" [formGroup]="form" >
+      <div *ngIf="!verificationSuccessful && !otpMode">
+        <div >
+        <!-- <div> -->
+          <div class="pointer btn btn-block border rounded flex aic p-1 mb-2 border-primary switch" (click)="emailModeSwitch()">
+            <i class="bx bx-{{emailMode ? 'mobile' : 'envelope'}} fs-20 primary"></i>
+            <p class="fs-13 btn btn-block simibold primary">{{(emailMode ? "continue_with_phone" : "continue_with_email") | translate}}</p>
+          </div>
+
+          <div class="flex aic jcc pb-1">
+            <hr class="w-100 border-top">
+            <span class="px-1 rounded-circel border">{{"or" | translate}}</span>
+            <hr class="w-100 border-top">
+          </div>
+        </div>
+
+        <div class="phone" *ngIf="!emailMode">
+        <!-- <div class="phone"> -->
+          <input-label [control]="f['phone']" key="phone"></input-label>
+          <ngx-intl-tel-input
+            [cssClass]="'input'"
+            [enableAutoCountrySelect]="false"
+            [enablePlaceholder]="false"
+            [phoneValidation]="true"
+            [preferredCountries]="[CountryISO.Egypt, CountryISO.SaudiArabia]"
+            [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+            [searchCountryFlag]="true"
+            [selectedCountryISO]="CountryISO.Egypt"
+            [separateDialCode]="true"
+            formControlName="phone"
+            dir="auto"
+            (ngModelChange)="phoneValidators()"
+          ></ngx-intl-tel-input>
+          <p *ngIf="phoneValidator" class="danger fs-11 mt-75 text-left">
+            <span class="" >{{'required' | translate}}</span>
+          </p>
+          <input-error [control]="f['phone']"></input-error>
+        </div>
+
+        <div class="email text-left relative" *ngIf="emailMode">
+        <!-- <div class="email text-left relative" > -->
+            <input-label [control]="f['email']" key="email"></input-label>
+            <div class="relative input-icon">
+              <i class="bx bx-envelope fs-20"></i>
+              <input [(ngModel)]="email" type="email" class="input email" formControlName="email" required>
+            </div>
+          <input-error [control]="f['email']"></input-error>
+        </div>
+
+        <button [disabled]="loading" type="submit" class="submit rounded mt-2" color="primary" mat-raised-button (click)="next()">
+          <submit-button [loading]="loading" text="continue"></submit-button>
+        </button>
+
+      </div>
+
+      <ng-container *ngIf="otpMode">
+      <!-- <ng-container> -->
+        <!-- <div class="otp mt-2" >
+          <input-label [control]="f['otp']" key="otp_code"></input-label>
+          <input [(ngModel)]="otp" type="text" class="input otp" formControlName="otp">
+          <input-error [control]="f['otp']"></input-error>
+        </div> -->
+        <div dir="ltr">
+          <code-input (codeCompleted)="check($event)" [codeLength]="6" [isCodeHidden]="false"></code-input>
+        </div>
+        <p class="pointer text-left primary fs-12"></p>
+        <button [disabled]="loading" type="submit" class="submit rounded mt-2" color="primary" mat-raised-button   (click)="sentAnotherCode()">
+          <submit-button [loading]="loading" text="anoter_otp"></submit-button>
+        </button>
+      </ng-container>
+
+
+      <ng-container *ngIf="verificationSuccessful">
+        <div class="password" >
+          <input-label [control]="f['password']" key="password"></input-label>
+          <input-password (getType)="passwordType = $event">
+            <input [maxlength]="16" [type]="passwordType" class="input password" formControlName="password" >
+          </input-password>
+          <input-error [control]="f['password']"></input-error>
+        </div>
+
+        <div class="forgot-password mt-1 flex jcfe" >
+          <a class="fs-11 primary simibold inline-block" routerLink="/auth/forgot-password">
+            {{ "forgot_password" | translate }}
+          </a>
+        </div>
+        <button [disabled]="loading" type="submit" class="submit rounded mt-2" color="primary" mat-raised-button  (click)="submit()">
+          <submit-button [loading]="loading" text="login"></submit-button>
+        </button>
+
+      </ng-container>
+
+    </form>
+    <div class="flex aic jcsb mt-2" *ngIf="otpMode">
+    <!-- <div class="flex aic jcsb mt-2" > -->
+      <p class="simibold fs-11 pointer">
+        <span>{{ "verify_data" | translate }}</span>
+        <a class="primary ml-50 pointe" (click)="otpMode = false;">
+          {{"back" | translate}}
+        </a>
+      </p>
+<!--      <p class="primary underline pointer bold" routerLink="/auth/qr-code">{{'login_by_qrcode' | translate}}</p>-->
+    </div>
+  </div>
+</auth-layout>

@@ -1,0 +1,72 @@
+<div class="task-details" [dir]="dir">
+  <div class="dialog-content">
+    <ng-container *ngIf="details$ | async as details">
+      <div class="top-section">
+        <top-section [details]="details" [withActions]="false"/>
+      </div>
+      <div class="content relative" magicScroll="">
+        <div class="py-2 px-3">
+          <div class="rejection-reason mb-2 danger" *ngIf="details.taskStateId == 8">
+            <p class="mb-75 fs-25">{{ 'rejection_reason' | translate }}</p>
+            <p>{{ details.stateReason }}</p>
+          </div>
+          <div class="users">
+            <task-users [users]="details.reporters" [assigneeImage]="details.assigneeImageUrl" [assigneeName]="details.assigneeName"
+                        [creatorImage]="details.taskGroupCreatorImageUrl"
+                        [creatorName]="details.taskGroupCreatorName" type="cc_assignees" [assigneeId]="details.assigneeId" [creatorId]="details.taskGroupCreatorId"
+                        [images]="details.reportersImagesUrls"/>
+          </div>
+          <div class="description mt-2" *ngIf="details.description || details.soundDescription">
+            <p class="fs-17 bold">{{ 'description' | translate }}</p>
+            <p class="mt-1" [innerHTML]="details.description" *ngIf="details.description"></p>
+            <div class="sound mt-1" *ngIf="details.soundDescription">
+              <audio controls="controls" class="w-100 rounded border">
+                <source src="{{details.soundDescription}}" type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </div>
+
+          <div class="dod mt-2" *ngIf="details.definitionOfDone">
+            <p class="fs-17 bold">{{ 'dod' | translate }}</p>
+            <p class="mt-1" [innerHTML]="details.definitionOfDone"></p>
+          </div>
+
+          <div class="mt-2" *ngIf="details?.link">
+            <p class="fs-17 bold">{{ 'meeting_link' | translate }}</p>
+            <a href="{{details.link}}" target="_blank" class="font-small-4 primary">{{ details.link }}</a>
+          </div>
+
+          <div class="location mt-2" *ngIf="details.longitude">
+            <p class="fs-17 bold">{{ 'location' | translate }}</p>
+            <!-- <google-map
+              height="300px"
+              width="100%"
+              [zoom]="16"
+              [center]="{lat: this.details.latitude, lng: this.details.longitude}"
+              [options]="options"
+            >
+              <map-marker [position]="{lat: this.details.latitude, lng: this.details.longitude}"></map-marker>
+            </google-map> -->
+          </div>
+
+          <div class="mt-2" *ngIf="details.taskGroupAttachments && details.taskGroupAttachments.length > 0">
+            <task-attachments [images]="details.taskGroupAttachments"></task-attachments>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <loading class="a-center" *ngIf="service.loading.value"/>
+  </div>
+  <div class="buttons" mat-dialog-actions align="end">
+    <div class="flex">
+      <button class="px-4 mr-2 dark-color clickable-btn rounded cancel-btn"
+              [mat-dialog-close]="{value: false}">{{ 'close' | translate }}
+      </button>
+      <button mat-raised-button color="primary" class="px-4 fs-15" [mat-dialog-close]="{value: true}">
+        {{ data.type == 1 ? ('go_to_task' | translate) : ('go_to_meeting' | translate) }}
+      </button>
+    </div>
+  </div>
+</div>

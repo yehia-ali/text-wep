@@ -1,0 +1,28 @@
+:host ::ng-deep{
+  .team-attendance
+  {
+    overflow: auto;
+    height: 82vh;
+    min-height: 50vh;
+  }
+}
+
+
+/* The entire scrollbar */
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba($color: #7B58CA, $alpha: 0.9);
+  border-radius: 10px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba($color: #7B58CA, $alpha: 1);
+}
+/* The entire scrollbar */

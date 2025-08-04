@@ -1,0 +1,98 @@
+<div class="total-hours flex aic jcsb p-2 rounded mb-2">
+  <div class="">
+    <p>{{ 'total_approved_hours' | translate }}</p>
+    <h3>{{ loading ? '--:--' : totalHours | convertToTime }}</h3>
+  </div>
+  <div class="img">
+    <img src="assets/images/overtime/overtime-hours.svg" alt="" class="convert-image-color">
+  </div>
+</div>
+<layout-with-filters (pageChange)="service.page.next($event); service.hasChanged.next(true)" [meta]="meta" [hasCard]="true">
+  <ng-container filters>
+    <div class="flex aife">
+      <!-- date -->
+      <div class="date-picker flex aic jcfe">
+        <mat-form-field appearance="fill" class="example-form-field" (click)="rangePicker.open()">
+          <mat-label class="fs-15">{{ "date_range" | translate }}</mat-label>
+          <mat-date-range-input [rangePicker]="rangePicker">
+            <input matStartDate placeholder="Start date" [(ngModel)]="from"/>
+            <input matEndDate placeholder="End date" [(ngModel)]="to"/>
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #rangePicker>
+            <mat-date-range-picker-actions>
+              <button mat-button matDateRangePickerCancel>{{ "cancel" | translate }}</button>
+              <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateChanged()">
+                {{ "apply" | translate }}
+              </button>
+            </mat-date-range-picker-actions>
+          </mat-date-range-picker>
+        </mat-form-field>
+      </div>
+
+      <!-- Status -->
+      <div class="px-1">
+        <label>{{ 'status' | translate }}</label>
+        <ng-select class="w-22r" [items]="status" [(ngModel)]="selectedStatus" (ngModelChange)="statusChanged()" bindLabel="name" bindValue="value" appendTo="body" [multiple]="false"
+                   [closeOnSelect]="true">
+          <ng-template ng-option-tmp ng-label-tmp let-item="item">
+            <span>{{ item.name | translate }}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+
+      <!-- team member -->
+      <div class="px-1" *ngIf="(teamMembers$ | async)?.length !== 0">
+        <label>{{ 'team_members' | translate }}</label>
+        <ng-select class="w-22r" [items]="teamMembers$ | async" [(ngModel)]="selectedUser" (ngModelChange)="userChanged()" bindLabel="name" bindValue="id" appendTo="body" [multiple]="false"
+                   [closeOnSelect]="true">
+        </ng-select>
+      </div>
+
+
+    </div>
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': requests?.length == 0 || loading}" class="table w-100 relative">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th>#</th>
+        <th>{{ 'title' | translate }}</th>
+        <th>{{ 'requested_hours' | translate }}</th>
+        <th>{{ 'approved_hours' | translate }}</th>
+        <th>{{ 'date' | translate }}</th>
+        <th>{{ 'status' | translate }}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="requests?.length > 0 && !loading">
+      <tr
+        *ngFor="let item of requests | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy ; let i = index"
+        class="border-bottom pointer"
+        routerLink="details/{{item.id}}">
+        <td>{{ i + 1 }}</td>
+        <td>{{ item.title | slice : 0  : 30 }}</td>
+        <td>{{ item.overTimeHoursRequsted | convertToTime }}</td>
+        <td>{{ item.overTimeHoursApproved ? (item.overTimeHoursApproved | convertToTime) : '-' }}</td>
+        <td>{{ item.date | arabicDate }}</td>
+        <td>
+          <ng-container *ngIf="item.overTimeStatus == 0">
+            <span class="rounded py-25 px-1 fs-14 bg-pending">{{ 'pending' | translate }}</span>
+          </ng-container>
+          <ng-container *ngIf="item.overTimeStatus == 1">
+            <span class="rounded py-25 px-1 fs-14 bg-approved">{{ 'approved' | translate }}</span>
+          </ng-container>
+          <ng-container *ngIf="item.overTimeStatus == 2">
+            <span class="rounded py-25 px-1 fs-14 bg-rejected">{{ 'rejected' | translate }}</span>
+          </ng-container>
+          <ng-container *ngIf="item.overTimeStatus == 3">
+            <span class="rounded py-25 px-1 fs-14 bg-canceled">{{ 'canceled' | translate }}</span>
+          </ng-container>
+        </td>
+      </tr>
+      </tbody>
+      <not-found *ngIf="requests?.length == 0 && !loading" class="a-center"></not-found>
+      <loading *ngIf="loading"></loading>
+    </table>
+  </ng-container>
+</layout-with-filters>

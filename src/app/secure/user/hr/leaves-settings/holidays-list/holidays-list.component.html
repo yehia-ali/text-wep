@@ -1,0 +1,21 @@
+<div class="leaves h-100">
+  <table [ngClass]="{'h-100': holidays.length == 0 || loading}" class="table w-100 relative">
+    <thead class="bg-gray border-bottom">
+    <tr>
+      <th class="text-left">{{ 'english_name' | translate }}</th>
+      <th class="text-left">{{ 'arabic_name' | translate }}</th>
+      <th class="text-left">{{ 'date' | translate }}</th>
+    </tr>
+    </thead>
+    <tbody *ngIf="holidays.length > 0 && !loading">
+    <tr *ngFor="let item of holidays; trackBy: trackBy" class="border-bottom pointer">
+      <td class="text-left">{{ item.nameEn }}</td>
+      <td class="text-left">{{ item.nameAr }}</td>
+      <td class="text-left">{{ item.date | arabicDate }}</td>
+    </tr>
+    </tbody>
+    <not-found *ngIf="holidays.length == 0 && !loading" class="a-center"></not-found>
+    <loading *ngIf="loading"></loading>
+  </table>
+
+</div>

@@ -1,0 +1,26 @@
+.template{
+  border-bottom: 3px solid #fff;
+  &.active{
+    border-color: #7b55d3 !important;
+  }
+}
+
+.templates-content-data
+{
+  max-height: 80vh;
+  overflow-y: auto;
+  .template-data-item{
+    overflow: hidden;
+    .template-data-item-category{
+      top: 0;
+      inset-inline-end: 0;
+      width: 150px;
+    }
+  }
+}
+
+.template-close
+{
+  top: 0;
+  inset-inline-end: 0;
+}

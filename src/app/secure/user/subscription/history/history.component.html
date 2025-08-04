@@ -1,0 +1,41 @@
+<layout-with-sidebar>
+  <ng-container top>
+    <div class="top-section py-2 px-3 flex aic gap-x-2 border-bottom">
+      <div class="img pointer right" routerLink="/subscription">
+        <img src="assets/images/icons/Back.svg" alt="" height="24" width="24" class="convert-image-color">
+      </div>
+      <h3>{{ 'billing_history' | translate }}</h3>
+    </div>
+  </ng-container>
+
+  <ng-container sidebar>
+    <div class="mt-4">
+      <p *ngFor="let item of status" class="sidebar-item flex aic px-3 mb-3 pointer" [ngClass]="{'active': item.value == service.paymentStatus.value}" (click)="filter(item.value)">
+        {{ item.title | translate }}
+      </p>
+    </div>
+  </ng-container>
+
+  <ng-container content>
+    <div class="px-4 relative h-100" magicScroll="calc(100% - 7rem)" [ngClass]="{'pt-3': orders?.length != 0}">
+      <ng-container *ngIf="!loading">
+        <div class="card flex aic jcsb shadow bg-gray py-1 px-3 mb-3 rounded pointer" *ngFor="let order of orders" (click)="orderDetails(order.id)">
+          <div class="start">
+            <p>{{ 'order' | translate }} {{ order.id | arabicNumbers }}</p>
+            <p class="fs-14 muted">{{ order.creationDate | arabicDate:'long' }}</p>
+          </div>
+          <div class="end flex gap-x-2">
+            <p>{{ order.price }} {{ 'EGP' | translate }}</p>
+            <p class="order-status px-1 rounded-5" [ngClass]="{'chip-light-danger': !order.paymentStatus, 'chip-light-primary': order.paymentStatus, 'pb-50': dir == 'rtl'}">
+              <span *ngIf="order.paymentStatus == 1">{{ 'payment_paid' | translate }}</span>
+              <span *ngIf="order.paymentStatus == 2">{{ 'payment_offline' | translate }}</span>
+              <span *ngIf="order.paymentStatus == 0">{{ 'payment_unpaid' | translate }}</span>
+            </p>
+          </div>
+        </div>
+      </ng-container>
+      <loading *ngIf="loading"></loading>
+      <not-found *ngIf="orders?.length == 0 && !loading"></not-found>
+    </div>
+  </ng-container>
+</layout-with-sidebar>

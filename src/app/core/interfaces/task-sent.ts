@@ -1,0 +1,23 @@
+export interface TaskSent {
+  depthLevel: number,
+  haveSubTasks: boolean,
+  isSubTasks: boolean,
+  projectTitle: string,
+  taskGroupStateType: string,
+  taskGroupType: number,
+  assigneeImageUrls: [string],
+  endDate: string,
+  endedTaskRepeatedCounter: number,
+  id: number,
+  isOverDue: boolean,
+  isRepeated: boolean,
+  parentTaskGroupId: number,
+  priority: number,
+  startDate: string,
+  taskRepeatedPeriod: number,
+  taskStateId: number,
+  title: string,
+  expectedTime: number,
+  expectedHours: number,
+  expectedMinutes: number
+}

@@ -1,0 +1,69 @@
+<info-sidebar [open]="open">
+  <ng-container header>
+    <div class="flex aic gap-x-1" *ngIf="user">
+      <div class="img">
+        <img [src]="apiUrl + '/' + user.imageUrl" *ngIf="user.imageUrl" alt="" [width]="55" [height]="55"
+             class="rounded-50">
+        <img src="assets/images/no-user.jpg" *ngIf="!user.imageUrl" alt="" [width]="55" [height]="55"
+             class="rounded-50">
+      </div>
+      <div class="info text-left flex jcsb flex-column" style="min-height: 30px;">
+        <p class="fs-20">{{user.name}}</p>
+        <div class="rate" style="width: max-content;">
+          <ngx-star-rating [(ngModel)]="user.rate" [disabled]="true"></ngx-star-rating>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container content>
+    <div class="p-2" *ngIf="user">
+      <div class="info flex-column gap-y-2 text-left">
+        <div *ngIf="user.jobTitle" class="job-title flex aic gap-x-1">
+          <div class="img">
+            <img src="assets/images/icons/job-title.svg" class="convert-image-color" alt="job-title-icon">
+          </div>
+          <p>{{user.jobTitle}}</p>
+        </div>
+        <div *ngIf="user.departmentName" class="department flex aic gap-x-1">
+          <div class="img">
+            <img src="assets/images/icons/department.svg" class="convert-image-color" alt="department-icon">
+          </div>
+          <p>{{user.departmentName}}</p>
+        </div>
+        <div *ngIf="user.phoneNumber" class="phone flex aic gap-x-1">
+          <div class="img">
+            <img src="assets/images/icons/phone.svg" class="convert-image-color" alt="phone-icon">
+          </div>
+          <p>{{user.phoneNumber}}</p>
+        </div>
+        <div *ngIf="user.email" class="email flex aic gap-x-1">
+          <div class="img">
+            <img src="assets/images/icons/email.svg" class="convert-image-color" alt="email-icon">
+          </div>
+          <p>{{user.email}}</p>
+        </div>
+      </div>
+      <div class="links mt-3" *ngIf="havePermissions">
+        <div class="inbox-card rounded p-1 bg-gray flex aic jcsb mb-2 pointer" (click)="getInbox()">
+          <div class="start flex aic gap-x-1">
+            <div class="img">
+              <img src="assets/images/user-info/inbox.png" alt="inbox image" width="30">
+            </div>
+            <p>{{'inbox' | translate}}</p>
+          </div>
+          <i class='bx bx-chevron-right fs-25' [ngClass]="{'bx-flip-horizontal': lang == 'ar'}"></i>
+        </div>
+        <div class="sent-card rounded p-1 bg-gray flex aic jcsb pointer" (click)="getSent()">
+          <div class="start flex aic gap-x-1">
+            <div class="img">
+              <img src="assets/images/user-info/sent.png" alt="sent image" width="30">
+            </div>
+            <p>{{'sent' | translate}}</p>
+          </div>
+          <i class='bx bx-chevron-right fs-25' [ngClass]="{'bx-flip-horizontal': lang == 'ar'}"></i>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</info-sidebar>

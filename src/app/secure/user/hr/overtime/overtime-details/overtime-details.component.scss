@@ -1,0 +1,62 @@
+.bg-pending {
+  color: #606060;
+  background-color: #ececed;
+}
+.text-approved,
+.bg-approved
+{
+  color: #29cc99 ;
+}
+.bg-approved {
+  background-color: rgba($color: #29cc99, $alpha: 0.25) !important;
+}
+.text-rejected,
+.bg-rejected
+{
+  color: #d32f2f;
+}
+.bg-rejected {
+  background-color: rgba($color: #d32f2f, $alpha: 0.25) !important;
+}
+
+.text-note,
+.bg-note
+{
+  color: #FFA95C;
+}
+.bg-note {
+  background-color: rgba($color: #FFA95C, $alpha: 0.25) !important;
+}
+
+.days_num {
+  background-color: #efebf8;
+}
+
+.details-content {
+  height: calc(100% - 69px);
+}
+
+.chat-section {
+  position: sticky;
+  top: -1px;
+  width: 100%;
+  height: calc(calc(100vh - 11rem) - 191px);
+}
+
+
+.date-start {
+  width: 10px;
+  display: inline-block;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #C7C7CC;
+  margin-inline-end: 5px;
+}
+.text-black
+{
+  color:#707070 !important
+}
+
+.custom-shadow{
+  box-shadow: 0px 0 6px 0px rgba(0, 0, 0, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.06)
+}

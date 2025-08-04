@@ -1,0 +1,41 @@
+<div class="create-task" dir="auto">
+  <h2 class="flex aic jcsb black">{{ 'edit_info_video' | translate }}</h2>
+
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="web-link-arabic mb-1">
+        <input-label key="web_link_arabic" [control]="f['arLinkWeb']"/>
+        <input type="text" class="input" formControlName="arLinkWeb">
+      </div>
+      <div class="web-link-english mb-1">
+        <input-label key="web_link_english" [control]="f['enLinkWeb']"/>
+        <input type="text" class="input" formControlName="enLinkWeb">
+      </div>
+      <div class="android-link-english mb-1">
+        <input-label key="android_link_english" [control]="f['enLinkAndroid']"/>
+        <input type="text" class="input" formControlName="enLinkAndroid">
+      </div>
+      <div class="android-link-arabic mb-1">
+        <input-label key="android_link_arabic" [control]="f['arLinkAndroid']"/>
+        <input type="text" class="input" formControlName="arLinkAndroid">
+      </div>
+      <div class="ios-link-english mb-1">
+        <input-label key="ios_link_english" [control]="f['enLinkIos']"/>
+        <input type="text" class="input" formControlName="enLinkIos">
+      </div>
+      <div class="ios-link-arabic mb-1">
+        <input-label key="ios_link_arabic" [control]="f['arLinkIos']"/>
+        <input type="text" class="input" formControlName="arLinkIos">
+      </div>
+    </form>
+  </div>
+
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex">
+      <button class="px-4 mr-2 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>{{ 'cancel' | translate }}</button>
+      <button mat-raised-button color="primary" class="px-5 fs-15" (click)="submit()" [disabled]="form.invalid || loading">
+        <submit-button text="update" [loading]="loading"></submit-button>
+      </button>
+    </div>
+  </div>
+</div>

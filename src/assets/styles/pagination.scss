@@ -1,0 +1,50 @@
+@use "vars" as *;
+
+.ngx-pagination {
+  margin-bottom: 0 !important;
+  border: 1px solid $border-color;
+  border-radius: 20px;
+  padding: .3rem .5rem;
+  display: flex !important;
+  a {
+    min-width: max-content;
+    min-height: 27px;
+    text-align: center;
+    padding: 0 !important;
+    color: $dark-color !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center;
+  }
+  li {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  a:last-of-type, a:first-of-type {
+    padding: 2px 10px !important;
+    &:hover {
+      border-radius: 10px;
+    }
+  }
+
+  .current {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    text-align: center;
+    width: max-content;
+    min-width: 27px;
+    height: 27px;
+    padding: .15rem .5rem !important;
+    cursor: default;
+    background: $primary !important;
+  }
+
+  .small-screen {
+    display: none !important;
+  }
+
+}

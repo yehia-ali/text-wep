@@ -1,0 +1,56 @@
+<div class="">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <div class="col-lg-3">
+      <search [newSearch]="true" (valueChanged)="search($event)"></search>
+    </div>
+    <div class="col-lg-3 text-right">
+      <a [routerLink]="['./employee']" class="btn rounded bg-primary white py-75 px-2 fs-14" (click)="leaveDialog()">
+        {{'add_leave' | translate}}
+      </a>
+    </div>
+  </div>
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+    <div class="table-container mx-1" *ngIf="alLeaves?.length > 0  && !loading">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">{{'leave_type' | translate}}</th>
+            <th class="text-left py-1">{{'balance' | translate}}</th>
+            <th class="text-left py-1">{{'used' | translate}}</th>
+            <th class="text-left py-1">{{'remaining' | translate}}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of alLeaves" >
+            <td>{{item.name}}</td>
+            <ng-container *ngIf="item.isPermission">
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </ng-container>
+            <ng-container *ngIf="!item.isPermission">
+              <td>{{item.accruals}}</td>
+              <td>{{item.accruals - item.balance}}</td>
+              <td>{{item.balance}}</td>
+              <td>
+                <div class="img pointer" (click)="leaveDialog(item)">
+                  <img src="assets/images/icons/edit1.svg" alt="edit icon">
+                </div>
+              </td>
+            </ng-container>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="alLeaves?.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>

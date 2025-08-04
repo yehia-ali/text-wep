@@ -1,0 +1,11 @@
+  <div class="p-2 dir">
+    <div class="flex-grid">
+      <div class="col-md-12 mb-2">
+        <all-penalty-types (valueChanged)="changePenalty($event)"></all-penalty-types>
+      </div>
+    </div>
+
+    <div class="text-right">
+      <button (click)="addPenalty()" type="submit" class="bg-primary white py-1 px-2 border-0 rounded  pointer" mat-button>{{'add_penalty' | translate}}</button>
+    </div>
+  </div>

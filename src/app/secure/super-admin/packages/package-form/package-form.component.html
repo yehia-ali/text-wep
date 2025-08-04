@@ -1,0 +1,49 @@
+<div mat-dialog-title>{{ (data?.isEdit ? 'update_package' : 'create_package') | translate }}</div>
+
+<form mat-dialog-content [formGroup]="form">
+  <div class="flex-grid">
+    <div class="col-lg-6">
+      <input-label key="name" [control]="f['name']"></input-label>
+      <input type="text" class="input" formControlName="name">
+      <input-error [control]="f['name']"></input-error>
+    </div>
+    <div class="col-lg-6">
+      <input-label key="description" [control]="f['description']"></input-label>
+      <input type="text" class="input" formControlName="description">
+      <input-error [control]="f['description']"></input-error>
+    </div>
+
+    <div class="col-lg-6">
+      <input-label key="duration" [control]="f['gracePeriod']"></input-label>
+      <input type="number" min="0" class="input" formControlName="gracePeriod">
+      <input-error [control]="f['gracePeriod']"></input-error>
+    </div>
+
+    <div class="col-lg-6">
+      <input-label key="limited_number_of_users" [control]="f['limitedNumberOfUser']"></input-label>
+      <input type="number" min="0" class="input" formControlName="limitedNumberOfUser">
+      <input-error [control]="f['limitedNumberOfUser']"></input-error>
+    </div>
+
+    <div class="col-lg-6">
+      <input-label key="currency" [control]="f['currencyId']"></input-label>
+      <ng-select [items]="currencies" appendTo="body" formControlName="currencyId" bindLabel="name" bindValue="value" [multiple]="false" [closeOnSelect]="true" [clearable]="false"></ng-select>
+      <input-error [control]="f['currencyId']"></input-error>
+    </div>
+
+    <div class="col-lg-6">
+      <input-label key="price_per_user" [control]="f['pricePerUser']"></input-label>
+      <input type="number" min="0" class="input" formControlName="pricePerUser">
+      <input-error [control]="f['pricePerUser']"></input-error>
+    </div>
+  </div>
+</form>
+
+<div class="buttons" mat-dialog-actions align="end" dir="auto">
+  <div class="flex">
+    <button class="px-4 mr-2 dark-color clickable-btn rounded cancel-btn" mat-dialog-close="">{{ 'cancel' | translate }}</button>
+    <button mat-raised-button color="primary" class="px-4 fs-15" (click)="submit()" [disabled]="form.invalid || loading">
+      <submit-button text="save" [loading]="loading"></submit-button>
+    </button>
+  </div>
+</div>

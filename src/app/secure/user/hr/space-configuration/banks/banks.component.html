@@ -1,0 +1,106 @@
+
+<div class="py-1">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <!-- <div class="col-lg-3">
+      <search [newSearch]="true" (valueChanged)="search($event)"></search>
+    </div> -->
+    <div class="col-lg-12 text-right">
+      <a (click)="openDialog()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14">
+        {{'add_bank' | translate}}
+      </a>
+    </div>
+  </div>
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+
+    <div class="table-container mx-1" *ngIf="banks.length > 0 && !loading">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">{{ 'bank_name' | translate }}</th>
+            <!-- <th class="text-left py-1">{{ 'description' | translate }}</th> -->
+            <th class="text-left py-1">{{ 'date' | translate }}</th>
+            <th class="text-left py-1"></th>
+          </tr>
+        </thead>
+
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of banks" >
+            <td class="text-left">{{ item.bankName }}</td>
+            <!-- <td class="text-left">{{ item.describtion }}</td> -->
+            <td class="text-left">{{ item.creationDate | arabicDate }}</td>
+            <td class="text-left">
+              <i class='bx bx-plus-circle fs-30 px-50 success pointer' (click)="openDialog(item,false)" matTooltip="{{'add_branch' | translate}}"></i>
+              <i class='bx bx-show fs-30 px-50 blue pointer' (click)="openDialog(item , true)" matTooltip="{{'branches' | translate}}"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="banks.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>
+<ng-template #dialogTemplate>
+
+  <div class="dir">
+    <div class="flex w-100 jcsb">
+      <h4 *ngIf="!branchDialog && !showBankBranches">{{'add_bank' | translate}}</h4>
+      <h4 *ngIf="branchDialog && !showBankBranches">{{'add_branch' | translate}}</h4>
+      <h4 *ngIf="showBankBranches">{{'branches' | translate}}</h4>
+      <i class="bx bx-x fs-25 danger pointer p-1" (click)="closeDialog()"></i>
+    </div>
+    <mat-dialog-content>
+      <ng-container *ngIf="!showBankBranches">
+        <form action="" [formGroup]="form" *ngIf="!branchDialog">
+          <div class="flex-grid gap-y-2">
+            <div class="col-lg-12">
+              <div class="name">
+                <input-label key="bank_name" [control]="f['bankName']"/>
+                <input type="text" formControlName="bankName" class="input">
+                <input-error [control]="f['bankName']"/>
+              </div>
+            </div>
+          </div>
+        </form>
+        <form action="" [formGroup]="branchForm" *ngIf="branchDialog">
+          <div class="flex-grid gap-y-2">
+            <div class="col-lg-12">
+              <div class="name">
+                <input-label key="branch_name" [control]="f['branchName']"/>
+                <input type="text" formControlName="branchName" class="input">
+                <input-error [control]="f['branchName']"/>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+
+      <ng-container *ngIf="showBankBranches">
+        <div class="aic flex jcc py-2 h-50v" *ngIf="loading">
+          <loading ></loading>
+        </div>
+        <ng-container *ngIf="branches.length > 0 && !loading">
+          <p class="pb-1 border-bottom" *ngFor="let item of branches">{{item.branchName}}</p>
+        </ng-container>
+        <div class="py-2 text-center" *ngIf="branches.length == 0 && !loading">
+          <not-found></not-found>
+        </div>
+      </ng-container>
+    </mat-dialog-content>
+    <mat-dialog-actions *ngIf="!showBankBranches">
+      <div class="text-right w-100">
+        <a (click)="createBank()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14 " *ngIf="!branchDialog">
+          {{'add_bank' | translate}}
+        </a>
+        <a (click)="createBranch()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14 " *ngIf="branchDialog">
+          {{'add_branch' | translate}}
+        </a>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</ng-template>

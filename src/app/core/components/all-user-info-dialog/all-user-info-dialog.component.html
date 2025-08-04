@@ -1,0 +1,32 @@
+<div class="dir py-2 relative all-user-info-dialog">
+  <i class="bx bx-x fs-25 pointer absolute close-btn pr-2 pt-2" (click)="dialogRef.close()"></i>
+  <div class="px-2 flex aic gap-x-2" *ngIf="users.length > 1">
+    <app-img-title
+      *ngFor="let user of users"
+      (click)="changeUser(user)"
+      [imgSrc]="user.imageUrl"
+      [imgBorder]="'border border-2 border-danger'"
+      [matTooltip]="user.name"
+      class="pointer"
+      [imgSize]="50"/>
+  </div>
+  <div class="flex jcsb aic my-2 px-2 user-info">
+    <app-img-title [userId]="userData.id" [title]="userData.name" [subTitle]="userData.jobTitle" [imgSrc]="userData.imageUrl" [imgSize]="50"></app-img-title>
+  </div>
+  <div class="user-info-container" *ngIf="!loadingData">
+    <!-- <div class="basic-info">
+      <p class="fs-20 black bold px-3">{{ 'basic_info' | translate }}</p>
+      <basic-info #basicInfo [normalComponent]="false" [employeeId]="userData.id"></basic-info>
+    </div> -->
+    <div class="personal-info">
+      <p class="fs-20 black bold px-3">{{ 'personal_info' | translate }}</p>
+      <personal-info #personalInfo [normalComponent]="false" (employeeDataChange)="employeeDataChange($event)" [employeeId]="userData.id"></personal-info>
+    </div>
+    <div class="contracts" *ngIf="!hideContract">
+      <contract-form #contractForm [normalComponent]="true" (contractCreated)="contractCreated($event)" [employeeData]="employeeData"  [employeeId]="userData.id"></contract-form>
+    </div>
+  </div>
+  <div class="text-right px-2 pt-2">
+    <button class="btn rounded bg-primary white py-75 px-2 fs-14" (click)="submit()">{{ 'save' | translate }}</button>
+  </div>
+</div>

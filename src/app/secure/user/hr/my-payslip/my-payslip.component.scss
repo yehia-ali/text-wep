@@ -1,0 +1,43 @@
+@use "src/assets/styles/vars" as *;
+
+.dot {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  margin-top: .5rem;
+  margin-inline-end: .7rem;
+}
+
+.circular-progress-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.circular-progress {
+  width: 100px;
+  height: 100px;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: $success;
+  stroke-width: 3.8;
+}
+
+.circle {
+  fill: none;
+  stroke-width: 3.8;
+  stroke: $danger;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.3s;
+}
+
+.percentage {
+  position: absolute;
+}
+
+.hauto{
+  height: calc(100% - 68px);
+}

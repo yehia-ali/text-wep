@@ -1,0 +1,247 @@
+<div class="create-task" dir="auto">
+  <div class="flex aic jcsb px-3 pt-2">
+    <p class="fs-20 black bold">{{ data.isEdit ? ('contract_details' | translate) : ('create_contract' | translate) }}</p>
+   
+  </div>
+
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="row gap-y-2 mb-2">
+   
+        <div class="col-lg-4">
+          <label class="custom-radio-box">
+            <input
+              type="radio"
+              formControlName="typeOfWork"
+              [checked]="true"
+              [value]="1"
+              name="typeOfWork"
+              checked 
+              (change)="onTypeOfWorkChange()" 
+            />
+            <span class="radio-label">
+              <div class="text-center fs-14">{{ 'full_time' | translate }}</div>
+            </span>
+
+          </label>
+          </div>
+
+          <div class="col-lg-4">
+
+            <label class="custom-radio-box">
+              <input
+              type="radio"
+              formControlName="typeOfWork"
+              [value]="2"
+              name="typeOfWork"
+              (change)="onTypeOfWorkChange()" 
+            />
+            <span class="radio-label">
+              <div class="text-center fs-14">{{ 'part_time' | translate }}</div>
+            </span>
+          </label>
+          </div>
+          <div class="col-lg-4">
+
+            <label class="custom-radio-box">
+              <input
+                type="radio"
+                formControlName="typeOfWork"
+                [value]="3"
+                name="typeOfWork"
+                (change)="onTypeOfWorkChange()" 
+              />
+              <span class="radio-label">
+                <div class="text-center fs-14">{{ 'contract_by_hour' | translate }}</div>
+              </span>
+
+            </label>
+            </div>
+
+       </div>
+       <!-- end of contract type -->
+      <div class="row gap-y-2 mb-2">
+        <div class="col-lg-6">
+          <input-label [control]="f['statusOfContract']" key="status_of_employment" [showIcon]="true" icon="assets/images/icons/Status.svg"/>
+          <ng-select [items]="employmentStatus" [readonly]="data.isEdit" formControlName='statusOfContract' [clearSearchOnAdd]="true" bindLabel="name" bindValue="value" appendTo="body">
+            <ng-template ng-option-tmp ng-label-tmp let-item="item">
+              {{ item.name | lowercase | translate }}
+            </ng-template>
+          </ng-select>
+          <input-error [control]="f['statusOfContract']"/>
+        </div>
+        <div class="col-lg-6">  
+          <input-label [control]="f['typeOfContract']" key="type_of_contract" [showIcon]="true" icon="assets/images/icons/hugeicons_time.svg"/>
+          <ng-select [items]="typeOfContract" formControlName='typeOfContract' [readonly]="data.isEdit" [clearSearchOnAdd]="true" bindLabel="name" bindValue="value" appendTo="body">
+            <ng-template ng-option-tmp ng-label-tmp let-item="item">
+              {{ item.name | lowercase | translate }}
+            </ng-template>
+          </ng-select>
+          <input-error [control]="f['typeOfContract']"/>
+            </div>
+      </div>  
+      <!-- end of status of employment and type of contract -->
+      <div class="row gap-y-2 mb-2">
+        <div class="col-lg-6">
+          <input-label [control]="f['startDate']" key="start_date" [showIcon]="true" icon="assets/images/icons/calendar-icon.svg"/>
+
+          <input class="input border-none"[readOnly]="data.isEdit" 
+              matInput [matDatepicker]="startPicker" formControlName="startDate" 
+              (click)="startPicker.open()" [value]="f['startDate'].value">
+          <mat-datepicker #startPicker [disabled]="data.isEdit"></mat-datepicker>
+          <input-error [control]="f['startDate']"/>
+
+        </div>
+        <div class="col-lg-6" *ngIf="f['typeOfContract'].value !== '1'">
+          <input-label [control]="f['endDate']" key="end_date" [showIcon]="true" icon="assets/images/icons/calendar-icon.svg"/>
+          <input class="input border-none" [readOnly]="data.isEdit"
+          matInput [matDatepicker]="endPicker" formControlName="endDate" 
+          (click)="endPicker.open()" [value]="f['endDate'].value">
+          <mat-datepicker #endPicker [disabled]="data.isEdit"></mat-datepicker>
+          <input-error [control]="f['endDate']"/>
+
+        </div>
+       </div>
+      <!-- end of start and end date -->
+    <!-- end of start date && end date -->
+    <div class="row gap-y-2 mb-2">
+
+      <div class="col-lg-6" *ngIf="!f['isPerHour'].value">
+        <input-label [control]="f['basicSalary']" key="basic_salary" [showIcon]="true" icon="assets/images/icons/money-bold.svg"/>
+        <div class="flex aic position-relative">
+        <input formControlName="basicSalary" [readonly]="data.isEdit" appInputNumbers type="number" class="input" [min]="1"/>
+        <span class="input-suffix">{{'pound' | translate}}</span>
+        </div>
+        <input-error [control]="f['basicSalary']"/>
+      </div>
+      <div class="col-lg-6" *ngIf="f['isPerHour'].value">
+        <input-label [control]="f['hourlyRate']" key="hourly_salary" [showIcon]="true" icon="assets/images/icons/money-bold.svg"/>
+        <div class="flex aic position-relative">
+        <input formControlName="hourlyRate" [readonly]="data.isEdit" [min]="1" appInputNumbers type="number" class="input"/>
+        <span class="input-suffix">{{'pound' | translate}}</span>
+        </div>
+        <input-error [control]="f['hourlyRate']"/>
+      </div>   
+      
+      <div class="col-lg-6">
+        <input-label [control]="f['bankName']" key="bank_account" [showIcon]="true" icon="assets/images/icons/number.svg"></input-label>
+        <ng-select
+          [items]="employeeBankAccount"
+          [readonly]="data.isEdit"
+          formControlName="bankName"
+          [clearSearchOnAdd]="true"
+          bindLabel="bankName"
+          bindValue="bankName"
+          appendTo="body"
+          (change)="selectedBank = $event"
+        >
+          <ng-template ng-option-tmp ng-label-tmp let-item="item">
+            {{ item.bankName + ' - ' + item.accountNumber }}
+          </ng-template>
+        </ng-select>
+
+      </div>
+    </div>
+    <!-- end of basic salary and hourly rate -->
+    <div class="row gap-y-2 mb-2">
+      <div class="col-lg-6">  
+        <input-label [control]="f['allowance']" key="total_of_allowance" [showIcon]="true" icon="assets/images/icons/money-bold.svg"/>
+        <div class="flex aic position-relative">
+          <input formControlName="allowance" type="number" [readonly]="data.isEdit" [min]="0" appInputNumbers class="input"/>
+          <span class="input-suffix">{{'pound' | translate}}</span>
+        </div>
+        <input-error [control]="f['allowance']"/>
+      </div>
+      <div class="col-lg-6">    
+        <input-label [control]="f['deductions']" key="deductions" [showIcon]="true" icon="assets/images/icons/money-bold.svg"/>
+        <div class="flex aic position-relative">
+          <input formControlName="deductions" type="number" [min]="0" [readonly]="data.isEdit" appInputNumbers class="input"/>
+          <span class="input-suffix">{{'pound' | translate}}</span>
+        </div>
+        <input-error [control]="f['deductions']"/>
+      </div>
+    </div>
+    <!-- end of allowance && deductions -->
+    <div class="row gap-y-2 mb-2">
+      <div class="col-lg-6">  
+        <input-label [control]="f['targetKPIBonus']" key="target_kpi_bonus" [showIcon]="true" icon="assets/images/icons/money-bold.svg"/>
+        <div class="flex aic position-relative">
+          <input formControlName="targetKPIBonus" type="number" [min]="0" [readonly]="data.isEdit" appInputNumbers class="input"/>
+          <span class="input-suffix">{{'pound' | translate}}</span>
+        </div>
+        <input-error [control]="f['targetKPIBonus']"/>
+      </div>
+   
+    </div>
+    <!-- end of target kpi bonus -->
+     <div class="row gap-y-2 mb-1" *ngIf="!f['isPerHour'].value">
+      <div class="col-lg-12">
+        <mat-checkbox
+        class="mr-1"
+        [checked]="f['insuranceState'].value"
+        formControlName="insuranceState"
+        color="primary"
+        *ngIf="!normalComponent"
+      >
+        <span class="font-medium-2">
+          {{'add_insurance' | translate}}
+        </span>
+      </mat-checkbox>
+    
+      </div>
+      </div>
+      <!-- end of target kpi bonus -->
+
+  <form action="" [formGroup]="formInsurance" *ngIf="f['insuranceState'].value && !f['isPerHour'].value">
+    <div class="row gap-y-2 mb-2">
+      <div class="{{insurances.length > 0 ? 'col-lg-12' : 'col-lg-6'}}">
+        <div class="name">
+          <input-label [control]="f['insuranceSalary']" key="insurance_salary" [showIcon]="true" icon="assets/images/icons/money-bold.svg"/>
+          <div class="flex aic position-relative">
+            <input type="number" appInputNumbers formControlName="insuranceSalary" [min]="0" class="input">
+            <span class="input-suffix">{{'pound' | translate}}</span>
+          </div>
+          <input-error [control]="f['insuranceSalary']"/>
+
+        </div>
+      </div>
+
+      <div class="col-lg-6" *ngIf="insurances.length == 0">
+        <div class="name">
+          <input-label [control]="f['insuranceNumber']" key="insurance_number" [showIcon]="true" icon="assets/images/icons/number.svg"/>
+          <div class="flex aic position-relative">
+            <input type="number" appInputNumbers formControlName="insuranceNumber" [min]="0" class="input">
+          </div>
+          <input-error [control]="f['insuranceNumber']"/>
+
+        </div>
+      </div>
+    </div>
+  </form>
+  <!-- end of insurance -->
+    <div class="row gap-y-2 mb-2">
+      <div class="col-lg-12">
+        <input-label [control]="f['notes']" key="notes" [showIcon]="true" icon="assets/images/icons/document.svg"/>
+        <div class="flex aic position-relative">
+          <textarea formControlName="notes" type="text" [readonly]="data.isEdit" readonly class="input inline-block fs-15" rows="4"></textarea>
+        </div>
+        <input-error [control]="f['notes']"/>
+
+      </div>
+     </div>
+     <!-- end of notes -->
+   
+    </form>
+
+
+  </div>
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex" *ngIf="!normalComponent">
+      <button mat-raised-button color="primary" class="px-5 fs-15 " *ngIf="!data.isEdit" (click)="submit()" [disabled]="form.invalid || loading">
+        <submit-button text="create" [loading]="loading"></submit-button>
+      </button>
+      <button class="px-4 py-50 dark-color clickable-btn rounded cancel-btn ml-2" mat-dialog-close>{{ 'close' | translate }}</button>
+    </div>
+  </div>
+</div>
+

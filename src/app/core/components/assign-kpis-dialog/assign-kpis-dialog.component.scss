@@ -1,0 +1,37 @@
+td.kpis-1-col-width
+,th.kpis-1-col-width{
+  width: 20%;
+}
+th.kpis-two-2span-col-width
+{
+  width: 45%;
+}
+th.kpis-2-col-width{
+  width: 30%;
+}
+th.kpis-3-col-width{
+  width: 15%;
+}
+th.kpis-4-col-width{
+  width: 10%;
+}
+th.kpis-5-col-width{
+  width: 10%;
+}
+th.kpis-6-col-width{
+  width: 15%;
+}
+
+.table-container {
+  height: calc(100vh - 195px);
+  // height: calc(100vh - 160px);
+  overflow: auto;
+}
+
+.p-slider.p-slider-horizontal .p-slider-handle {
+  margin-top: -0.5715rem !important;
+}
+
+.tabel-weight-width{
+  min-width: 25px;
+}

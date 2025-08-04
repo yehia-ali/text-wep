@@ -1,0 +1,32 @@
+<div class="flex content aic">
+  <div class="start flex-40">
+    <apx-chart
+      [chart]="chartOptions?.chart"
+      [colors]="chartOptions?.colors"
+      [dataLabels]="chartOptions?.dataLabels"
+      [labels]="chartOptions?.labels"
+      [legend]="chartOptions?.legend"
+      [plotOptions]="chartOptions.plotOptions"
+      [responsive]="chartOptions?.responsive"
+      [series]="chartOptions?.series"
+      [subtitle]="chartOptions?.subtitle"
+      [title]="chartOptions?.title"
+      *ngIf="showChart"
+    ></apx-chart>
+
+    <div *ngIf="!showChart" class="empty-state bg-gray rounded-50 flex-center mx-4">
+      <p>{{0 | arabicNumbers}}%</p>
+    </div>
+  </div>
+  <div class="end flex-60">
+    <div *ngFor="let answer of question.voteFormQuestionChoices; let index = index"
+         class="info flex aifs mb-1">
+      <div [ngStyle]="{'background': colors[index]}" class="bullet mr-1"></div>
+      <div class="answer">
+        <p class="bold">{{answer.text}}</p>
+        <p (click)="!anonymous && getResponses(answer.id)"
+           [ngClass]="{'pointer': !anonymous}">{{answer.questionChoicesResult.selectedCount}} {{'responses' | translate}}</p>
+      </div>
+    </div>
+  </div>
+</div>

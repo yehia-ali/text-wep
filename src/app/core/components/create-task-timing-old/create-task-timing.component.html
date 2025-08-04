@@ -1,0 +1,94 @@
+<form [formGroup]="form">
+  <div class="flex-grid gap-y-1">
+    <!--        Start Date     -->
+    <div class="col-lg-6">
+      <input-label [control]="f['startDate']" key="start_date"/>
+      <input [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" class="input" formControlName="startDate" [min]="now">
+      <input-error [control]="f['startDate']"/>
+    </div>
+
+    <!--  End Date  -->
+    <div class="col-lg-6">
+      <input-label [control]="f['endDate']" key="end_date"/>
+      <input [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2" class="input" formControlName="endDate" [min]="f['startDate'].value" [max]="isMeeting ? maxValue : null">
+      <input-error [control]="f['endDate']"/>
+    </div>
+
+    <!--        Repeat   -->
+    <div class="col-lg-6" [ngStyle]="{'pointer-events': !!f['startDate'].value && !!f['endDate'].value ? 'unset': 'none'}">
+      <input-label key="repeat"></input-label>
+      <ng-select [items]="repeatList" [clearable]="false" [clearSearchOnAdd]="true" [clearOnBackspace]="true" (ngModelChange)="repeatChange($event)" bindLabel="name" bindValue="value" appendTo="body"
+                 [(ngModel)]="repeat" [ngModelOptions]="{standalone: true}">
+        <ng-template let-index="index" let-item="item" let-item$="item$" ng-option-tmp>
+          <span>{{item.name  | translate}}</span>
+        </ng-template>
+        <ng-template ng-label-tmp let-item="item" let-clear="clear">
+          <span class="fs-14">{{item.name | translate}}</span>
+        </ng-template>
+      </ng-select>
+    </div>
+
+    <!--   Daily Repetition(Days list)   -->
+    <div class="col-lg-6" *ngIf="isDaily" [ngStyle]="{'pointer-events': !!f['startDate'].value && !!f['endDate'].value ? 'unset': 'none'}">
+      <input-label key="repeated_days" [control]="f['repetitionSelectedDays']"/>
+      <ng-select [items]="daysList" [clearSearchOnAdd]="true" [clearOnBackspace]="true" [multiple]="true" [closeOnSelect]="false" bindLabel="name" bindValue="value" appendTo="body"
+                 formControlName="repetitionSelectedDays">
+        <ng-template let-index="index" let-item="item" let-item$="item$" ng-option-tmp>
+          <span>{{item.name  | translate}}</span>
+        </ng-template>
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value flex aic" *ngFor="let member of items.slice(0, 1)">
+                  <span class="ng-value-label">
+                    <span class="flex aic">
+                    <span *ngIf="member.name?.length >= 14">{{member.name | slice:0:14}}...</span>
+                    <span *ngIf="member.name?.length < 14">{{member.name | translate}}</span>
+                    </span>
+                  </span>
+            <span class="ng-value-icon right" (click)="clear(member)" aria-hidden="true">×</span>
+          </div>
+          <div class="ng-value rounded" *ngIf="items.length > 1">
+            <span class="ng-value-label">{{items.length - 1}} {{'more' | translate}}...</span>
+          </div>
+        </ng-template>
+      </ng-select>
+      <input-error [control]="f['repetitionSelectedDays']"/>
+    </div>
+
+    <!--        Custom repeat   -->
+    <div class="col-lg-6" *ngIf="isCustom">
+      <input-label [control]="f['taskRepeatedPeriod']" key="repeat_every"/>
+      <div class="flex aic gap-x-1">
+        <input type="number" formControlName="repeatedPeriodNumber" min="1" class="input flex-20">
+        <ng-select class="flex-80" [items]="customRepeatList" [clearSearchOnAdd]="true" [clearable]="false" [clearOnBackspace]="true" bindLabel="name" bindValue="value" appendTo="body"
+                   formControlName="taskRepeatedPeriod">
+          <ng-template let-index="index" let-item="item" let-item$="item$" ng-option-tmp>
+            <span>{{item.name  | translate}}</span>
+          </ng-template>
+          <ng-template ng-label-tmp let-item="item" let-clear="clear">
+            <span class="fs-14">{{item.name | translate}}</span>
+          </ng-template>
+        </ng-select>
+        <input-error [control]="f['taskRepeatedPeriod']"/>
+      </div>
+    </div>
+
+    <!--        End time for repeat   -->
+    <div class="col-lg-6" *ngIf="isRepeated">
+      <input-label key="end_time_for_repeat" [control]="f['endTimeForRepeat']"/>
+      <input [owlDateTimeTrigger]="dt3" [owlDateTime]="dt3" class="input" formControlName="endTimeForRepeat" [min]="f['endDate'].value">
+      <owl-date-time #dt3></owl-date-time>
+      <input-error [control]="f['endTimeForRepeat']"/>
+    </div>
+
+    <!--        sound description     -->
+    <div class="col-lg-6">
+      <input-label key="sound_description" [optional]="true"/>
+      <record (soundDescription)="soundDescription.emit($event)" [url]="soundUrl"></record>
+    </div>
+
+  </div>
+</form>
+
+
+<owl-date-time #dt1></owl-date-time>
+<owl-date-time #dt2></owl-date-time>

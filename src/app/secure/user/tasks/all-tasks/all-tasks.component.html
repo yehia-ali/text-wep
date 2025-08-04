@@ -1,0 +1,184 @@
+<layout-with-filters [meta]="meta" (pageChange)="changePage($event)" (limitChanged)="limitChanged($event)" [admin]="true" [limit]="service.limit.value">
+  <ng-container filters>
+    <all-tasks-filter (export)="exportToExcel()"></all-tasks-filter>
+  </ng-container>
+  <ng-container content>
+    <table *ngIf="tasks && tasks.length > 0 && !loading" class="table" id="tasks">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">
+          <div class="flex aic">
+            <mat-checkbox class="mr-1 example-margin" color="primary"
+                          (change)="selectAllTasks($event)"
+                          [checked]="allChecked"></mat-checkbox>
+            {{ 'title' | translate }}
+          </div>
+        </th>
+        <th class="text-left">{{ 'creator' | translate }}</th>
+        <th class="text-left">{{ 'assignee' | translate }}</th>
+        <th class="text-left">{{ 'department' | translate }}</th>
+        <th class="text-center">{{ 'assignee_state' | translate }}</th>
+        <th class="text-center">{{ 'date' | translate }}</th>
+        <th class="text-center">{{ 'status' | translate }}</th>
+        <th class="text-center">{{ 'actual_time' | translate }}</th>
+        <th class="text-center">{{ 'repeated' | translate }}</th>
+        <th>
+          <div class="flex-center">
+            <p class="mr-50">{{ 'progress' | translate }}</p>
+            <sorting (up)="sort('5', $event)" (down)="sort('5', $event)"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <p class="mr-50">{{ 'rate' | translate }}</p>
+            <sorting (up)="sort('4', $event)" (down)="sort('4', $event)"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <p class="mr-50">{{ 'overdue' | translate }}</p>
+            <sorting (up)="sort('6', $event)" (down)="sort('6', $event)"></sorting>
+          </div>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr
+        *ngFor="let task of tasks | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy"
+        class="pointer border-bottom" (click)="openDetails(task)">
+        <td style="width: 35rem">
+          <div class="flex aic jcfs text-left">
+            <mat-checkbox class="mr-1 example-margin" (click)="$event.stopImmediatePropagation()" color="primary" [disabled]="task.taskStateId != 1 && task.taskStateId != 3 && task.taskStateId != 7"
+                          [checked]="task.isSelected" (change)="selectTask($event, task)">
+            </mat-checkbox>
+            <i class="bx bx-show pointer fs-20 primary pl-1 pr-2"  matTooltip="{{'show_answers' | translate}}" (click)="$event.stopImmediatePropagation();getTaskProps(task.taskId)"></i>
+            <div class="start mr-75">
+              <priority [priority]="task.priority"></priority>
+            </div>
+            <span routerLink="/admin/tasks/task-details/{{task.taskId}}" [matTooltip]="task.title" *ngIf="task.title.length > 30">{{ task.title | slice:0:30 }}... </span>
+            <span routerLink="/admin/tasks/task-details/{{task.taskId}}" *ngIf="task.title.length <= 30">{{ task.title }}</span>
+          </div>
+        </td>
+        <td style="width: 25rem">
+          <div class="flex aic">
+            <user-image *ngIf="service.limit.value < 101" [dim]="30" (click)="$event.stopImmediatePropagation()" [id]="task.creatorId" [img]="task.creatorProfilePicture"
+                        [matTooltip]="task.creatorName"></user-image>
+            <p class="ml-1 truncate text-left">{{ task.creatorName }}</p>
+          </div>
+        </td>
+        <td style="width: 25rem">
+          <div class="flex aic">
+            <user-image *ngIf="service.limit.value < 101" [dim]="30" (click)="$event.stopImmediatePropagation()" [id]="task.assigneeId" [img]="task.assigneeProfilePicture"
+                        [matTooltip]="task.assigneeName"></user-image>
+            <p class="ml-1 truncate text-left">{{ task.assigneeName }}</p>
+          </div>
+        </td>
+        <td style="width: 25rem" class="text-left">
+          {{ task.assigneeDepartementName }}
+        </td>
+        <td style="width: 17rem;">
+          <div class="text-center">
+            <span *ngIf="task.assigneeStatus">{{ 'active' | translate }}</span>
+            <span *ngIf="!task.assigneeStatus">{{ 'inactive' | translate }}</span>
+          </div>
+        </td>
+        <td style="width: 19rem;">
+          <div class="flex-column-center">
+            <p class="mb-75">{{ task.startDate | arabicDate:'typicalDate' }}</p>
+            <p>{{ task.endDate | arabicDate:'typicalDate' }}</p>
+          </div>
+        </td>
+        <td>
+          <task-status [state]="task.taskStateId"/>
+        </td>
+        <td>
+          {{task.actualTime ? (task.actualTime | convertMinutes:'minutes') + ' ' + ('h' | translate) : '-' }}
+        </td>
+        <td>
+          <p *ngIf="task.isRepeated" class="w-100 bg-light-success px-2 py-1 fs-10 simibold rounded">
+            {{'repeated' | translate}}</p>
+            <span *ngIf="!task.isRepeated">-</span>
+        </td>
+        <td>
+          <div class="flex-center">
+            <task-vote-progress [progress]="task.percentage" *ngIf="task.percentage > 0 || task.taskStateId == 3"></task-vote-progress>
+            <span *ngIf="!task.percentage && task.taskStateId != 3">-</span>
+          </div>
+        </td>
+        <td>
+          <div class="flex-center">
+            <ng-container *ngIf="task.taskStateId == 2; else notRated">
+              <rate [rate]="task.rate" type="small"></rate>
+            </ng-container>
+            <ng-template #notRated>
+              <span>-</span>
+            </ng-template>
+          </div>
+        </td>
+        <td>
+          <div class="flex-center">
+            <task-overdue [endedTaskRepeatedCounter]="task.endedTaskRepeatedCounter" *ngIf="task.endedTaskRepeatedCounter > 0"></task-overdue>
+            <span *ngIf="task.endedTaskRepeatedCounter == 0">-</span>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <not-found *ngIf="tasks && tasks.length == 0 && !loading"></not-found>
+    <loading *ngIf="loading" [height]="true"></loading>
+  </ng-container>
+</layout-with-filters>
+<ng-template #dialogTemplate >
+  <div class="dir">
+    <div class="flex w-100 jcsb px-1 py-1">
+      <p class="fs-20 simibold">{{'all_answers' | translate}}</p>
+      <i class="bx bx-x fs-22 danger pointer" (click)="closeDialog()"></i>
+    </div>
+    <div class="aic flex jcc py-5 h-25v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+    <div class="py-5 text-center" *ngIf="taskAnswers.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+    <div class="content-height">
+      <ng-container *ngIf="taskAnswers.length > 0">
+          <div class="table-container mx-1 mt-1 mb-1 ">
+            <table class="w-100">
+              <thead class="border bg-gray">
+              <tr class="border-bottom fs-12 simibold">
+                <th class="text-left py-1 w-25r">{{ 'question' | translate }}</th>
+                <th class="text-left py-1 w-7r">{{ 'type' | translate }}</th>
+                <th class="text-left py-1">{{ 'answer' | translate }}</th>
+              </tr>
+              </thead>
+              <tbody>
+                <!-- "taskId": 2877937,
+                "name": "ddd",
+                "dataType": 5,
+                "value": "39da96e7-0f66-4edf-8b1c-3c57c0709788-be364052-d284-42b1-813f-ebf7c5c5eb40-create.xlsx",
+                "isAnswered": true,
+                "task": null,
+                "id": 832,
+                "creationDate": "2024-12-19T14:31:50.6989514",
+                "isDeleted": null,
+                "deleterUserId": null,
+                "deletionDate": null,
+                "lastModifierUserId": null,
+                "lastModificationDate": -->
+              <tr class="border" *ngFor="let q of taskAnswers" >
+                <td class="fs-13 text-left">{{ q?.name }}</td>
+                <td class="fs-13 text-left">{{ answersTypes[q?.dataType - 1].name | translate }}</td>
+                <td class="fs-13 text-left">
+                  <i *ngIf="q?.isAnswered && q.dataType == 2" class="fs-20 bx bx-{{q?.value =='true' ? 'check-circle success' : 'x-circle danger'}}"></i>
+                  <span *ngIf="q.isAnswered && q.dataType != 5 && q.dataType != 2">{{q?.value || '-'}}</span>
+                  <a *ngIf="q.isAnswered && q.dataType == 5" class="primary" target="_blank" [href]="url + 'Companies/' + spaceId + '/attachments/' + q.value">{{ q.value }}</a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+      </ng-container>
+    </div>
+
+  </div>
+</ng-template>

@@ -1,0 +1,160 @@
+<div class="create-task" dir="auto">
+  <h4 class="flex aic jcsb black bold">
+    <p>{{ data.isEdit ? ("edit_shift" | translate) : ("create_shift" | translate) }}</p>
+    <i class="bx bx-x fs-30 pointer danger" mat-dialog-close></i>
+  </h4>
+
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-2 mt-2">
+        <div class="col-sm-8">
+          <input-label key="start_time" />
+          <input
+            [ngxTimepicker]="timeFrom"
+            class="input"
+            formControlName="checkInTime"
+            readonly
+          />
+          <ngx-material-timepicker #timeFrom [minutesGap]="5"></ngx-material-timepicker>
+        </div>
+
+        <div class="col-sm-4">
+          <div class="flex">
+            <input-label key="margin" [control]="f['checkInAllowance']" /> /
+            <input-label key="m" [control]="f['checkInAllowance']" />
+          </div>
+          <div class="flex aic gap-x-1">
+            <input
+              type="number"
+              class="input"
+              formControlName="checkInAllowance"
+            />
+          </div>
+        </div>
+
+        <div class="col-sm-8">
+          <input-label key="end_time" />
+          <input
+            [ngxTimepicker]="timeTo"
+            class="input"
+            [disabled]="!f['checkInTime'].value"
+            formControlName="checkOutTime"
+            readonly
+          />
+          <ngx-material-timepicker #timeTo [minutesGap]="5"></ngx-material-timepicker>
+        </div>
+
+        <div class="col-sm-4">
+          <div class="flex">
+            <input-label key="margin" [control]="f['checkOutAllowance']" /> /
+            <input-label key="m" [control]="f['checkOutAllowance']" />
+          </div>
+          <div class="flex aic gap-x-1">
+            <input
+              type="number"
+              class="input"
+              formControlName="checkOutAllowance"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <input-label key="daily_working_hours" [control]="f['workingHours']" />
+          <div class="flex aic gap-x-1">
+            <input
+              type="number"
+              class="input"
+              formControlName="workingHours"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <input-label key="early_checkin" [control]="f['earlyCheckIn']" />
+          <div class="flex aic gap-x-1">
+            <input
+              type="number"
+              class="input"
+              formControlName="earlyCheckIn"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="weekend mt-2">
+        <input-label key="weekend_days" />
+        <div class="flex-grid">
+          <div class="col" *ngFor="let day of data.days">
+            <mat-checkbox
+              (change)="weekendChanged(day)"
+              [checked]="day.isDayAdded"
+              [value]="day.weekDay"
+              [disabled]="day.isDayAdded"
+              color="primary"
+            >
+              {{ day.dayName  | translate }}
+            </mat-checkbox>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mb-1">
+        <mat-checkbox [checked]="map" color="primary" (change)="onCheckboxChange($event)">
+          {{ "prevent_checkin" | translate }}
+        </mat-checkbox>
+      </div>
+
+      <div *ngIf="map">
+        <div class="mb-1">
+          <label class="fs-11 simibold mb-75" for="radius">{{ "radius_meters" | translate }}</label>
+          <div class="flex aic gap-x-1">
+            <input
+              type="number"
+              class="input"
+              [(ngModel)]="radius"
+              (input)="handleRadiusChange($event)"
+              formControlName="radius"
+            />
+          </div>
+        </div>
+
+        <div style="width: 100%; height: 250px">
+          <google-map
+            [center]="circleCenter"
+            [zoom]="zoom"
+            [options]="options"
+            (mapClick)="handleMapClick($event)"
+          >
+            <map-marker
+              [position]="circleCenter"
+              [options]="markerOptions"
+            ></map-marker>
+            <map-circle
+              #mapCircle
+              [center]="circleCenter"
+              [radius]="radius"
+              [options]="circleOptions"
+            ></map-circle>
+          </google-map>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex">
+      <button class="px-4 mr-2 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>
+        {{ "cancel" | translate }}
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        class="px-5 fs-15"
+        (click)="submit()"
+      >
+        <submit-button [text]="data.isEdit ? 'update' : 'create'" [loading]="loading"></submit-button>
+      </button>
+    </div>
+  </div>
+</div>

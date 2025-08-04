@@ -1,0 +1,46 @@
+<div class="session-details">
+  <layout>
+    <top-section [session]="sessionDetails()"/>
+    <div class="flex-column jcsb content-height px-2 pt-2 pb-3" *ngIf="sessionDetails().id">
+      <div class="details-content">
+        <div class="flex-grid">
+          <div class="col-lg-6">
+            <div class="start p-1">
+              <div class="user-info">
+                <h3>{{sessionDetails().isConsultant ? ('account' | translate) : ('consultant' | translate)}}</h3>
+                <div class="flex aic gap-x-1 mt-1">
+                  <user-image [imageUrl]="environment.publicImageUrl" [dim]="45" [img]="sessionDetails().userImage"></user-image>
+                  <div>
+                    <p class="fs-16">{{sessionDetails().userName}}</p>
+                    <p class="fs-14">{{sessionDetails().userJobTitle}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="description mt-2" *ngIf="sessionDetails().description">
+                <h3>{{'description' | translate}}</h3>
+                <p>{{sessionDetails().description}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 border-left">
+            <div class="session-info p-1 flex aic jcsb gap-x-5">
+              <div class="card py-2 px-1 shadow rounded flex-33 text-center"
+                   *ngFor="let item of [{icon: 'calendar', value: sessionDetails().startDate | arabicDate}, {icon: 'time', value: (sessionDetails().startDate | arabicTime) + ' - ' + (sessionDetails().endDate | arabicTime)}, {icon: 'price', value: sessionDetails().price + ' ' + ('egp' | translate)}]">
+                <div class="img">
+                  <img [src]="'assets/images/icons/' + item.icon + '.svg'" alt="icon">
+                </div>
+                <div class="value mt-2">
+                  <p class="fs-12">{{item.value}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex jcfe">
+        <session-details-buttons [session]="sessionDetails()"/>
+      </div>
+    </div>
+
+  </layout>
+</div>

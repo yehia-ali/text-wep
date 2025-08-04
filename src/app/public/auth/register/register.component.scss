@@ -1,0 +1,63 @@
+@use "src/assets/styles/vars" as *;
+
+.top-section {
+  position: absolute;
+  z-index: 99999;
+}
+
+.register-content {
+ max-height: 85vh;
+ overflow: auto;
+}
+
+.package {
+  padding: 1.2rem 1rem;
+  background: rgb(247 244 254);
+
+  &.active {
+    border: 1px solid $primary !important;
+
+    .package-name {
+      color: $primary !important;
+    }
+  }
+}
+
+
+@media (min-width: 992px) {
+  .d-lg-flex {
+    display: flex !important;
+  }
+
+}
+
+// @media (min-width: 800px) and (max-width: 1400px) {
+//   .register-content.create-space {
+//     padding-top: 25rem !important;
+//   }
+// }
+
+
+.primary-border {
+  border-color: $primary !important;
+}
+
+.number-input::-webkit-outer-spin-button,
+.number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.number-input {
+  border: none;
+  height: 34px;
+  width: 100%;
+  text-align: center;
+  color: $dark-color !important
+}
+.overflow-auto{
+  overflow: auto;
+}
+:host ::ng-deep{
+  .mdc-form-field>label{font-size: 11px; font-weight: 500;}
+}

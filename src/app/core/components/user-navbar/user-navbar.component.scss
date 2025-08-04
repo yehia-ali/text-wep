@@ -1,0 +1,16 @@
+.user > * {
+  min-width: 4.5rem;
+  min-height: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-inline-start: .3rem;
+  &:hover {
+    border-radius: 50%;
+    background-color: rgba(60, 64, 67, 0.078);
+  }
+}
+.user-navbar{
+  box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.04);
+  }

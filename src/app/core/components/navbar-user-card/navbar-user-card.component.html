@@ -1,0 +1,48 @@
+<ng-container *ngIf="user$ | async as user">
+  <user-image [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger" [img]="user.imageUrl" class="pointer" [dim]="32"/>
+  <mat-menu #menu="matMenu" class="user-card-menu bg-gray">
+    <div (click)="$event.stopImmediatePropagation()" class="p-1 text-center mt-1">
+      <user-image [img]="user.imageUrl" [dim]="70"/>
+      <div class="name mt-1 bold primary fs-18">{{'hi' | translate}}, {{user.name}}!</div>
+      <!--      <div class="email mb-25">{{user.email}}</div>-->
+      <div class="phone">{{user.phoneNumber}}</div>
+      <div class="manager-code" (click)="copy()" [cdkCopyToClipboard]="user.memberCode">
+        <p class="flex-center pointer mt-25 primary">
+          <span class="fs-16 mr-25">{{user.memberCode}}</span>
+          <i class='bx bx-copy fs-16'></i>
+        </p>
+      </div>
+      <div class="edit-profile border py-1 px-2 inline-block mt-75 primary fs-14 pointer" routerLink="/settings">
+        {{'manage_your_account' | translate}}
+      </div>
+      <div class="spaces mt-1 text-left">
+        <!--        <div class="border-bottom bg-white py-1 px-2 rounded-tl-5 rounded-tr-5">{{'all_spaces' | translate}}</div>-->
+        <div class="all-spaces bg-white" magicScroll>
+          <space-list/>
+        </div>
+        <!-- <button class="clickable-btn fs-17 w-100 border-bottom bg-white py-1 px-2 flex aic gap-x-1">
+          <img alt="action icon" class="convert-image-color" src="assets/images/icons/plus.svg">
+          <p>{{'create_space' | translate}}</p>
+        </button> -->
+        <button class="clickable-btn w-100 fs-17 border-bottom bg-white py-1 px-2 flex aic gap-x-1" (click)="joinSpace()">
+          <img alt="action icon" class="convert-image-color" src="assets/images/icons/join.svg">
+          <p>{{'join_space' | translate}}</p>
+        </button>
+        <button class="clickable-btn w-100 fs-17 border-bottom bg-white py-1 px-2 flex aic gap-x-1" (click)="raiseIssue(menuTrigger)">
+          <img alt="action icon" class="convert-image-color" src="assets/images/icons/info.svg">
+          <p>{{'raise_issue' | translate}}</p>
+        </button>
+        <button class="clickable-btn fs-17 w-100 bg-white py-1 px-2 rounded-bl-5 rounded-br-5 flex aic gap-x-1 pointer" (click)="logout()">
+          <img alt="action icon" class="convert-image-color" src="assets/images/icons/welcome-logout.svg">
+          <p>{{'sign_out' | translate}}</p>
+        </button>
+      </div>
+
+      <div class="terms flex-center gap-x-1 fs-14 mt-1">
+        <p>{{'privacy_policy' | translate}}</p>
+        <p>.</p>
+        <p>{{'terms_of_service' | translate}}</p>
+      </div>
+    </div>
+  </mat-menu>
+</ng-container>

@@ -1,0 +1,64 @@
+/* styles.scss */
+.date-range-app {
+  mat-form-field {
+    width: 100%;
+    .mat-mdc-text-field-wrapper {
+      width: 100% !important;
+      height: 41.2px !important;
+      border-radius: 0.5rem !important;
+      background: rgba($color: #000000, $alpha: 000) !important;
+      border: 1px solid #e7e7e7 !important;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.date-filter{
+  &.selected-date-range{
+    .mat-mdc-button-touch-target::after{
+      color: #7B58CA !important;
+    }
+  }
+  align-items: center;
+  display: flex;
+  mat-form-field *{
+    background-color: transparent !important;
+    height:27px !important;
+    width: 27px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mat-mdc-form-field-infix ,.mat-datepicker-toggle-default-icon {
+    display: none !important;
+  }
+  .mat-mdc-button-touch-target{
+    width: 20px ;
+    height: 20px;
+    &::after{
+      font-family: 'boxicons' !important;
+      content: '\ea15';
+      font-size: 18px;
+    }
+  }
+  .mat-mdc-text-field-wrapper ,.mat-mdc-form-field-icon-suffix{
+    padding: 0 !important;
+  }
+  .mat-mdc-text-field-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    & , *{
+      transition: ease all 0.3s;
+    }
+  }
+  .mat-mdc-icon-button.mat-mdc-button-base {
+    padding: 0;
+    height: 25px;
+    width: 20px;
+  }
+}
+
+

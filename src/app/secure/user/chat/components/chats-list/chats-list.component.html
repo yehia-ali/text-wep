@@ -1,0 +1,45 @@
+<div class="chats h-100">
+  <div class="top-section bg-white flex aic w-100 gap-x-1 border-bottom">
+    <div class="w-100 flex aic gap-x-1">
+      <input type="text" class="input full-rounded" (input)="search(query)" [(ngModel)]="query" [placeholder]="'search' | translate">
+      <app-create-chat></app-create-chat>
+    </div>
+  </div>
+  <div class="content" magicScroll="">
+    <div class="chats-list relative h-100">
+      <mat-tab-group animationDuration="0ms" (selectedTabChange)="selectedTabChanged($event)">
+        <mat-tab [label]="'task' | translate" class="h-100">
+          <ng-container *ngIf="groupTaskChat$ | async as task">
+            <ng-container *ngFor="let chat of task; trackBy: trackBy">
+              <div class="chat px-2 py-1 pointer" (click)="openRoom(chat)" [ngClass]="{'active': chat.id == roomId}">
+                <app-group-task-chat [chat]="chat"></app-group-task-chat>
+              </div>
+            </ng-container>
+            <not-found *ngIf="task.length == 0"></not-found>
+          </ng-container>
+        </mat-tab>
+        <mat-tab [label]="'group' | translate">
+          <ng-container *ngIf="groupChat$ | async as groupChat">
+            <ng-container *ngFor="let chat of groupChat; trackBy: trackBy">
+              <div class="chat px-2 py-1 pointer" (click)="openRoom(chat)" [ngClass]="{'active': chat.id == roomId}">
+                <app-group-chat [chat]="chat"></app-group-chat>
+              </div>
+            </ng-container>
+            <not-found *ngIf="groupChat.length == 0"></not-found>
+          </ng-container>
+        </mat-tab>
+        <mat-tab [label]="'private' | translate">
+          <ng-container *ngIf="privateChat$ | async as privateChat">
+            <ng-container *ngFor="let chat of privateChat; trackBy: trackBy">
+              <div class="chat px-2 py-1 pointer" (click)="openRoom(chat)" [ngClass]="{'active': chat.id == roomId}">
+                <!--              <app-private-chat [chat]="chat" [notSeen]="chat.lastMessage.messageStatus != 'seen' && chat.lastMessage.senderId != userId"></app-private-chat>-->
+                <app-private-chat [chat]="chat"></app-private-chat>
+              </div>
+            </ng-container>
+            <not-found *ngIf="privateChat.length == 0"></not-found>
+          </ng-container>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

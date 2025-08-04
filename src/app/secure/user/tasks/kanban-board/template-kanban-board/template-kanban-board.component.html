@@ -1,0 +1,148 @@
+<user-navbar />
+<i *ngIf="moreTasksStatus" class="bx bx-refresh more-tasks flex aic jcc fixed white bg-primary fs-20 pointer shadow"
+  (click)="getMoreTasks()" [matTooltip]="'load_more' | translate" matTooltipPosition="above"></i>
+<div class="p-2 relative">
+  <div class="py-5 overlay-loading" *ngIf="loading">
+    <loading></loading>
+  </div>
+  <layout>
+    <!-- <h2 class="danger bold my-1 px-1">{{ "beta" | translate }}</h2> -->
+    <div class="flex w-100 m-auto mb-2 aic jcsb px-1 pt-1">
+      <div class="flex w-100 m-auto aic gap-x-2">
+        <div class="w-15r ">
+          <search #searchFilter [width]="'w-100'" (valueChanged)="search($event)" [newSearch]="true"
+            [classes]="'py-50 pr-1 fs-10'" [hideLabel]="true"></search>
+          <!-- <search [width]="'w-100'" (valueChanged)="search($event)" [newSearch]="true" ></search> -->
+        </div>
+        <div class="  ">
+          <projects #projectsFilter [newFilter]="true" [classes]="'w-100'" (valueChanged)="changeProject($event)">
+          </projects>
+        </div>
+        <div class="  ">
+          <priority-filter #priorityFilter [newFilter]="true" [multi]="false" [classes]="'w-100'"
+            (valueChanged)="changePriority($event)"></priority-filter>
+        </div>
+        <div class="  ">
+          <task-status #statusFilter [newFilter]="true" [width]="'w-100'"
+            (valueChanged)="changeTaskStatus($event)"></task-status>
+        </div>
+
+        <div class="filter-calendar  ">
+          <app-date-range #dateFilter [newFilter]="true" [label]="'start_date'" [startDate]="startDateFrom"
+            [endDate]="startDateTo" (valueChanged)="changeStartDate($event)"></app-date-range>
+        </div>
+        <!-- <div class="filter-calendar " *ngIf="this.adminView">
+          <app-date-range #dateFilter  [newFilter]="true" [label]="'end_date'" [startDate]="endDateFrom"  [endDate]="endDateTo" (valueChanged)="changeEndDate($event)"></app-date-range>
+        </div> -->
+        <div class="" *ngIf="this.adminView">
+          <select-user #userFilter [multi]="true" (getSelectedUsers)="changeAssignee($event)" text="assignee"
+            [newFilter]="true" />
+        </div>
+        <div class="">
+          <select-user #userFilter [multi]="true" (getSelectedUsers)="changeCreator($event)" text="creator"
+            [newFilter]="true" />
+        </div>
+        <div class="">
+          <button mat-raised-button color="primary" (click)="getTemplates()">
+            <span *ngIf="!selectedTemplate">{{'templates' | translate}}</span>
+            <span *ngIf="selectedTemplate">{{ selectedTemplate.title.length > 15 ? (selectedTemplate.title | slice:0:15)
+              + '...' : selectedTemplate.title }}</span>
+          </button>
+        </div>
+
+
+      </div>
+      <div class="flex aic">
+        <div class="flex aic gap-x-1" *ngIf="role.canAccessAdmin | async" >
+          <p class="mb-0 fs-11 simibold text-right" style="width: 80px;">{{'admin_view' | translate}} </p>
+          <p>
+            <mat-slide-toggle [matTooltip]="'admin_view' | translate" (change)="changeView($event , true)" color="primary"> </mat-slide-toggle>
+          </p>
+        </div>
+
+        <div class="flex aic mr-1" *ngIf="role.canAccessAdmin | async">
+          <p class="mr-1 mb-0 fs-11 simibold text-right" style="width: 50px;">{{'stages' | translate}} </p>
+          <p>
+            <mat-slide-toggle [matTooltip]="'stages' | translate" [checked]="true" (change)="changeView($event)"
+              color="primary"> </mat-slide-toggle>
+          </p>
+        </div>
+        <i class='bx bx-reset pointer fs-18 rounded-circle clear-filters flex aic jcc white bg-primary border border-primary'
+          [matTooltip]="'reset_filter' | translate" (click)="resetFilters()"></i>
+      </div>
+    </div>
+
+    <div class=" template-kanban-layout kanban-layout relative" id="kanban-layout">
+      <div class="w-100 ">
+        <div class="flex acs m-auto w-100 acs">
+          <div class="example-container kanban-card px-1" *ngFor="let item of stages">
+            <div class="h-100">
+              <h5 class="mb-50 py-1 px-1 rounded bg-gray simibold title-kanban-list fs-13">
+                {{ item.name}} ({{ item.tasks?.length || 0 }})
+              </h5>
+              <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="item.tasks" class="example-list"
+                (cdkDropListDropped)="drop($event)">
+                <ng-container *ngFor="let task of item.tasks; trackBy: trackByIndex">
+                  <div class="example-box bg-white p-1 mb-50 pointer new-list" cdkDrag
+                    (cdkDragReleased)="onItemSelected(task)" (click)="openDetails(task)">
+                    <div>
+                      <div class="flex jcsb">
+                        <p class="fs-12 simibold mb-50">{{ task.title }}</p>
+                        <priority class="mb-50" [priority]="task.priority"></priority>
+                      </div>
+                      <div class="flex aic mb-1 jcsb">
+                        <div class="cards flex">
+                          <p *ngIf="task.isOverDue" class="bg-light-danger px-50 py-50 fs-10 simibold rounded mr-50">
+                            {{ "overdue" | translate }}
+                          </p>
+                          <p *ngIf="task.isRepeated" class="bg-light-success px-50 py-50 fs-10 simibold rounded mr-50">
+                            {{ "repeated" | translate }}
+                          </p>
+                          <p *ngIf="task.isSubTasks" class="bg-light-blue px-50 py-50 fs-10 simibold rounded mr-50">
+                            {{ "project" | translate }}
+                          </p>
+                        </div>
+                        <p class="fs-10 text-right">
+                          <span class="success"> {{ task.startDate | arabicDate:'month' }}</span><br />
+                          <span class="danger"> {{ task.endDate | arabicDate:'month' }}</span>
+                        </p>
+                      </div>
+                      <div class="flex jcsb aie mt-50">
+                        <app-img-title *ngIf="!adminView" [imgSrc]="task.creatorProfilePicture"
+                          [matTooltip]="('creator' | translate) + ': ' + task.creatorName" matTooltipPosition="below" />
+                        <app-img-title *ngIf="adminView" [imgSrc]="task.assigneeProfilePicture"
+                          [matTooltip]="('assignee' | translate) + ': ' +task.assigneeName"
+                          matTooltipPosition="below" />
+                        <p class="mb-0 light fs-11 text-right simibold">
+                          {{ "T-" + task.taskId }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="py-5" *ngIf="!item.tasks?.length && !loading">
+                  <not-found></not-found>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="py-5 w-100" *ngIf="stages.length == 0 && !loading">
+          <p *ngIf="!selectedTemplate" class="fs-12 simibold text-center fs-20 fw-500 mb-3">{{'select_template_first' | translate}}</p>
+          <not-found></not-found>
+        </div>
+      </div>
+    </div>
+  </layout>
+</div>
+<!-- "templateId": 1289,
+"template": null,
+"name": "test",
+"order": 0,
+"id": 11,
+"creationDate": "2025-03-18T21:30:39.1442614",
+"isDeleted": null,
+"deleterUserId": null,
+"deletionDate": null,
+"lastModifierUserId": null,
+"lastModificationDate": "2025-03-18T21:30:39.1442526" -->

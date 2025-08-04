@@ -1,0 +1,42 @@
+<div class="session-details-top-section p-2 border-bottom flex aic jcsb">
+  <div class="start flex gap-x-3">
+    <p class="fs-18">S-{{session.id}}</p>
+    <p class="fs-18 bold">{{session.title}}</p>
+  </div>
+  <div class="end flex aic gap-x-2">
+    <add-rate text="add_rate" [session]="session" *ngIf="!session.attendeeRate && session.sessionAttendeesStatus == 6 && session.isAttendee"/>
+    <add-rate text="update_rate" [session]="session" *ngIf="session.attendeeRate && session.sessionAttendeesStatus == 6 && session.isAttendee && session.canRate"/>
+    <rate [rate]="session.attendeeRate" *ngIf="session.attendeeRate" [displayNumber]="false"/>
+    <session-status [sessionStatus]="session.sessionAttendeesStatus"></session-status>
+    <button class="clickable-btn img" (click)="getHistory()">
+      <img src="assets/images/icons/history.svg" alt="history">
+    </button>
+    <button [matMenuTriggerFor]="menu" class="clickable-btn"
+            *ngIf="((session.isAttendee && (session.sessionAttendeesStatus == 1 || session.sessionAttendeesStatus == 2)) || (session.isConsultant && session.sessionAttendeesStatus == 2)) || session.raiseIssue">
+      <i class='bx bx-dots-vertical-rounded fs-25'></i>
+    </button>
+  </div>
+</div>
+
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item dir="auto" (click)="cancelSession()"
+          *ngIf="(session.isAttendee && (session.sessionAttendeesStatus == 1 || session.sessionAttendeesStatus == 2)) || (session.isConsultant && session.sessionAttendeesStatus == 2)">
+    <span class="fs-15">{{'cancel' | translate}}</span>
+  </button>
+  <button mat-menu-item dir="auto" (click)="raiseIssue()" *ngIf="session.raiseIssue">
+    <span class="fs-15">{{'raise_issue' | translate}}</span>
+  </button>
+</mat-menu>
+
+<info-sidebar [open]="historyIsOpen">
+  <ng-container header>
+    <h2>{{'history' | translate}}</h2>
+  </ng-container>
+
+  <ng-container content>
+    <div class="p-2">
+      <history [history]="history"></history>
+    </div>
+  </ng-container>
+</info-sidebar>

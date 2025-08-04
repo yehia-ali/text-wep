@@ -1,0 +1,47 @@
+.hint {
+    padding: 8px 16px;
+    background:#fca1301a;
+    i {
+        color: #fca130;
+    }
+}
+.crossMonth-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    align-items: flex-start;
+  }
+  
+.buttons-container {
+    display: flex;
+    justify-content: flex-end;  
+    gap: 10px;
+}
+
+.border-none {
+    border-color: transparent;
+    &:focus {
+        border-color: transparent !important;
+    }
+}
+
+.info-banner {
+    background: rgba(255, 169, 92, 0.15);
+    color: #000;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    i {
+        color: #FFA95C;
+    }
+}
+
+.custom-radio-group {
+    display: flex;
+    flex-direction: column;
+}
+
+

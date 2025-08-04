@@ -1,0 +1,286 @@
+@use "vars" as *;
+
+.dark-mode {
+  background: $dark-gray !important;
+  color: $white-color !important;
+
+  .dark, .black, .clock-face__number--outer > span, .owl-dt-calendar-table .owl-dt-calendar-cell-disabled > .owl-dt-calendar-cell-content:not(.owl-dt-calendar-cell-selected), .schedule-meeting-card .content, .user-card-menu .edit-profile, .space .current, .convert-color {
+    color: $white-color !important;
+  }
+
+  .schedule-meeting-card .start img {
+    filter: brightness(0) invert(.9) !important;
+  }
+
+  button:disabled {
+    color: rgb(255 255 255 / 26%) !important;
+  }
+
+  .owl-dt-calendar-table .owl-dt-calendar-cell {
+    color: unset !important;
+  }
+
+  .owl-dt-calendar-table .owl-dt-calendar-cell-disabled {
+    opacity: .2 !important;
+  }
+
+  .owl-dt-control-button-arrow svg {
+    fill: $white-color;
+  }
+
+  // for task details
+  .task-repeat, .mat-checkbox-label, .mat-radio-label-content, .mat-mdc-dialog-container .mdc-dialog__content, .mdc-tab__text-label, .owl-dt-weekday, .owl-dt-control-content, .option-input, .muted, .number-input ,.mat-mdc-button-touch-target::after{
+    color: $white-color !important;
+  }
+
+
+  .mat-mdc-tab-header {
+    border-bottom: 1px solid $dark-border !important;
+  }
+
+  .bg-gray, .task-repeat, .angular-editor-toolbar, .bg-light-primary-1, .bg-light-success-1, .bg-light-danger-1, .clock-face, .timepicker__actions, .fc-day-past,  .owl-dt-timer-input, .main-sidebar .item.active, .convert-bg-color, .bg-light-primary-1 {
+    background: $dark-gray !important;
+    color: $white-color !important;
+  }
+
+  .mdc-text-field--filled:not(.mdc-text-field--disabled){
+    background: transparent !important;
+  }
+
+  // end for task details
+
+  .bg-white, .angular-editor-button, audio::-webkit-media-controls-panel, .sounded-description, .mat-tree, .mat-tab-header, .timepicker__body, .mat-mdc-raised-button.mat-unthemed:not(.bg-primary, .bg-danger), .mat-mdc-tab-list, .owl-dt-container-inner, .mdc-checkbox .mdc-checkbox__native-control[disabled]:checked ~ .mdc-checkbox__background, .package, .number-input, .days_num {
+    background: $dark-white !important;
+    color: $white-color !important;
+  }
+
+  .border, .border-bottom, .border-top, .border-left, .border-right, .angular-editor-toolbar, .angular-editor-button, .layout .content .menu-button, .sounded-description, .attachments_area, .admin-users-report td, .admin-users-report th, .ngx-file-drop__drop-zone, .mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true]) ~ .mdc-checkbox__background, .owl-dt-calendar-table .owl-dt-calendar-cell-today:not(.owl-dt-calendar-cell-selected), .mdc-checkbox .mdc-checkbox__native-control[disabled]:not(:checked):not(:indeterminate):not([data-indeterminate=true]) ~ .mdc-checkbox__background, .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled:not(:checked) + .mdc-radio__background .mdc-radio__outer-circle, .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:disabled:not(:checked) + .mdc-radio__background .mdc-radio__outer-circle, .mdc-checkbox .mdc-checkbox__native-control[disabled]:checked ~ .mdc-checkbox__background {
+    border-color: $dark-border !important;
+  }
+
+  .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:disabled + .mdc-radio__background .mdc-radio__inner-circle, .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:disabled:checked + .mdc-radio__background .mdc-radio__outer-circle {
+    border-color: #fff !important;
+  }
+
+  .angular-editor .angular-editor-wrapper .angular-editor-textarea {
+    outline: unset !important;
+  }
+
+  // to change any image color to white
+  .convert-image-color {
+    filter: brightness(0) invert(.9) !important;
+  }
+
+  /*  start charts  */
+  .apexcharts-datalabel-label, .apexcharts-datalabel-value {
+    fill: $white-color !important;
+  }
+
+  .apexcharts-tooltip .apexcharts-tooltip-series-group {
+    background: $dark-white !important;
+    color: $white-color !important;
+  }
+
+  /*  end charts  */
+
+  /*  start datepicker  */
+  .mat-datepicker-toggle-default-icon, .mat-calendar-arrow {
+    fill: $white-color !important;
+  }
+
+  .mat-form-field-label, .mat-date-range-input-separator {
+    color: $white-color !important;
+  }
+
+  .mat-datepicker-content-container {
+    background: $dark-white !important;
+    color: $white-color !important;
+  }
+
+  .mat-calendar-table-header th, .mat-calendar-body-cell-content, .mat-calendar-previous-button::after, .mat-calendar-next-button::after, .mat-calendar-body-label, .mat-calendar-controls .mdc-button__label, .mdc-floating-label, .mat-start-date, .mat-end-date, .mat-mdc-button:not(:disabled, .primary), .mdc-label {
+    color: $white-color !important;
+  }
+
+  .mat-calendar-body-today:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+    border-color: $border-color !important;
+  }
+
+  /*  end datepicker  */
+
+
+  /*  start notifications  */
+  .notifications {
+    .c-badge {
+      color: #b9a0f2 !important;
+    }
+
+    .black {
+      color: #fff !important;
+    }
+  }
+
+  /*  end notifications  */
+
+  /* start global menu */
+  .mat-mdc-menu-content, .mat-mdc-menu-panel {
+    background: $dark-white !important;;
+
+    .mat-mdc-menu-item {
+      color: $white-color;
+    }
+  }
+
+  /* end global menu */
+
+  // for checkbox border color
+  .mat-checkbox-disabled .mat-checkbox-frame, .mat-radio-disabled .mat-radio-outer-circle {
+    border-color: rgba(179, 179, 179, 0.38) !important;
+  }
+
+  .mat-checkbox-disabled .mat-checkbox-label, .mat-radio-disabled .mat-radio-label-content {
+    color: rgba(179, 179, 179, 0.38) !important;
+  }
+
+  .mat-radio-disabled .mat-radio-inner-circle {
+    background-color: rgba(179, 179, 179, 0.38) !important
+  }
+
+  .mat-checkbox-frame, .mat-radio-outer-circle {
+    border-color: $white-color;
+  }
+
+  .mat-checkbox-label, .mat-radio-label-content {
+    color: $white-color;
+  }
+
+  .mat-radio-inner-circle {
+    background-color: $white-color
+  }
+
+
+  /* start input and ng-select */
+  .input, .ng-select .ng-select-container, .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-input > input, .ng-select .ng-select-container .ng-value-container .ng-input > input {
+    border-color: $dark-border !important;
+    color: $white-color !important;
+    background-color: $dark-white !important;
+  }
+
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    color: $white-color !important;
+    background-color: $dark-white;
+  }
+
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected,
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected.ng-option-marked {
+    color: $white-color !important;
+    background-color: $primary !important;
+  }
+
+  .ng-dropdown-panel {
+    background-color: $dark-white !important;
+
+    .ng-dropdown-panel-items {
+      .ng-optgroup.ng-option-selected,
+      .ng-optgroup.ng-option-marked,
+      .ng-option.ng-option-marked {
+        background-color: $primary !important;
+        color: $white-color !important;
+      }
+    }
+  }
+
+  .ng-value-label, .ng-value {
+    color: $white-color !important;
+    z-index: 999;
+  }
+
+  //.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup, .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup.ng-option-marked {
+  //  color: $white-color !important;
+  //  background-color: $dark-gray !important;
+  //}
+
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+    background-color: $light-primary !important;
+  }
+
+  .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-label, .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value {
+    color: $white-color !important;
+  }
+
+  /* end input and ng-select*/
+
+  // pagination
+  .ngx-pagination {
+    border-color: $dark-border !important;
+
+    a {
+      color: $white-color !important;
+
+      &:hover {
+        color: $dark-color !important;
+      }
+    }
+  }
+
+  .menu-filters {
+    box-shadow: 0 4px 6px -1px $dark-border, 0 2px 4px -1px $dark-border !important;
+  }
+
+  .mat-tab-label .mat-tab-label-content {
+    color: #fff !important;
+  }
+
+  //  sidebar
+  .info-sidebar-title h1 {
+    color: $white-color !important;
+  }
+
+  //  for dialog
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    background: $dark-white !important;
+    color: $white-color !important;
+
+    h2 {
+      color: $white-color !important;
+    }
+  }
+
+  .mat-tree-node, .mat-nested-tree-node {
+    color: $white-color !important
+  }
+
+  .fc-popover-header {
+    background: $dark-gray !important;
+  }
+
+  .fc-popover-body {
+    background: $dark-white !important;
+  }
+
+  .fc-theme-standard .fc-popover {
+    border-color: $dark-border !important;
+  }
+
+  .fc-scrollgrid {
+    td, th, & {
+      border-color: $dark-border !important;
+    }
+  }
+
+  .order-details .cards {
+    border-bottom: 2px dashed $dark-border !important;
+  }
+
+  .export.bg-success.mat-mdc-raised-button.mat-unthemed:not(.bg-primary) {
+    background-color: $success !important;
+    color: #fff !important;
+  }
+
+  .all-spaces .space {
+    &:hover {
+      background-color: $dark-gray;
+    }
+  }
+
+}
+

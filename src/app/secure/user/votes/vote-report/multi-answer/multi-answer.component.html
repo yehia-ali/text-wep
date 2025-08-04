@@ -1,0 +1,16 @@
+<div *ngFor="let answer of answers; let i = index" class="flex aife mb-2 content">
+  <div class="start flex-40 vote-report-start">
+    <p class="mb-50">{{answer.text}}</p>
+    <div [ngStyle]="{'background': colors[i] + 30}" class="progress rounded-5 relative">
+      <div [ngClass]="{'bg-success': answer.questionChoicesResult.percentage == 100}" [ngStyle]="{'background': colors[i], 'width': answer.questionChoicesResult.percentage + '%'}"
+           class="fill rounded-5"></div>
+    </div>
+  </div>
+  <div class="end flex-60">
+    <p (click)="!anonymous && getResponses(answer.id)" [ngClass]="{'pointer': !anonymous}" class="inline-block">
+      {{answer.questionChoicesResult.selectedCount | arabicNumbers}}
+      {{'responses' | translate}}
+      ({{answer.questionChoicesResult.percentage | arabicNumbers}}%)
+    </p>
+  </div>
+</div>

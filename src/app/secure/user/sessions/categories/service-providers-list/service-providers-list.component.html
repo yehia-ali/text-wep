@@ -1,0 +1,53 @@
+<layout>
+  <div class="flex aic jcsb px-2 py-1">
+    <search (valueChanged)="service.search.set($event)"/>
+    <!-- <sort [sortList]="sortList" (getValue)="sort($event)"/> -->
+  </div>
+  <categories-list></categories-list>
+  <div class="service-providers-list p-2 border-top relative" magicScroll='calc(100% - 191px)'>
+    <div *ngIf="serviceProviders().length > 0 && !loading()" class="flex-grid gap-y-2">
+      <div *ngFor="let serviceProvider of serviceProviders()" [routerLink]="serviceProvider.id + '/profile'" class="col-lg-6">
+        <div class="service-provider bg-gray p-2 rounded pointer relative">
+          <div class="flex aic gap-x-1">
+            <user-image [dim]="35" [imageUrl]="environment.publicImageUrl" [img]="serviceProvider.imageUrl"/>
+            <div class="info">
+              <div class="flex aic gap-x-1">
+                <p>{{serviceProvider.name}}</p>
+                <verified *ngIf="serviceProvider.isVerified"/>
+              </div>
+              <p class="muted fs-14">{{serviceProvider.jobTitle}}</p>
+            </div>
+          </div>
+          <div class="fees-time flex aic fs-13">
+            <div class="img">
+              <img alt="money icon" src="assets/images/icons/money.svg">
+            </div>
+            <p class="fs-12">{{serviceProvider.sessionDuration | arabicNumbers}}</p>
+            <p>{{'min' | translate}}</p>
+            <p>/</p>
+            <p class="fs-12">{{serviceProvider.sessionFees}}</p>
+            <p *ngIf="!!serviceProvider.currency">{{serviceProvider.currency.currencyCode | translate}}</p>
+            <p *ngIf="!serviceProvider.currency">{{'egp' | translate}}</p>
+          </div>
+          <!-- <div class="flex aic jcsb gap-x-1 px-3 mt-1">
+            <rate [rate]="serviceProvider.rate"/>
+            <availability [isAvailable]="serviceProvider.isAvailable"/>
+          </div> -->
+
+          <!-- <div class="send-message w-100 px-3 mt-1">
+            <button mat-raised-button color="primary" class="w-100 rounded-4 py-2" (click)="$event.stopImmediatePropagation()">
+              <div class="flex-center gap-x-1">
+                <div class="img"><img src="assets/images/icons/chat.svg" alt="chat icon"></div>
+                <p>{{'send_message' | translate}}</p>
+              </div>
+            </button>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <div *ngIf="serviceProviders().length == 0 || loading()" class="a-center">
+      <not-found *ngIf="serviceProviders().length == 0 && !loading()"/>
+      <loading *ngIf="loading()"/>
+    </div>
+  </div>
+</layout>

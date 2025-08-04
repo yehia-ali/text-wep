@@ -1,0 +1,12 @@
+<div class="filters flex aic jcsb gap-x-4">
+  <div class="flex-wrap aic gap-x-1 gap-y-1">
+    <search (valueChanged)="service.search.next($event); filter()" [key]="service.search.value"/>
+    <departments (valueChanged)="service.department.next($event); filter()" [selectedDepartment]="service.department.value"/>
+    <assignee-state (valueChanged)="service.assigneeState.next($event); filter()" [selectedValue]="service.assigneeState.value"/>
+    <date-filter (valueChanged)="service.dateFrom.next($event); service.dateTo.next(''); filter()" [selectedValue]="service.dateFrom.value" key="start_date"/>
+    <date-filter (valueChanged)="service.dateTo.next($event); filter()" [minDate]="service.dateFrom.value" [selectedValue]="service.dateTo.value" key="end_date"/>
+  </div>
+  <div class="end flex aic gap-x-2 pt-75">
+    <button mat-raised-button class="bg-success export" (click)="export.emit()">{{'export' | translate}}</button>
+  </div>
+</div>

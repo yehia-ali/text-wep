@@ -1,0 +1,45 @@
+<div
+  class="card flex app-dropdown relative flex aic {{
+    startDropDown ? 'start-drop-down' : 'end-drop-down'
+  }}"
+  [ngClass]="{ 'app-dropdown-small': small, 'app-dropdown-icon': icon }"
+>
+  <ng-container *ngIf="!tree">
+    <p-dropdown
+      [options]="list"
+      [(ngModel)]="selectedValue"
+      [filter]="true"
+      optionLabel="name"
+      filterBy="name"
+      (ngModelChange)="onChange($event)"
+      [placeholder]="labelTitle | translate"
+    ></p-dropdown>
+    <i class="bx bx-category absolute dropdown-icon"></i>
+  </ng-container>
+
+  <ng-container *ngIf="tree">
+    <p-treeSelect
+      class="w-full md:w-20rem"
+      containerStyleClass="w-full"
+      [(ngModel)]="selectedNodes"
+      [options]="treeList"
+      [metaKeySelection]="false"
+      (ngModelChange)="onChange($event)"
+      selectionMode="checkbox"
+      placeholder="{{ labelTitle | translate }}"
+      [filter]="true"
+      [metaKeySelection]="false"
+    >
+      <ng-template let-values pTemplate="value">
+        <span *ngIf="selectedNodes.length == 0">{{ labelTitle | translate }}</span>
+        <span *ngIf="values?.length > 0 && values?.length <= 1">
+          {{ displaySelectedValues(values) }}
+        </span>
+        <span *ngIf="selectedNodes.length > 1">
+          {{ ('selected' | translate) + ' ( ' + selectedNodes.length + ' ) ' }}
+        </span>
+      </ng-template>
+    </p-treeSelect>
+    <i class="bx bx-category absolute dropdown-icon"></i>
+  </ng-container>
+</div>

@@ -1,0 +1,22 @@
+<div class="container px-2 py-1 h-70vh mx-0">
+    <loading *ngIf="loading"></loading>
+    <div *ngIf="!loading" class="content-container">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-2 simibold black">{{'manager_approval' | translate}}</h2>
+            <form [formGroup]="form" [dir]="currentLanguage === 'ar' ? 'rtl' : 'ltr'">
+                <div class="radio-container mb-1">
+                    <mat-radio-group formControlName="autoTaskApprove" class="custom-radio-group" (change)="setTasksConfig()" color="primary">
+                        <mat-radio-button [value]="false" class="radio-option">
+                            <span class="radio-label">{{'allow_manager_to_approve_every_task' | translate}}</span>
+                        </mat-radio-button>
+                        <mat-radio-button [value]="true" class="radio-option">
+                            <span class="radio-label">{{'add_task_without_manager_approval' | translate}}</span>
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<ng-container *ngIf="details">
+  <div class="task-progress bg-gray p-2 mb-2 rounded" [ngClass]="{'completed': details.percentage == 100}">
+    <div class="flex aic jcsb px-75">
+      <h4>{{ 'task_progress' | translate }} <span class="ml-1">{{ details.percentage || 0 | arabicNumbers }}%</span></h4>
+      <div class="img pointer" *ngIf="(details.taskStateId == 3 || (details.taskStateId == 2 && !details.rate)) && (details.isAssignee || creator)">
+        <i class="bx bx-edit fs-25 warning" *ngIf="disabled" (click)="disabled = false"></i>
+        <i class='bx bx-check fs-25 primary' *ngIf="!disabled && ((details.percentage < 100 && !details.logsFlag) || details.logsFlag)" (click)="progressValue()"></i>
+      </div>
+    </div>
+    <div class="slider relative">
+      <div class="w-100 flex-center">
+        <mat-slider [disabled]="disabled" [max]="details.max" dir="ltr">
+          <input matSliderThumb [(ngModel)]="details.percentage" #slider (change)="openActualDialog()">
+        </mat-slider>
+      </div>
+
+      <p class="max rounded bg-gray" *ngIf="details.percentage == 99 && (details.creator && !details.isAssignee) && !disabled">
+        {{ 'max_percentage' | translate }}  {{ 99 | arabicNumbers }}%
+      </p>
+    </div>
+  </div>
+</ng-container>

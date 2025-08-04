@@ -1,0 +1,99 @@
+<div class="manage-subscription" dir="auto">
+  <h3>{{ "manage_subscription" | translate }}</h3>
+
+  <div mat-dialog-content="mat-dialog-content">
+    <div class="plan">
+      <p>{{ 'select_your_plan' | translate }}</p>
+      <div class="plans border border-primary flex aic jcsb rounded mt-50" *ngIf="packages">
+        <div class="plan w-100 text-center px-2 py-1 pointer flex-auto" (click)="selectPlan(_package)" *ngFor="let _package of packages; let i = index"
+             [ngClass]="{'border-right border-left border-color': i == 1, 'bg-primary white': _package.id == selectedPackage}">
+          <p class="fs-17 mb-25" [ngClass]="{'primary': _package.id != selectedPackage}">{{ _package.name | translate }}
+          </p>
+          <p class="fs-14">
+            {{ _package.pricePerUser | arabicNumbers }}<span>{{
+              _package.currencyId == 1 ? ('EGP' | translate) :
+                '$'
+            }}</span>
+            /
+            <span *ngIf="_package.limitedNumberOfUser">
+              {{ _package.limitedNumberOfUser | arabicNumbers }}</span>
+            <span>
+              {{ 'per_user' | translate }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- number of users -->
+    <div class="flex aic jcsb mt-3">
+      <div class="flex aic gap-x-1">
+        <div class="img rounded-50 bg-light-primary-2 flex-center">
+          <img src="assets/images/icons/people.svg" alt="" height="16" width="16">
+        </div>
+        <div>
+          <p class="primary">{{ 'number_of_users' | translate }}</p>
+          <p class="muted fs-14" *ngIf="!packageChanged && numberOfEmployees > _package?.totalNumberOfUser">
+            {{ 'number_of_added_users' | translate }}: <span class="primary">{{
+              numberOfEmployees -
+              _package.totalNumberOfUser
+            }} {{ 'user_payment' | translate }}</span></p>
+        </div>
+      </div>
+      <div class="border rounded flex aic jcsb">
+        <div (click)="selectedPackage != 1 && minus()" class="minus border-right py-1 px-2 pointer">-</div>
+        <div class="number px-5">{{ numberOfEmployees | arabicNumbers }}</div>
+        <div (click)="selectedPackage != 1 && add()" class="add border-left py-1 px-2 pointer">+</div>
+      </div>
+    </div>
+    <!-- expiry date -->
+    <div class="flex aic jcsb mt-2">
+      <div class="flex aic gap-x-1">
+        <div class="img rounded-50 bg-light-primary-2 flex-center">
+          <img src="assets/images/icons/expiry-date.svg" alt="" height="16" width="16">
+        </div>
+        <p class="primary">{{ 'expiry_date' | translate }}</p>
+      </div>
+      <p class="bold">{{ expiryDate ? (expiryDate | arabicDate) : ('unlimited' | translate) }}</p>
+    </div>
+    <!-- cost -->
+    <div class="flex aic jcsb mt-2">
+      <div class="flex aic gap-x-1">
+        <div class="img rounded-50 bg-light-primary-2 flex-center">
+          <img src="assets/images/icons/cost.svg" alt="" height="16" width="16">
+        </div>
+        <p class="primary">{{ 'total_cost' | translate }}</p>
+      </div>
+      <div class="end">
+        <p>{{ (total | arabicNumbers) }}$</p>
+        <!-- <p>{{(total * 31 | number:'1.0-0')}} {{'EGP' | translate}}</p> -->
+      </div>
+    </div>
+    <!--  caution  -->
+    <div class="caution mt-1" *ngIf="numberOfEmployees < _package?.activeUsers">
+      <h3 class="danger flex aic gap-x-1">
+        <img src="assets/images/icons/caution.svg" alt="" height="24" width="24">
+        <span>{{ 'caution' | translate }}</span>
+      </h3>
+      <p class="bold mt-75">{{ 'caution_message' | translate }}</p>
+    </div>
+  </div>
+
+  <div mat-dialog-actions [align]="'end'" class="mt-2">
+    <div class="flex mb-2 gap-x-1">
+      <div class="submit-btn fs-14">
+
+        <button mat-raised-button color="primary" class="w-100 flex-auto white rounded bg-primary px-5" *ngIf="numberOfEmployees >= _package?.activeUsers"
+                [disabled]="loading || (_package?.paymentPackageId == 1 && selectedPackage == 1) || (_package.totalNumberOfUser >= numberOfEmployees && !packageChanged)"
+                (click)="pay()">
+          <submit-button [text]="selectedPackage != 1 ? ('pay' | translate) : ('change' | translate)" [loading]="loading"/>
+        </button>
+
+        <button mat-raised-button color="primary" class="w-100 flex-auto rounded bg-primary px-5" *ngIf="numberOfEmployees < _package?.activeUsers"
+                [disabled]="loading || (_package?.paymentPackageId == 1 && selectedPackage == 1)" (click)="deactivate()">
+          <submit-button [text]="'deactivate'" [loading]="loading"/>
+        </button>
+
+      </div>
+      <button mat-dialog-close="" class="flex-auto dark-color clickable-btn rounded px-4 cancel-btn">{{ 'cancel' | translate }}</button>
+    </div>
+  </div>
+</div>

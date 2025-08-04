@@ -1,0 +1,39 @@
+<div class="filters flex aic jcsb gap-x-4">
+  <div class="flex-wrap aic gap-x-1 gap-y-1">
+    <search (valueChanged)="service.search.next($event); filter()" [key]="service.search.value"/>
+    <task-status (valueChanged)="service.taskStatus.next($event); filter()" [selectedValue]="service.taskStatus.value"/>
+    <task-type (valueChanged)="service.taskType.next($event); filter()" [selectedValue]="service.taskType.value"/>
+    <priority-filter (valueChanged)="service.priority.next($event); filter()" *ngIf="visibleFilters.priority" [selectedValue]="service.priority.value"/>
+    <is-rated (valueChanged)="service.rated.next($event); filter()" *ngIf="visibleFilters.rate" [selectedValue]="service.rated.value"/>
+    <is-overdue (valueChanged)="service.isOverdue.next($event); filter()" *ngIf="visibleFilters.overdue" [selectedValue]="service.isOverdue.value"/>
+    <projects (valueChanged)="service.project.next($event); filter()" *ngIf="visibleFilters.project" [selectedValue]="service.project.value"/>
+    <date-filter (valueChanged)="service.dateFrom.next($event); service.dateTo.next(''); filter()" *ngIf="visibleFilters.date" [selectedValue]="service.dateFrom.value" key="start_date"/>
+    <date-filter (valueChanged)="service.dateTo.next($event); filter()" *ngIf="visibleFilters.date" [minDate]="service.dateFrom.value" [selectedValue]="service.dateTo.value"
+                 key="end_date"/>
+    <div class="no-label">
+      <select-user (getSelectedUsers)="service.creators.next($event); filter()" text="creators" [selectedUsers]="service.creators.value" />
+    </div>
+    <div class="no-label">
+      <button class="btn white bg-primary px-2 rounded fs-14 py-75 shadow" (click)="createTask()">{{'create_task' | translate}}</button>
+    </div>
+  </div>
+  <div class="end flex aic gap-x-2 pt-75">
+    <task-vote-sort (sortChanged)="service.orderKey.next($event); filter()" [selectedValue]="service.orderKey.value"></task-vote-sort>
+    <div (click)="$event.stopImmediatePropagation(); showFilters = true" class="img relative pointer">
+      <img alt="" class="convert-image-color" src="assets/images/icons/filters.svg">
+      <div (click)="$event.stopImmediatePropagation()" *ngIf="showFilters" class="filters-menu bg-white p-1 rounded"
+           magicScroll="">
+        <div *ngFor="let filter of filtersArray" class="menu-item">
+          <mat-checkbox
+            (change)="unCheck(filter)"
+            [checked]="visibleFilters[filter]"
+            [indeterminate]="false"
+            [labelPosition]="'after'"
+            color="primary">
+            {{filter | translate}}
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

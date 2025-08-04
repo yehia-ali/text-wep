@@ -1,0 +1,10 @@
+<layout>
+  <div class="configuration h-100 p-2">
+    <mat-slide-toggle labelPosition="before" color="primary" [(ngModel)]="leaveSystem" (ngModelChange)="updateLeaveSystem($event)">
+      <div class="flex gap-x-1">
+        <img src="assets/images/icons/eye.svg" alt="eye icon">
+        <p class="mr-2">{{ 'enable_leaves_module' | translate }}</p>
+      </div>
+    </mat-slide-toggle>
+  </div>
+</layout>

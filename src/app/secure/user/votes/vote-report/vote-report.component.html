@@ -1,0 +1,30 @@
+<layout>
+  <div class="h-100 relative">
+    <div *ngIf="report$ | async as report; else loadingBlock" class="vote-report">
+      <div class="top-section py-2 px-3 flex aic jcsb gap-x-2 border-bottom bg-white">
+        <div class="start auto flex aic gap-x-1">
+          <priority [priority]="report.priority" [size]="20"></priority>
+          <h3>{{report.title}}</h3>
+        </div>
+      </div>
+
+      <div class="content py-2 px-3 relative" magicScroll="">
+        <div *ngFor="let question of report.voteFormQuestions; let i = index" class="question p-2">
+          <h3 class="mb-2">{{i + 1 | arabicNumbers}}. {{question.title}}</h3>
+
+          <ng-container *ngIf="question.type == 1">
+            <single-answer [anonymous]="report.isAnonymous" [question]="question"></single-answer>
+          </ng-container>
+
+          <ng-container *ngIf="question.type == 2">
+            <multi-answer [anonymous]="report.isAnonymous" [answers]="question.voteFormQuestionChoices"></multi-answer>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #loadingBlock>
+      <loading/>
+    </ng-template>
+  </div>
+</layout>

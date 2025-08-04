@@ -1,0 +1,30 @@
+<div class="last-message muted fs-13 flex aic">
+  <!--   sender   -->
+  <p *ngIf="chat.lastMessage.senderId == currentUserId"
+     [ngClass]="{'black': notSeen}"> {{'you' | translate}}</p>
+  <p
+    [ngClass]="{'black': notSeen}"
+    *ngIf="chat.lastMessage.senderId != currentUserId"
+    [matTooltip]="chat.lastMessage.senderName && chat.lastMessage.senderName.length > 10 ? chat.lastMessage.senderName : ''">
+    {{chat.lastMessage.senderName | slice:0:10}}
+    <span *ngIf="chat.lastMessage.senderName && chat.lastMessage.senderName.length > 10">...</span>
+  </p>
+  <span class="fs-18 ml-25 mr-25"
+        [ngClass]="{'black': notSeen}"
+        *ngIf="chat.lastMessage.senderName">:</span>
+  <!--   Message   -->
+  <p [ngClass]="{'black': notSeen}"
+     *ngIf="chat.lastMessage.messageType != 'text' && chat.lastMessage.messageType != 'server' && !chat.lastMessage.isDeleted">
+    {{'attachment' | translate}}
+  </p>
+  <p
+    *ngIf="chat.lastMessage.isDeleted && chat.lastMessage.senderId == currentUserId">{{'you_deleted_message' | translate}}</p>
+  <p
+    *ngIf="chat.lastMessage.isDeleted && chat.lastMessage.senderId != currentUserId">{{'message_was_deleted' | translate}}</p>
+  <p
+    [ngClass]="{'black': notSeen}"
+    *ngIf="(chat.lastMessage.messageType == 'text' || chat.lastMessage.messageType == 'server') && !chat.lastMessage.isDeleted"
+    [matTooltip]="chat.lastMessage.text.length > 12 ? (chat.lastMessage.text | translate) : ''">{{chat.lastMessage.text | slice:0:20 | translate}}
+    <span *ngIf="chat.lastMessage.text && chat.lastMessage.text.length > 20">...</span>
+  </p>
+</div>

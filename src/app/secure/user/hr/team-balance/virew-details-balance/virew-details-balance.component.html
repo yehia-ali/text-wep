@@ -1,0 +1,80 @@
+<div  [dir]="currentLang == 'ar' ? 'rtl' : 'ltr'">
+    <div class="d-flex align-items-center justify-content-between gap-x-2">
+        <h2 class="fs-18 black bold">{{'leave_details' | translate}}</h2>
+        <i class="bx bx-x fs-25 danger pointer p-1" (click)="closeDialog()"></i>
+    
+    </div>
+    <div class="row justify-content-between px-2 mt-2 mb-1">
+        <div class="col-md-6 d-flex align-items-center gap-x-2">
+            <app-img-title [userId]="data.data.userId" [imgSrc]="data.data.userPic" [title]="data.data.userName" [subTitle]="data.data.jobTitle"></app-img-title>
+          <div class="flex aic gap-x-1">
+            
+            <app-custom-year-picker 
+            [classes]="'w-12r'"
+            [showLabel]="false"
+            [selectedDate]="selectedYearSubject"
+            (onChange)="service.year.next($event); service.hasChanged.next(true)">
+          </app-custom-year-picker>
+          </div>
+        </div>
+      </div>
+      <div class="flex-grid-center my-1 gap-y-2 mx-1">
+            <div class="col-md-3" *ngFor="let item of statistics">
+            <div class="card bg-white relative leave-card rounded py-1">
+            <div class="card-body flex-grid-center mx-0">
+              <div class="col-sm-12 icon d-flex align-items-center gap-x-1">
+                <div class="image-container" [style.background-color]="item.background">
+                  <img src="assets/images/leave/{{item.icon}}" alt="">
+                </div>
+                <div class="d-flex flex-column">
+                  <h4 class="bold fs-40 black line-height-35">{{ item.value }}</h4>
+                  <p class="fs-16">{{ item.title | translate }}</p>
+        
+                </div>
+      
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mx-2 mb-2">
+        <div class="table-container">     
+          <table [ngClass]="{'h-100': requests.length == 0 || loading}" class="table table-bordered w-100  relative " >
+          <thead class="bg-gray border-bottom">
+          <tr>
+              <th style="width: 32.5%;" class="text-left">{{ 'leaves_type' | translate }}</th>
+              <th style="width: 10%;" class="text-left">{{ 'leave_days' | translate }}</th>
+              <th style="width: 12.5%;" class="text-left">{{ 'start_date' | translate }}</th>
+              <th style="width: 12.5%;" class="text-left">{{ 'end_date' | translate }}</th>
+              <th style="width: 32.5%;" class="text-left">{{ 'leave_status' | translate }}</th>
+          </tr>
+          </thead>
+          <tbody *ngIf="requests.length > 0 && !loading">
+          <tr *ngFor="let item of requests; trackBy: trackBy"
+              class="border-bottom pointer">
+              <td class="text-left">{{ item.leaves_type }}</td>
+              <td class="text-left">{{ item.leave_days }}</td>
+              <td class="text-left">{{ item.start_date | arabicDate }}</td>
+              <td class="text-left">{{ item.end_date | arabicDate}}</td>
+              <td class="text-left">
+              <ng-container *ngIf="item.leaveStatus == 0">
+                  <span class="rounded py-25 px-1 fs-14 bg-pending">{{ 'pending' | translate }}</span>
+              </ng-container>
+              <ng-container *ngIf="item.leaveStatus == 1">
+                  <span class="rounded py-25 px-1 fs-14 bg-approved">{{ 'approved' | translate }}</span>
+              </ng-container>
+              <ng-container *ngIf="item.leaveStatus == 2">
+                  <span class="rounded py-25 px-1 fs-14 bg-rejected">{{ 'rejected' | translate }}</span>
+              </ng-container>
+              <ng-container *ngIf="item.leaveStatus == 3">
+                  <span class="rounded py-25 px-1 fs-14 bg-canceled">{{ 'canceled' | translate }}</span>
+              </ng-container>
+              </td>
+          </tr>
+          </tbody>
+          <not-found *ngIf="requests.length == 0 && !loading" class="a-center"></not-found>
+          <loading *ngIf="loading"></loading>
+          </table>
+      </div>
+    </div>
+</div>

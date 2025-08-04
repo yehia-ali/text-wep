@@ -1,0 +1,24 @@
+<div class="leaves h-100">
+  <table [ngClass]="{'h-100': leaveTypes.length == 0 || loading}" class="table w-100 relative">
+    <thead class="bg-gray border-bottom">
+    <tr>
+      <th class="text-left">{{ 'type' | translate }}</th>
+      <th>{{ 'paid' | translate }}</th>
+      <th>{{ 'required_approval' | translate }}</th>
+      <th>{{ 'days_limit_per_request' | translate }}</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody *ngIf="leaveTypes.length > 0 && !loading">
+    <tr *ngFor="let item of leaveTypes; trackBy: trackBy" class="border-bottom pointer">
+      <td class="text-left">{{ item.name }}</td>
+      <td>{{ item.isPaid ? ('yes' | translate) : ('no' | translate) }}</td>
+      <td>{{ item.needApprove ? ('yes' | translate) : ('no' | translate) }}</td>
+      <td>{{ item.requestLimit }}</td>
+    </tr>
+    </tbody>
+    <not-found *ngIf="leaveTypes.length == 0 && !loading" class="a-center"></not-found>
+    <loading *ngIf="loading"></loading>
+  </table>
+
+</div>

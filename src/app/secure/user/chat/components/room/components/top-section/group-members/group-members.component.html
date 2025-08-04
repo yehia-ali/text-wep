@@ -1,0 +1,23 @@
+<div class="img pointer" [matTooltip]="'group_members' | translate" (click)="getMembers()">
+  <img src="assets/images/main-sidebar/users.svg" alt="" class="convert-image-color" width="25">
+</div>
+
+
+<info-sidebar [open]="open">
+  <ng-container header>
+    <h2 class="black">{{'group_members'  | translate}}</h2>
+  </ng-container>
+
+  <ng-container content>
+    <div class="p-2">
+      <div class="reporter bg-gray rounded mb-1 p-1 flex aic" *ngFor="let user of users">
+        <div class="start">
+          <user-image [img]="user.avatar" [id]="+user.id" [dim]="35"></user-image>
+        </div>
+        <div class="end ml-1">
+          <p class="line-height">{{user.name}}</p>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</info-sidebar>

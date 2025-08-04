@@ -1,0 +1,19 @@
+.start {
+  transform: translateX(4rem)
+}
+
+.progress {
+  width: 220px;
+  height: 1rem;
+  overflow: hidden;
+
+  .fill {
+    height: 100%;
+    opacity: 1;
+  }
+}
+
+.end {
+  position: relative;
+  top: 7.5px;
+}

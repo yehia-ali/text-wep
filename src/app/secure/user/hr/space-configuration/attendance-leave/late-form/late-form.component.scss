@@ -1,0 +1,44 @@
+.late-form {
+  .btn-circle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background: #7B55D3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .input-time {
+    width: 32px;
+    border-radius: 2px;
+    margin: 0 5px;
+    padding: 4px 0;
+    text-align: center;
+    border: 0.5px solid var(--divder, #9D9D9D66);  }
+
+  .minutes-container {
+    padding: 8px;
+    border-radius: 4px;
+  }
+
+  .late-select {
+    background: #f5f5f5;
+    border-radius: 4px;
+  }
+
+  .deduction-value {
+    padding: 8px;
+  }
+
+  .value-container {
+    margin-top: 8px;
+  }
+}

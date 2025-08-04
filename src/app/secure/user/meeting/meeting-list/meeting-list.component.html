@@ -1,0 +1,102 @@
+<div class="mb-2">
+  <schedule-meeting-card/>
+</div>
+
+<layout-with-filters (pageChange)="service.page.next($event); service.hasChanged.next(true)" [meta]="meta" [hasCard]="true">
+  <ng-container filters>
+    <meeting-filters/>
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': inbox.length == 0 || loading}" class="table w-100 relative">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">{{'title' | translate}}</th>
+        <th class="text-left">{{'creator' | translate}}</th>
+        <th class="text-left">{{'date' | translate}}</th>
+        <th>{{'remaining_time' | translate}}</th>
+        <th>{{'overdue' | translate}}</th>
+        <th>{{'repeat' | translate}}</th>
+        <th>{{'status' | translate}}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="inbox.length > 0 && !loading">
+      <tr *ngFor="let task of inbox | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy" class="border-bottom pointer"
+          routerLink="details/{{task.taskId}}">
+
+        <!--        &lt;!&ndash; id &ndash;&gt;-->
+        <!--        <td>-->
+        <!--          <p class="fs-13">{{task.taskId}}</p>-->
+        <!--        </td>-->
+
+        <!--    title    -->
+        <td>
+          <div class="flex aic bold">
+            <priority [priority]="task.priority" class="mr-1"></priority>
+            <!-- title -->
+            <span *ngIf="task.title.length! <= 90" class="text-left fs-13">{{task.title}}</span>
+
+            <!-- trimmed title -->
+            <span *ngIf="task.title.length! > 90" [matTooltip]="task.title" class="text-left fs-13">{{task.title | slice:0:90}}...</span>
+          </div>
+        </td>
+
+
+        <!-- creator -->
+        <td class="text-left">
+          <div class="flex aic gap-x-1">
+            <user-image (click)="$event.stopImmediatePropagation()" [id]="task.creatorId" [img]="task.creatorProfilePicture" [matTooltip]="task.creatorName"></user-image>
+            <div>
+              <p class="fs-14">
+                <!-- title -->
+                <span *ngIf="task.creatorName.length! <= 12" class="text-left">{{task.creatorName}}</span>
+
+                <!-- trimmed creatorName -->
+                <span *ngIf="task.creatorName.length! > 12" [matTooltip]="task.creatorName" class="text-left">{{task.creatorName | slice:0:12}}...</span>
+              </p>
+              <p class="fs-12 muted">{{task.creatorjob}}</p>
+            </div>
+          </div>
+        </td>
+
+        <!-- due date -->
+        <td class="text-left">
+          <span [ngClass]="{'danger': task.isOverDue}">{{task?.endDate | arabicDate:'withTime'}}</span>
+        </td>
+
+        <!-- remaining -->
+        <td>
+          <div class="flex-center">
+            <time-left *ngIf="task.timeLeft && task.taskStateId != 2 && task.taskStateId != 6" [bullet]="task.bullet" [label]="task.timeLeftLabel" [timeLeft]="task.timeLeft"></time-left>
+            <span *ngIf="!task.timeLeft || task.taskStateId == 2 || task.taskStateId == 6">-</span>
+          </div>
+        </td>
+
+
+        <!-- overdue -->
+        <td>
+          <div class="flex-center">
+            <task-overdue [endedTaskRepeatedCounter]="task.endedTaskRepeatedCounter"></task-overdue>
+            <span *ngIf="!task.endedTaskRepeatedCounter">-</span>
+          </div>
+        </td>
+
+        <!-- repeat -->
+        <td>
+          <repetition [isRepeated]="task.isRepeated || (task.parentTaskGroupId && !task.isSubTasks)" [repeatedPeriod]="task.taskRepeatedPeriod"></repetition>
+        </td>
+
+        <!-- state -->
+        <td>
+          <div class="flex-center">
+            <task-status [state]="task.taskStateId"></task-status>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+      <not-found *ngIf="inbox.length == 0 && !loading" class="a-center"></not-found>
+      <loading *ngIf="loading"></loading>
+    </table>
+
+  </ng-container>
+</layout-with-filters>

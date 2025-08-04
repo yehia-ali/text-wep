@@ -1,0 +1,21 @@
+.task-requests {
+  .requests {
+    min-width: 90rem;
+  }
+
+  .task-request {
+    &:hover {
+      background-color: rgba(black, .05);
+    }
+  }
+
+  .forward img {
+    filter: brightness(0) invert(1) !important;
+    width: 1.9rem;
+  }
+}
+
+.flex-30 {
+  flex: 1 1 30%;
+  max-width: 30%;
+}

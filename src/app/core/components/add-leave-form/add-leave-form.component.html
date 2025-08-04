@@ -1,0 +1,100 @@
+<div class="add-leave" dir="auto">
+  <h2 class="black fs-18">{{ (!data ? 'add_leave_type':'update_leave_type') | translate }}</h2>
+  <div mat-dialog-content>
+    <div class="row mb-2">
+      <div class="col-lg-6">
+        <label class="custom-radio-box">
+          <input
+            primary
+            type="radio"
+            [(ngModel)]="leaveType"
+            [value]="true"
+            name="leaveType"
+            [checked]="true"   
+            (change)="onLeaveTypeChange()"
+          />
+          <span class="radio-label d-flex flex-column align-items-start">
+            <p class="text-center fs-14 medium-bold black">{{ 'general_leave' | translate }}</p>
+            <p class="desc fs-10">{{ 'general_leave_desc' | translate }}</p>
+          </span>
+        </label>
+      </div>
+      <div class="col-lg-6">
+        <label class="custom-radio-box">
+          <input
+            type="radio"
+            name="leaveType"
+            [(ngModel)]="leaveType"
+            [value]="false"
+            (change)="onLeaveTypeChange()"
+          />
+          <span class="radio-label d-flex flex-column align-items-start">
+            <p class="text-center fs-14 medium-bold black">{{ 'special_leave' | translate }}</p>
+            <p class="desc fs-10">{{ 'special_leave_desc' | translate }}</p>
+          </span>
+        </label>
+      </div>
+    </div>
+    <form [formGroup]="form">
+      <div class="row gap-y-2">
+  
+        <div class="col-lg-6 ar-name">
+          <input-label key="arName" [control]="f['nameAr']" [showIcon]="true" [icon]="'assets/images/icons/text-block.svg'"/>
+          <input type="text" formControlName="nameAr" class="input" appArabicText [appArabicTextAllowSpaces]="true" [appArabicTextAllowNumbers]="false">
+          <input-error [control]="f['nameAr']"/>
+        </div>
+        <div class="col-lg-6 en-name">
+          <input-label key="english_name" [control]="f['nameEn']" [showIcon]="true" [icon]="'assets/images/icons/text-block.svg'"/>
+          <input type="text" formControlName="nameEn" class="input" appEnglishText [appEnglishTextAllowSpaces]="true" [appEnglishTextAllowNumbers]="false" [appEnglishTextAllowSpecialChars]="false">
+          <input-error [control]="f['nameEn']"/>
+        </div>
+        <div class="col-lg-6">
+          <input-label key="paid" [control]="f['isPaid']" [showIcon]="true" [icon]="'assets/images/icons/money-bold.svg'"/>
+          <ng-select [closeOnSelect]="true" formControlName="isPaid" [clearable]="false" [items]="[{name: translate.instant('yes'), id: true}, {name: translate.instant('no'), id: false}]"
+                     [multiple]="false" appendTo="body" bindLabel="name" bindValue="id">
+          </ng-select>
+        </div>
+
+        <div class="col-lg-6">          
+          <input-label key="require_approval" [control]="f['needApprove']" [showIcon]="true" [icon]="'assets/images/icons/right.svg'"/>
+          <ng-select [closeOnSelect]="true" formControlName="needApprove" [clearable]="false" [items]="[{name: translate.instant('yes'), id: true}, {name: translate.instant('no'), id: false}]"
+                     [multiple]="false" appendTo="body" bindLabel="name" bindValue="id">
+          </ng-select>
+        </div>
+        <div class="col-lg-6">
+          <input-label key="max_days_number_in_year" [control]="f['automaticAssignDaysCount']" [showIcon]="true" [icon]="'assets/images/icons/number.svg'"/>
+          <div class="flex aic position-relative">
+            <input type="number" min="0" formControlName="automaticAssignDaysCount" class="input">
+            <span class="input-suffix">{{'day' | translate}}</span>
+          </div>
+          <input-error [control]="f['automaticAssignDaysCount']"/>
+        </div>
+
+
+        <div class="col-lg-6">
+          <div class="d-flex justify-content-between align-items-center">
+            <input-label key="max_days_number" [control]="f['requestLimit']" [showIcon]="true" [icon]="'assets/images/icons/number.svg'"/>
+            <span class="bx bx-info-circle fs-16" matTooltip="{{'max_days_number_in_year' | translate}}"></span>
+  
+          </div>
+          <div class="flex aic position-relative">
+            <input type="number" min="0" formControlName="requestLimit" class="input">
+            <span class="input-suffix">{{'day' | translate}}</span>
+          </div>
+          <input-error [control]="f['requestLimit']"/>
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex">
+      <button mat-raised-button color="primary" class="px-2 mr-2 fs-15 flex-50" (click)="submit()">
+        <submit-button text="{{(!data ? 'add':'update') }}" [loading]="loading"></submit-button>
+      </button>
+      <button class="px-2 flex-50 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>{{ 'cancel' | translate }}</button>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,21 @@
+<div class="week-view-calendar">
+  <div class="flex aic jcsb mx-5 mb-1">
+    <div class="month fs-17 bold">{{ selectedDate | arabicDate:'short' }}</div>
+    <div class="bold">{{ selectedDate | arabicDate:'long'}}</div>
+  </div>
+  <div class="flex aic gap-x-2 w-100">
+    <button (click)="goToPreviousWeek()" class="clickable-btn line-height left">
+      <img src="assets/images/icons/chev-left.svg" alt="chev left icon" [ngClass]="{'disabled-img': isPreviousButtonDisabled}">
+    </button>
+    <div class="week-day" [ngClass]="{'pointer': day.getTime() > today}" *ngFor="let day of weekDays"
+      (click)="day.getTime() > today && selectDate(day);day.getTime() < today && cantSelect()">
+      <p class="fs-17 bold mb-1">{{ day | arabicDate:'weekDay' }}</p>
+      <p
+        [ngClass]="{'selected-date bg-primary rounded-50 white mx-auto': day.toString() == selectedDate.toString(), 'disabled-day muted' : day.getTime() < today, 'bold': day.getTime() > today}">
+        {{ day | arabicDate:'dayNumber' }}</p>
+    </div>
+    <button (click)="goToNextWeek()" class="clickable-btn line-height right">
+      <img src="assets/images/icons/chev-right.svg" alt="chev right icon">
+    </button>
+  </div>
+</div>

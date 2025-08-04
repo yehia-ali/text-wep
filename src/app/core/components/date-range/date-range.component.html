@@ -1,0 +1,34 @@
+  <div class="{{newFilter ? 'date-filter' : 'date-range-app'}} {{endDate || startDate ? 'selected-date-range' : ''}}">
+    <div class="" *ngIf="!hideLabel">
+      <filter-label [key]="label"></filter-label>
+    </div>
+    <div *ngIf="newFilter && endDate && startDate && (startDate == endDate)" class="fs-11 simibold primary ml-1">
+      {{(startDate | arabicDate) }}
+    </div>
+    <div *ngIf="newFilter && endDate && startDate && (startDate != endDate)" class="fs-11 simibold primary ml-1">
+      {{(startDate | arabicDate) + ' - ' + (endDate | arabicDate)}}
+    </div>
+    <mat-form-field appearance="fill" class="example-form-field {{width}}">
+      <!-- <mat-label class="fs-15">{{"date_range" | translate}}</mat-label> -->
+      <mat-date-range-input [max]="maxDate" [rangePicker]="rangePicker">
+        <input matStartDate placeholder="{{ ('from' | translate)}}" [(ngModel)]="startDate"/>
+        <input matEndDate placeholder="{{ ('to' | translate)}}" [(ngModel)]="endDate"/>
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #rangePicker>
+        <mat-date-range-picker-actions>
+          <div class="my-50">
+            <button mat-button matDateRangePickerCancel>
+              {{ "cancel" | translate }}
+            </button>
+            <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateChanged()">
+              {{ "apply" | translate }}
+            </button>
+          </div>
+        </mat-date-range-picker-actions>
+      </mat-date-range-picker>
+    </mat-form-field>
+
+  </div>
+
+

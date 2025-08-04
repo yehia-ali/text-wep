@@ -1,0 +1,52 @@
+<div class="py-1">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <div class="col-lg-3">
+      <search [newSearch]="true" (valueChanged)="search($event)"></search>
+    </div>
+    <div class="col-lg-3 text-right">
+      <a (click)="addbankAccount()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14">
+        {{'add_bank_account' | translate}}
+      </a>
+    </div>
+  </div>
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+
+    <div class="table-container mx-1" *ngIf="allBankAccounts.length > 0 && !loading">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">{{'country' | translate}}</th>
+            <th class="text-left py-1">{{'bank' | translate}}</th>
+            <th class="text-left py-1">{{'account_number' | translate}}</th>
+            <th class="text-left py-1">{{'branch' | translate}}</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of allBankAccounts" >
+            <td>{{item.countryName}}</td>
+            <td>{{item.bankName}}</td>
+            <td>{{item.accountNumber}}</td>
+            <td>{{item.bankBranchName }}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="img pointer" (click)="editbankAccount(item)">
+                <img src="assets/images/icons/edit1.svg" alt="edit icon">
+              </div>
+              <i (click)="deletebankAccount(item.id)" class="bx bx-trash danger fs-30 pointer"></i>
+            </div>
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="allBankAccounts.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>

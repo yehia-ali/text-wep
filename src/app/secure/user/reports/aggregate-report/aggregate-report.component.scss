@@ -1,0 +1,30 @@
+@use "src/assets/styles/vars" as *;
+
+table {
+  min-width: 175rem !important;
+}
+
+th, td {
+  font-size: 1.4rem !important;
+  border: 1px solid #e7e7e7 !important;
+}
+
+thead tr:nth-of-type(2) th:nth-child(1), thead tr:nth-of-type(2) th:nth-child(6) {
+  border-bottom: 2px solid #77DCD8 !important;
+}
+
+thead tr:nth-of-type(2) th:nth-child(2), thead tr:nth-of-type(2) th:nth-child(7) {
+  border-bottom: 2px solid $primary !important;
+}
+
+thead tr:nth-of-type(2) th:nth-child(3), thead tr:nth-of-type(2) th:nth-child(8) {
+  border-bottom: 2px solid $warning !important;
+}
+
+thead tr:nth-of-type(2) th:nth-child(4), thead tr:nth-of-type(2) th:nth-child(9) {
+  border-bottom: 2px solid $success !important;
+}
+
+thead tr:nth-of-type(2) th:nth-child(5), thead tr:nth-of-type(2) th:nth-child(10) {
+  border-bottom: 2px solid $danger !important;
+}

@@ -1,0 +1,171 @@
+<layout>
+  <div class="attendance p-2 h-100 relative" magicScroll="">
+    <div class="flex-grid aic mb-1 select-date">
+      <div class="col-lg-2 date-range relative ">
+        <label class="fs-11 bold">{{ 'date_range' | translate }}</label>
+        <mat-form-field appearance="fill" (click)="rangePicker.open()">
+          <mat-date-range-input [rangePicker]="rangePicker">
+            <input matStartDate placeholder="Start date" [(ngModel)]="startDate"/>
+            <input matEndDate placeholder="End date" [(ngModel)]="endDate"/>
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #rangePicker>
+            <mat-date-range-picker-actions>
+              <button mat-button matDateRangePickerCancel>{{ "cancel" | translate }}</button>
+              <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateChanged()">
+                {{ "apply" | translate }}
+              </button>
+            </mat-date-range-picker-actions>
+          </mat-date-range-picker>
+        </mat-form-field>
+
+      </div>
+      <div class="col-lg-2">
+        <div class="">
+          <label class="fs-11 bold">{{ 'team_members' | translate }}</label>
+          <ng-select class="w-100 custom-dropdown" [items]="teamMembers$ | async" [placeholder]="'select_user' | translate" [(ngModel)]="selectedUser"
+                     (ngModelChange)="userChanged()" bindLabel="name" bindValue="id" appendTo="body" [multiple]="false" [closeOnSelect]="true">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <attendance-card (statusChanged)="userChanged()"></attendance-card>
+      </div>
+
+    </div>
+
+    <div class="sticky">
+      <user-dashboard/>
+    </div>
+    <ng-container *ngIf="attendance$ | async as attendance">
+      <table [ngClass]="{'h-100': attendance.length == 0 || loading}" class="table w-100 relative">
+        <thead class="bg-gray border-bottom">
+        <tr>
+          <th class="text-left">{{ 'date' | translate }}</th>
+          <th>{{ 'check-in' | translate }}</th>
+          <th>{{ 'check-out' | translate }}</th>
+          <th>{{ 'total_hours' | translate }}</th>
+          <th>{{ 'notes' | translate }}</th>
+        </tr>
+        </thead>
+        <tbody *ngIf="attendance.length > 0 && !loading">
+        <tr *ngFor="let item of attendance | paginate: {itemsPerPage: 15, currentPage: 1, totalItems: 15}; trackBy: trackBy" class="border-bottom pointer">
+          <ng-container *ngIf="item.stauts != 4 && item.stauts != 3 && item.stauts != 2 && item.stauts != 1">
+            <td class="text-left">
+              <p class="flex"><span class="day-card text-center bold fs-12 mb-0 py-50 px-1 rounded white bg-primary">{{ item.day | arabicDate:'weekDay' }} {{ item.day | arabicDate:'dayNumber' }} </span></p>
+            </td>
+
+            <td >
+              <p class="fs-13" *ngIf="!!item.checkIn" [ngClass]="{'danger': item.checkIn.isLate}">{{ item.checkIn.time ? (item.checkIn.time | arabicTime) : '-' }}</p>
+              <p *ngIf="!item.checkIn">-</p>
+            </td>
+
+            <td >
+              <p class="fs-13" *ngIf="item.checkOut" [ngClass]="{'danger': item.checkOut.isLate}">{{ item.checkOut.time ? (item.checkOut.time | arabicTime) : '-' }}</p>
+              <p *ngIf="!item.checkOut">-</p>
+            </td>
+
+            <td >
+              <p class="fs-13" *ngIf="item.totalHours" [ngClass]="{'danger': !item.totalHours.isEqual}">{{ item.totalHours.time || '-' }}</p>
+              <p class="fs-13" *ngIf="!item.totalHours">-</p>
+            </td>
+            <td >
+              <p class="fs-13">-</p>
+            </td>
+          </ng-container>
+
+          <!-- holyDayes chekin -->
+          <ng-container *ngIf="item.checkIn && item.stauts == 2">
+            <td class="text-left">
+              <p class="flex"><span class="day-card text-center bold fs-12 mb-0 py-50 px-1 rounded white bg-primary">{{ item.day | arabicDate:'weekDay' }} {{ item.day | arabicDate:'dayNumber' }} </span></p>
+            </td>
+
+            <td >
+              <p class="fs-13" *ngIf="!!item.checkIn" [ngClass]="{'danger': item.checkIn.isLate}">{{ item.checkIn.time ? (item.checkIn.time | arabicTime) : '-' }}</p>
+              <p *ngIf="!item.checkIn">-</p>
+            </td>
+
+            <td >
+              <p class="fs-13" *ngIf="item.checkOut" [ngClass]="{'danger': item.checkOut.isLate}">{{ item.checkOut.time ? (item.checkOut.time | arabicTime) : '-' }}</p>
+              <p *ngIf="!item.checkOut">-</p>
+            </td>
+
+            <td >
+              <p class="fs-13" *ngIf="item.totalHours" [ngClass]="{'danger': !item.totalHours.isEqual}">{{ item.totalHours.time || '-' }}</p>
+              <p class="fs-13" *ngIf="!item.totalHours">-</p>
+            </td>
+
+            <td >
+              <p class="fs-13">{{item.reason}}</p>
+            </td>
+          </ng-container>
+           <!-- weekend chekin -->
+          <ng-container *ngIf="item.checkIn && item.stauts == 3">
+            <td class="text-left">
+              <p class="flex"><span class="day-card text-center bold fs-12 mb-0 py-50 px-1 rounded white bg-primary">{{ item.day | arabicDate:'weekDay' }} {{ item.day | arabicDate:'dayNumber' }} </span></p>
+            </td>
+
+            <td >
+              <p class="fs-13 warning" *ngIf="!!item.checkIn">{{ item.checkIn.time ? (item.checkIn.time | arabicTime) : '-' }}</p>
+              <p *ngIf="!item.checkIn">-</p>
+            </td>
+
+            <td >
+              <p class="fs-13 warning" *ngIf="item.checkOut" >{{ item.checkOut.time ? (item.checkOut.time | arabicTime) : '-' }}</p>
+              <p *ngIf="!item.checkOut">-</p>
+            </td>
+
+            <td >
+              <p class="fs-13 warning" *ngIf="item.totalHours">{{ item.totalHours.time || '-' }}</p>
+              <p class="fs-13" *ngIf="!item.totalHours">-</p>
+            </td>
+            <td >
+              <p class="fs-13 blue">{{'weekend_leave' | translate}}</p>
+            </td>
+          </ng-container>
+
+          <td *ngIf="item.stauts == 1" colspan="5" class="py-25">
+            <div class="flex-center gap-x-1 bg-light-primary white w-100 py-75 rounded">
+              <p class="flex"><span >{{ item.day | arabicDate:'weekDay' }} {{ item.day | arabicDate:'dayNumber' }} </span></p> |
+              <p>{{ item.reason | translate }}</p>
+            </div>
+          </td>
+
+          <td *ngIf="item.stauts == 2" colspan="5" class="py-25">
+            <div class="flex-center gap-x-1 bg-light-warning w-100 py-75 rounded">
+              <p class="flex"><span >{{ item.day | arabicDate:'weekDay' }} {{ item.day | arabicDate:'dayNumber' }} </span></p> |
+              <p>{{ item.reason | translate }}</p>
+            </div>
+          </td>
+
+          <td *ngIf="item.stauts == 3 && !item.checkIn" colspan="5" class="py-25">
+            <div class="flex-center gap-x-1 bg-light-blue w-100 py-75 rounded">
+              <p class="flex"><span >{{ item.day | arabicDate:'weekDay' }} {{ item.day | arabicDate:'dayNumber' }} </span></p> |
+              <p>{{ 'weekend' | translate }}</p>
+            </div>
+          </td>
+
+          <td *ngIf="item.stauts == 4" colspan="5" class="py-25">
+            <div class="flex-center gap-x-1 bg-light-danger w-100 py-75 rounded">
+              <img src="assets/images/attendance/close.svg" alt="close icon">
+              <p class="flex"><span >{{ item.day | arabicDate:'weekDay' }} {{ item.day | arabicDate:'dayNumber' }} </span></p> |
+              <p>{{ 'absent' | translate }}</p>
+            </div>
+          </td>
+          <td *ngIf="item.stauts == 7" colspan="5" class="py-25">
+            <div class="flex-center gap-x-1 bg-exceeded w-100 py-75 rounded">
+              <img src="assets/images/attendance/exceeded.svg" [alt]="'exceeded_lateness_limit'| translate">
+              <p class="flex"><span >{{ item.day | arabicDate:'weekDay' }} {{ item.day | arabicDate:'dayNumber' }} </span></p> |
+              <p>{{ 'exceeded_lateness_limit' | translate }}</p>
+            </div>
+          </td>
+
+        </tr>
+        </tbody>
+        <not-found *ngIf="attendance.length == 0 && !loading" class="a-center"></not-found>
+        <loading *ngIf="loading"></loading>
+      </table>
+    </ng-container>
+
+  </div>
+</layout>

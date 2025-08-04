@@ -1,0 +1,15 @@
+export interface CreatorReport {
+  departmentId: number,
+  departmentName: string,
+  id: number,
+  imageUrl: string,
+  jobTitle: string,
+  name: string,
+  parentRepeatedCount: number,
+  parentRepeatedPercentage: number,
+  repeatedCount: number,
+  repeatedPercentage: number,
+  totalCount: number,
+  unRepeatedCount: number,
+  unRepeatedPercentage: number,
+}

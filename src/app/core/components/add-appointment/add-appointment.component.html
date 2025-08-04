@@ -1,0 +1,65 @@
+<div class="add-appointment" dir="auto">
+  <h3>{{'add_appointment' | translate}}</h3>
+
+  <div mat-dialog-content class="pt-0">
+    <div class="month-view-calendar">
+      <table>
+        <thead>
+        <tr>
+          <th colspan="7" class="pb-3">
+            <div class="flex aic jcc gap-x-3">
+              <button (click)="previousMonth()" class="clickable-btn line-height left" [disabled]="disablePreviousMonth">
+                <img src="assets/images/icons/chev-left.svg" alt="chev left icon" class="convert-image-color" *ngIf="!disablePreviousMonth">
+                <img src="assets/images/icons/disabled-chev-left.svg" alt="chev right icon" class="convert-image-color" *ngIf="disablePreviousMonth">
+              </button>
+              <p class="current-date text-center"> {{ currentDate | arabicDate:'short' }}</p>
+              <button (click)="nextMonth()" class="clickable-btn line-height right">
+                <img src="assets/images/icons/chev-right.svg" alt="chev right icon">
+              </button>
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <th *ngFor="let day of ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']">{{ day | translate}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let week of monthData">
+          <td *ngFor="let day of week">
+            <div class="flex-column aic jcc">
+              <p class="pointer text-center" (click)="!day.isDisabledDay && selectDate(day); day.isDisabledDay && cantSelect()"
+                 [ngClass]="{'bg-primary white rounded-50 selected-day bold': day.isSelectedDay, 'muted': day.isDisabledDay, 'bold': !day.isDisabledDay}">
+                {{day.day | arabicNumbers}}</p>
+              <p class="dot bg-primary rounded-50 mt-25" *ngIf="day.isCurrentDay"></p>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="time mt-1">
+      <div class="flex-grid gap-y-1">
+        <div class="col-lg-6">
+          <input-label key="from" classes="bold"/>
+          <input [ngxTimepicker]="timeFrom" class="input bold fs-17" [(ngModel)]="from" readonly>
+          <ngx-material-timepicker #timeFrom [minutesGap]="5"></ngx-material-timepicker>
+        </div>
+        <div class="col-lg-6">
+          <input-label key="to" classes="bold"/>
+          <input [ngxTimepicker]="timeTo" class="input bold fs-17" [(ngModel)]="to" readonly [min]="from">
+          <ngx-material-timepicker #timeTo [minutesGap]="5"></ngx-material-timepicker>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <div class="flex aic gap-x-1">
+      <button mat-dialog-close="" mat-raised-button class="flex-auto dark-color rounded shadow-0 border border-dark">{{'cancel' | translate}}</button>
+      <button class="flex-auto rounded px-3" color="primary" mat-raised-button (click)="submit()" [disabled]="selectedDays.length == 0">
+        {{'save' |translate}}
+      </button>
+    </div>
+  </div>
+</div>

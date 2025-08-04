@@ -1,0 +1,29 @@
+export interface SessionDetails {
+    attendeeId: number;
+    attendeeImage: string;
+    attendeeJobTitle: string;
+    attendeeRate: any;
+    attendeeUserName: string;
+    consulaltantId: number;
+    consulaltantImage: string;
+    consulaltantJobTitle: string;
+    consulaltantUserName: string;
+    description: string;
+    endDate: string;
+    endTime: string;
+    id: number;
+    price: number;
+    remainingTime: string;
+    sessionAttendeesStatus: number;
+    sessionDateId: number;
+    startDate: string;
+    startTime: string;
+    title: string;
+    isConsultant: boolean;
+    isAttendee: boolean;
+    canRate: boolean;
+    userName: string;
+    userImage: string;
+    userJobTitle: string;
+    raiseIssue: boolean;
+}

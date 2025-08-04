@@ -1,0 +1,63 @@
+<layout-with-filters (pageChange)="service.page.next($event); service.hasChanged.next(true)" [meta]="meta">
+  <ng-container filters>
+    <div class="date-picker flex aic jcfe pt-1 gap-x-1">
+      <mat-form-field appearance="fill" class="example-form-field" (click)="rangePicker.open()">
+        <mat-label class="fs-15">{{ "date_range" | translate }}</mat-label>
+        <mat-date-range-input [rangePicker]="rangePicker">
+          <input matStartDate placeholder="Start date" [(ngModel)]="startDate"/>
+          <input matEndDate placeholder="End date" [(ngModel)]="endDate"/>
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #rangePicker>
+          <mat-date-range-picker-actions>
+            <button mat-button matDateRangePickerCancel>{{ "cancel" | translate }}</button>
+            <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateChanged()">
+              {{ "apply" | translate }}
+            </button>
+          </mat-date-range-picker-actions>
+        </mat-date-range-picker>
+      </mat-form-field>
+      <button mat-raised-button class="bg-primary white export" (click)="exportToExcel()">{{'export' | translate}}</button>
+    </div>
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': timesheet.length == 0 || loading}" class="table w-100 relative" id="team-timesheet">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left pl-5">{{ 'member' | translate }}</th>
+        <th>{{ 'logged_time' | translate }}</th>
+        <th>{{ 'required_time' | translate }}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="timesheet.length > 0 && !loading">
+      <tr *ngFor="let item of timesheet | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy ; let i = index"
+          class="border-bottom pointer" (click)="getUserTimeSheet(item.userId)">
+        <td class="pl-5">
+          <div class="flex aic gap-x-1">
+            <user-image [img]="item.userPic"/>
+            <div class="text-left">
+              <p>{{ item.userName }}</p>
+              <p class="muted">{{ item.userJobTitle }}</p>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="flex-center">
+            <div class="hours">
+              {{ Math.floor(item.totalHours || 0) | arabicNumbers }} {{ 'h' | translate }}
+            </div>
+            <div class="mx-50">:</div>
+            <div class="minutes">
+              {{ ((item.totalHours * 60) % 60) | arabicNumbers }} {{ 'm' | translate }}
+            </div>
+          </div>
+        </td>
+        <td>{{ Math.round(item.expectedHours || 0) | arabicNumbers }} {{ 'h' | translate }}</td>
+      </tr>
+      </tbody>
+      <not-found *ngIf="timesheet.length == 0 && !loading" class="a-center"></not-found>
+      <loading *ngIf="loading"></loading>
+    </table>
+  </ng-container>
+</layout-with-filters>

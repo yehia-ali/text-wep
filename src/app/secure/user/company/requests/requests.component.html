@@ -1,0 +1,24 @@
+<layout>
+  <div class="space-requests relative h-100" magicScroll="">
+    <ng-container *ngIf="requests.length > 0">
+      <div class="space-request flex aic jcsb p-2 border-bottom" *ngFor="let request of requests; trackBy: trackBy">
+        <div class="start flex aic gap-x-1">
+          <user-image [img]="request.imageUrl"></user-image>
+          <p>{{request.name}}</p>
+        </div>
+        <div class="end flex aic gap-x-2">
+          <div class="reject action bg-danger rounded-50 pointer flex-center" (click)="rejectSpaceRequest(request.id)" [matTooltip]="'reject' | translate">
+            <i class='bx bx-x fs-25'></i>
+          </div>
+          <div class="approve action bg-success rounded-50 pointer flex-center" (click)="approveSpaceRequest(request.id)" [matTooltip]="'approve' | translate">
+            <i class='bx bx-check fs-25'></i>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <not-found *ngIf="!loading && requests.length == 0"></not-found>
+    <loading *ngIf="loading"></loading>
+  </div>
+
+</layout>

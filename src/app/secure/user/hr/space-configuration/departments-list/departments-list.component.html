@@ -1,0 +1,54 @@
+
+<div class="py-1">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <!-- <div class="col-lg-3">
+      <search [newSearch]="true" (valueChanged)="search($event)"></search>
+    </div> -->
+    <div class="col-lg-12 text-right">
+      <a (click)="openDialog()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14">
+        {{'create_department' | translate}}
+      </a>
+    </div>
+  </div>
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+
+    <div class="table-container mx-1" *ngIf="departments.length > 0 && !loading">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">{{ 'department' | translate }}</th>
+            <th class="text-left py-1">{{ 'department_manager' | translate }}</th>
+            <th class="text-left py-1">{{ 'parent_department' | translate }}</th>
+            <th class="text-left py-1">
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of departments" >
+            <td class="text-left">{{ item.name }}</td>
+            <td class="text-left">
+              <app-img-title *ngIf="item.managerName" [imgSrc]="item.managerImageUrl" [title]="item.managerName"/>
+              <span *ngIf="!item.managerName">-</span>
+            </td>
+            <td class="text-left">{{ item.parentName || '-' }}</td>
+            <td class="text-left">
+              <div class="img pointer" (click)="updateDialog(item)">
+                <img src="assets/images/icons/edit1.svg" alt="edit icon">
+              </div>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="departments.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>
+

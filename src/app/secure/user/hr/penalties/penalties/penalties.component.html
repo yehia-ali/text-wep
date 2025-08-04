@@ -1,0 +1,133 @@
+<layout-with-filters
+  (pageChange)="service.page.next($event); service.hasChanged.next(true)"
+  [meta]="meta"
+>
+  <ng-container filters>
+    <div class="row align-items-center p-1">
+      <div class="col-lg-5 px-1">
+        <ng-select
+          (change)="
+            service.loading.next(true);
+            service.penaltyTypeId.next($event);
+            service.hasChanged.next(true)
+          "
+          [items]="penaltyTypes"
+          [bindLabel]="currentLang === 'ar' ? 'nameAr' : 'name'"
+          bindValue="id"
+          [placeholder]="'choose_a_penalty' | translate"
+          [clearSearchOnAdd]="true"
+        >
+        </ng-select>
+      </div>
+      <div class="col-lg-4 d-flex gap-x-1 px-0">
+        <search
+          [hideLabel]="true"
+          [width]="'w-20r'"
+          [classes]="'py-1  pr-1 fs-10'"
+          [placeholder]="'employee_name_or_code'"
+          [key]="service.search.value"
+          (valueChanged)="
+            service.loading.next(true);
+            service.search.next($event);
+            service.hasChanged.next(true)
+          "
+        ></search>
+        <app-levels-filter
+          (valueChanged)="
+            service.loading.next(true);
+            service.levels.next($event);
+            service.hasChanged.next(true)
+          "
+          [tree]="true"
+          [labelTitle]="'level_filter'"
+          [classes]="'w-15r py-1'"
+        ></app-levels-filter>
+        <date-filter
+          [hideLabel]="true"
+          [clearable]="false"
+          key="date"
+
+          [selectedValue]="service.month.value"
+          (valueChanged)="dateChanged($event)"
+        />
+      </div>
+      <div class="col-lg-3 d-flex justify-content-end">
+        <button
+          (click)="assignPenalty()"
+          mat-button
+          color="primary"
+          mat-raised-button
+        >
+          {{ "assign_penalty" | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container content>
+    <div class="table-container border-0 rounded shadow-xs overflow-auto">
+      <table
+        [ngClass]="{ 'h-100': penalties.length == 0 || loading }"
+        class="table table-bordered table-hover"
+        id="penalties"
+      >
+        <thead class="bg-gray border-bottom">
+          <tr>
+            <th class="text-left pl-5">{{ "employee" | translate }}</th>
+            <th class="text-left">{{ "penalty" | translate }}</th>
+            <th class="text-left">{{ "reptation" | translate }}</th>
+            <th class="text-left">{{ "penalty_value" | translate }}</th>
+            <th class="text-left">{{ "penalty_date" | translate }}</th>
+            <th>{{ "action" | translate }}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="penalties.length > 0 && !loading">
+          <tr
+            *ngFor="
+              let penalty of penalties
+                | paginate
+                  : {
+                      itemsPerPage: meta.pageSize,
+                      currentPage: meta.currentPage,
+                      totalItems: meta.totalItems
+                    };
+              trackBy: trackBy
+            "
+            class="border-bottom pointer"
+          >
+            <td class="pl-5">
+              <div class="flex aic gap-x-1">
+                <user-image [img]="penalty.employee.imageUrl" />
+                <div class="text-left">
+                  <p>{{ penalty.employee.name }}</p>
+                  <p class="muted">{{ penalty.employee.jobTitle }}</p>
+                </div>
+              </div>
+            </td>
+            <td class="text-left">{{ currentLang === 'ar' ? penalty.penaltyType.nameAr : penalty.penaltyType.name }}</td>
+            <td class="text-left">{{  repetition[penalty.level- 1].name }}</td>
+              <td class="text-left"> 
+                {{ penalty.deductionAmount }}
+                {{ penalty.deductionAmount > 1 ? 'days' : 'day'}} 
+                <span class="ml-1" *ngIf="penalty.dayValue">
+                  ({{ penalty.dayValue.toFixed(2) }} {{"egp" | translate}})
+                </span>
+              </td>
+            <td class="text-left">
+              {{ penalty.penaltyDate | date : "yyyy/MM" }}
+            </td>
+            <td>
+              
+              <i (click)="deletePenalty(penalty.id)" *ngIf="!penalty.isDeleted" class='bx bx-trash danger fs-30'></i>
+            </td>
+          </tr>
+        </tbody>
+        <not-found
+          *ngIf="penalties.length == 0 && !loading"
+          class="a-center"
+        ></not-found>
+        <loading *ngIf="loading"></loading>
+      </table>
+    </div>
+  </ng-container>
+</layout-with-filters>

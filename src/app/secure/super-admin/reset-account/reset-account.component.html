@@ -1,0 +1,23 @@
+<user-navbar/>
+<div class="p-2">
+  <layout>
+    <div class="h-100 p-3" magicScroll>
+      <div class="flex-grid ">
+        <div class="col-md-6 mb-3">
+          <label for="phone">{{'phone' | translate}}</label>
+          <input type="tel" class="input text-left" id="phone" [(ngModel)]="phoneNumber">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="password">{{'password' | translate}}</label>
+          <input type="password" class="input" id="password" [(ngModel)]="newPassword">
+        </div>
+      </div>
+      <div class="flex-grid">
+        <div class="col-sm-12">
+          <button type="button" class="mr-2 mb-3 btn bg-primary fs-16 white rounded px-2 py-1" (click)="resetPassword()">{{'reset_password' | translate}}</button>
+          <button type="button" class="mr-2 mb-3 btn bg-primary fs-16 white rounded px-2 py-1" (click)="resetItoCount()">{{'reset_Otp_count' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </layout>
+</div>

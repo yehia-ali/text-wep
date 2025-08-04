@@ -1,0 +1,12 @@
+<div class="img mb-2" [matMenuTriggerFor]="updateable ? settingsMenu: null">
+  <div class="relative pointer inline-block">
+    <user-image [img]="img" [imageUrl]="imageUrl" [dim]="dim" class="pointer"></user-image>
+    <i class='bx bxs-pencil rounded-50 flex-center' *ngIf="updateable"></i>
+  </div>
+  <input type="file" id="img-input" hidden accept="image/*" (change)="change($event)"/>
+</div>
+
+<mat-menu #settingsMenu [xPosition]="'after'">
+  <!--  <menu mat-menu-item (click)="previewImage()">{{'preview_image' | translate}}</menu>-->
+  <menu mat-menu-item (click)="updateImage()">{{'update_image' | translate}}</menu>
+</mat-menu>

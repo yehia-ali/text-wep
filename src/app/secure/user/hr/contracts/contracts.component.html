@@ -1,0 +1,66 @@
+<layout-with-filters (pageChange)="service.page.next($event); service.hasChanged.next(true)" [meta]="meta">
+  <ng-container filters>
+    <div class="row align-items-end ">
+      <div class="col-lg-10">
+        <div class="d-flex gap-x-2">
+          <search [key]="service.search.value" (valueChanged)="service.loading.next(true); service.search.next($event); service.hasChanged.next(true)"/>
+          <departments (valueChanged)="service.loading.next(true); service.department.next($event); service.hasChanged.next(true)" [selectedDepartment]="service.department.value"/>
+          <contract-type (valueChanged)="service.loading.next(true); service.contractType.next($event); service.hasChanged.next(true)" [selectedValue]="service.contractType.value"/>
+          <contract-status (valueChanged)="service.loading.next(true); service.contractStatus.next($event); service.hasChanged.next(true)" [selectedValue]="service.contractStatus.value"/>
+        </div>
+      </div>
+  
+
+    </div>
+
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': contracts.length == 0 || service.loading.value}" class="table w-100 relative">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">{{ 'employee' | translate }}</th>
+        <th class="text-left">{{ 'department' | translate }}</th>
+        <th class="text-left">{{ 'start_date' | translate }}</th>
+        <th class="text-left">{{ 'end_date' | translate }}</th>
+        <th class="text-left">{{ 'type' | translate }}</th>
+        <th>{{ 'employee_status' | translate }}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="contracts.length > 0 && !service.loading.value">
+      <tr *ngFor="let item of contracts | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy" class="border-bottom pointer"
+          (click)="contractDetails(item)">
+        <td class="text-left">
+          <div class="flex aic gap-x-1">
+            <div class="img">
+              <user-image [img]="item.userImage"/>
+            </div>
+            <div class="info">
+              <p>{{ item.userName }}</p>
+              <p class="muted">{{ item.userJobTitle }}</p>
+            </div>
+          </div>
+        </td>
+        <td class="text-left">
+          <p>{{ item.departmentName }}</p>
+        </td>
+        <td class="text-left">
+          <p>{{ item.startDate | arabicDate }}</p>
+        </td>
+        <td class="text-left">
+          <p>{{ item.endDate | arabicDate }}</p>
+        </td>
+
+        <td class="text-left">
+          <p>{{ types[item.typeOfContract - 1]?.name | lowercase | translate }}</p>
+        </td>
+        <td>
+          <p>{{ status[item.statusOfContract - 1]?.name | lowercase | translate }}</p>
+        </td>
+      </tr>
+      </tbody>
+      <not-found *ngIf="contracts.length == 0 && !service.loading.value" class="a-center"></not-found>
+      <loading *ngIf="service.loading.value"></loading>
+    </table>
+  </ng-container>
+</layout-with-filters>

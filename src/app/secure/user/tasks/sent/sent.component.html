@@ -1,0 +1,189 @@
+<p class="mb-1 flex aic gap-x-1 " *ngIf="service.userSent.value">
+  <span>{{'sent' | translate}}</span>
+  <i class='bx bx-chevron-right fs-20' [ngClass]="{'bx-flip-horizontal': lang == 'ar'}"></i>
+  <span class="primary flex aic gap-x-1 pointer" (click)="removeUser()" [matTooltip]="'click_to_remove' | translate">
+    <span>{{service.userName.value}}</span>
+    <i class='bx bx-x danger'></i>
+  </span>
+</p>
+
+<layout-with-filters (pageChange)="service.page.next($event); service.hasChanged.next(true)" [meta]="meta" [hasTitle]="!!service.userSent.value">
+  <ng-container filters>
+    <sent-filters/>
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': sent.length == 0 || loading}" class="table w-100 relative" id="tasks">
+      <thead class="bg-gray border-bottom">
+      <tr>
+
+        <th>#</th>
+        <th class="text-left pl-4">{{'task_name' | translate}}</th>
+        <th>{{'expected_time' | translate}}</th>
+        <th>{{'assignees' | translate}}</th>
+        <th>{{'assignees_count' | translate}}</th>
+        <th>{{'in_progress' | translate}}</th>
+        <th>{{'executed' | translate}}</th>
+        <th>{{'due_date' | translate}}</th>
+        <th>{{'repeat' | translate}}</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody *ngIf="sent.length > 0 && !loading">
+      <tr (click)="selectedTask = task; getAssignees()"
+          *ngFor="let task of sent | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}"
+          class="border-bottom pointer">
+
+        <!-- id -->
+        <td>
+          <p class="fs-13">{{task.id}}</p>
+        </td>
+
+        <!--    title    -->
+        <td class="pl-4">
+          <div class="flex aic bold">
+            <priority [priority]="task?.priority" class="mr-1"></priority>
+            <!-- title -->
+            <span *ngIf="task?.title?.length! <= 40">{{task?.title}}</span>
+
+            <!-- trimmed title -->
+            <span *ngIf="task?.title?.length! > 40" [matTooltip]="task.title">{{task?.title | slice:0:40}}...</span>
+          </div>
+        </td>
+
+        <!--    expected time    -->
+        <td>
+          <div (click)="(!service.userId.value && task.taskGroupType != 8) && $event.stopImmediatePropagation(); (!service.userId.value && task.taskGroupType != 8) && editExpected(task)"
+               [matTooltip]="(!service.userId.value && task.taskGroupType != 8) ? ('click_to_update' | translate) : null"
+               class="flex-center">
+            <p *ngIf="task.expectedHours">
+              <span *ngIf="(task.expectedHours > 2 && lang == 'ar') || lang == 'en'"
+                    class="mr-50">{{task.expectedHours | arabicNumbers}}</span>
+              <span>{{(task.expectedHours | defineDays) + "_hour" | translate}}</span>
+            </p>
+            <p *ngIf="task.expectedMinutes && task.expectedHours" class="mx-50">:</p>
+
+            <p *ngIf="task.expectedMinutes">
+              <span *ngIf="(task.expectedMinutes > 2 && lang == 'ar') || lang == 'en'"
+                    class="mr-50">{{task.expectedMinutes | arabicNumbers}}</span>
+              <span>{{(task.expectedMinutes | defineDays) + "_minute" | translate}}</span>
+            </p>
+          </div>
+        </td>
+
+        <!-- assignees -->
+        <td class="flex-center">
+          <task-vote-users [images]="task.assigneeImageUrls"></task-vote-users>
+        </td>
+
+        <!-- total assinees -->
+        <td >
+          <div class="flex-center bold">
+            {{task.assigneeCount }}
+          </div>
+        </td>
+        <!-- inprogress -->
+        <td >
+          <div class="flex-center warning bold">
+            {{task.inporogressStateCount }}
+          </div>
+        </td>
+
+        <!-- completed -->
+        <td >
+          <div class="flex-center success bold">
+            {{task.complateStateCount }}
+          </div>
+        </td>
+
+        <!-- due date -->
+        <td>
+          <div class="flex-center">
+            <div class="img mr-50">
+              <img *ngIf="!task.isOverDue" alt="due date" src="assets/images/icons/due-date.svg">
+              <img *ngIf="task.isOverDue" alt="due date" src="assets/images/icons/due-date-red.svg">
+            </div>
+            <span [ngClass]="{'danger': task.isOverDue}">{{task?.endDate | arabicDate:'typicalDate'}}</span>
+          </div>
+        </td>
+
+        <!-- repeat -->
+        <td>
+          <div class="flex-center">
+            <repetition [isRepeated]="task?.isRepeated || (task.parentTaskGroupId && !task.isSubTasks)"
+                        [repeatedPeriod]="task?.taskRepeatedPeriod"></repetition>
+          </div>
+        </td>
+
+
+        <td (click)="$event.stopImmediatePropagation()">
+          <div class="flex aic jce pr-2">
+          <i class="bx bx-show fs-20 primary pointer px-1" (click)="getTaskAnswers(task)"></i>
+          <a
+            [href]="url + 'api/TaskGroups/GetTaskGroupAnswersExcel?TaskGroup=' + task?.headParentTaskGroupId"
+            target="_blank"
+            class="bx bx-file fs-20 primary pointer px-1">
+          </a>
+            <task-actions (cancel)="cancel(task.id)" (delete)="delete(task.id)" (edit)="edit(task)" (reassign)="reassign(task)" [isRepate]="task.isRepeated"></task-actions>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+      <not-found *ngIf="sent && sent.length == 0 && !loading" class="a-center"></not-found>
+      <loading *ngIf="loading"></loading>
+    </table>
+
+  </ng-container>
+</layout-with-filters>
+
+<task-group-details *ngIf="assigneesIsOpen" (close)="assigneesIsOpen = false" [assigneesLoading]="assigneesLoading" [assignees]="assignees" [open]="assigneesIsOpen" [reporters]="reporters"
+                    [task]="selectedTask"></task-group-details>
+
+  <ng-template #dialogTemplate >
+    <div class="dir">
+      <div class="flex w-100 jcsb px-1 py-1">
+        <p class="fs-20 simibold">{{'all_answers' | translate}}</p>
+        <i class="bx bx-x fs-22 danger pointer" (click)="closeDialog()"></i>
+      </div>
+   
+      <div class="aic flex jcc py-5 h-25v" *ngIf="answerLoading">
+        <loading ></loading>
+      </div>
+      <div class="py-5 text-center" *ngIf="taskAnswers.length == 0 && !answerLoading">
+        <not-found></not-found>
+      </div>
+      <div class="content-height">
+        
+        <ng-container *ngIf="taskAnswers.length > 0">
+
+          <div *ngFor="let item of taskAnswers" class="mb-2">
+            <div class="mb-1 px-1">
+              <app-img-title [imgSrc]="item[0].userImg" [title]="item[0].userName" [userId]="item[0].userId"></app-img-title>
+            </div>
+            <div class="table-container mx-1 mt-1 mb-1 ">
+              <table class="w-100">
+                <thead class="border bg-gray">
+                <tr class="border-bottom fs-12 simibold">
+                  <th class="text-left py-1 w-25r">{{ 'question' | translate }}</th>
+                  <th class="text-left py-1 w-7r">{{ 'type' | translate }}</th>
+                  <th class="text-left py-1">{{ 'answer' | translate }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="border pointer" *ngFor="let q of item">
+                  <td class="fs-13 text-left">{{ q.name }}</td>
+                  <td class="fs-13 text-left">{{ answersTypes[q.type - 1].name | translate }}</td>
+                  <td class="fs-13 text-left">
+                    <i *ngIf="q.answer && (q.answer == 'true' || q.answer == 'false' )" class="fs-20 bx bx-{{q.answer =='true' ? 'check-circle success' : 'x-circle danger'}}"></i>
+                    <span *ngIf="q.answer != 'true' && q.answer != 'false'">{{q.answer || '-'}}</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+    </div>
+  </ng-template>

@@ -1,0 +1,30 @@
+<div class="forward-task" dir="auto">
+  <h2 class="flex aic jcsb black">
+    <p>{{ 'forward_email' | translate }}</p>
+    <i class='bx bx-x fs-35 pointer danger' mat-dialog-close></i>
+  </h2>
+  <div mat-dialog-content>
+    <div>
+      <div class="users">
+        <input-label key="to"/>
+        <select-user text="select_assignees" classes="w-100" [multi]="true" (getSelectedUsers)="getAssignees($event)"/>
+      </div>
+
+      <div class="cc mt-1">
+        <input-label key="cc_assignees"/>
+        <select-user text="select_assignees" classes="w-100" [multi]="true" (getSelectedUsers)="getCC($event)"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex">
+      <button class="px-4 mr-2 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>
+        {{ 'cancel' | translate }}
+      </button>
+      <button mat-raised-button color="primary" class="px-5 fs-15" (click)="submit()" [disabled]="assignees.length == 0 || loading">
+        <submit-button text="send" [loading]="loading"></submit-button>
+      </button>
+    </div>
+  </div>
+</div>

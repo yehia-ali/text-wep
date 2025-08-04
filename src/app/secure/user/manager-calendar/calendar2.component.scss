@@ -1,0 +1,64 @@
+.my-calendar {
+  height: 100% !important;
+  padding: 3rem;
+
+  full-calendar {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.sidebar {
+  width: 420px;
+
+  .date {
+    gap: 0 .4rem !important;
+
+    .date-icon {
+      transform: translateY(-.2rem);
+    }
+  }
+}
+
+.select {
+  max-width: 310px;
+}
+
+.sidebar-height {
+  height: calc(100% - 5.5rem);
+}
+
+.wrap {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1; /* start showing ellipsis when 3rd line is reached */
+  white-space: pre-wrap; /* let the text wrap preserving spaces */
+}
+
+.bg-meeting {
+  background-color: #F46850;
+}
+
+.bg-vote {
+  background-color: #29CC99;
+}
+
+.bg-holiday {
+  background-color: #557FDE;
+}
+
+.bg-leave {
+  background-color: #8DC8C8;
+}
+
+.calendar-chip {
+  .convert-image-color {
+    filter: brightness(0) invert(.9) !important;
+  }
+}
+
+.plus-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+}

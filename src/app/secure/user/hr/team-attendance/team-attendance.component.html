@@ -1,0 +1,87 @@
+<!--
+<div class="my-1">
+  <team-dashboard/>
+</div>
+
+<layout-with-filters [meta]="meta" [hasCard]="true" (pageChange)="pageChanged($event)">
+  <ng-container filters>
+    <div class="filters flex aic gap-x-1">
+      <search (valueChanged)="service.search.next($event) ;service.hasChanged.next(true)" [key]="service.search.value"/>
+      <date-filter [clearable]="false" key="date" (valueChanged)="dateChanged($event)" [selectedValue]="service.startDateFrom.value"/>
+    </div>
+  </ng-container>
+  <ng-container content *ngIf="attendance$ | async as attendance">
+    <table [ngClass]="{'h-100': attendance.length == 0 || loading}" class="table w-100 relative">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">{{ 'member' | translate }}</th>
+        <th>{{ 'check-in' | translate }}</th>
+        <th>{{ 'check-out' | translate }}</th>
+        <th>{{ 'total_hours' | translate }}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="attendance.length > 0 && !loading">
+      <tr *ngFor="let item of attendance | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy" class="border-bottom pointer">
+        <td>
+          <div class="flex aic jcfs">
+            <user-image [img]="item.imageUrl" [dim]="30"/>
+            <div class="info ml-1 flex-column aifs">
+              <p class="bold">{{ item.userName }}</p>
+              <p class="mt-25 muted fs-14" *ngIf="item.jobTitle">{{ item.jobTitle }}</p>
+            </div>
+          </div>
+        </td>
+
+        <td *ngIf="item.stauts != 4 && item.stauts != 3 && item.stauts != 1 && item.stauts != 2">
+          <p class="fs-13" *ngIf="!!item.checkIn" [ngClass]="{'danger': item.checkIn.isLate}">{{ item.checkIn.time ? (item.checkIn.time | arabicTime) : '-' }}</p>
+          <p *ngIf="!item.checkIn">-</p>
+        </td>
+
+        <td *ngIf="item.stauts != 4 && item.stauts != 3 && item.stauts != 1 && item.stauts != 2">
+          <p class="fs-13" *ngIf="item.checkOut" [ngClass]="{'danger': item.checkOut.isLate}">{{ item.checkOut.time ? (item.checkOut.time | arabicTime) : '-' }}</p>
+          <p *ngIf="!item.checkOut">-</p>
+        </td>
+
+        <td *ngIf="item.stauts != 4 && item.stauts != 3 && item.stauts != 1 && item.stauts != 2">
+          <p class="fs-13" *ngIf="!!item.totalHours" [ngClass]="{'danger': !item.totalHours.isEqual}">{{ item.totalHours.time || '-' }}</p>
+          <p class="fs-13" *ngIf="!item.totalHours">-</p>
+        </td>
+
+        <td *ngIf="item.stauts == 1" colspan="3" class="py-0">
+          <div class="flex-center gap-x-1 bg-light-primary white w-100 py-75 rounded">
+            <p>{{ item.reason | translate }}</p>
+          </div>
+        </td>
+
+        <td *ngIf="item.stauts == 2" colspan="3" class="py-0">
+          <div class="flex-center gap-x-1 bg-light-warning w-100 py-75 rounded">
+            <p>{{ item.reason | translate }}</p>
+          </div>
+        </td>
+
+        <td *ngIf="item.stauts == 3" colspan="3" class="py-0">
+          <div class="flex-center gap-x-1 bg-light-warning w-100 py-75 rounded">
+            <p>{{ 'weekend' | translate }}</p>
+          </div>
+        </td>
+
+        <td *ngIf="item.stauts == 4" colspan="3" class="py-0">
+          <div class="flex-center gap-x-1 bg-light-danger w-100 py-75 rounded">
+            <img src="assets/images/attendance/close.svg" alt="close icon">
+            <p>{{ 'absent' | translate }}</p>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+      <not-found *ngIf="attendance.length == 0 && !loading" class="a-center"></not-found>
+      <loading *ngIf="loading"></loading>
+    </table>
+  </ng-container>
+</layout-with-filters>
+-->
+
+<layout>
+  <div class="p-2 h-100" magicScroll>
+    <team-attendance-page/>
+  </div>
+</layout>

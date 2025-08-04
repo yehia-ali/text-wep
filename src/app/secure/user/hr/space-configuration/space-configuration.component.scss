@@ -1,0 +1,27 @@
+:host ::ng-deep{
+  mat-form-field{
+    width: 100%;
+    .mdc-text-field {
+      background: transparent;
+      border: 1px solid #e7e7e7;
+      border-radius: 4px;
+      height: 41px;
+      .mat-mdc-icon-button{
+        top: -9px;
+      }
+    }
+  }
+  .mat-mdc-tab-labels{
+    display: block;
+    .mdc-tab{
+      display: inline-block;
+      letter-spacing: 0 !important;
+    }
+  }
+
+}
+.overflow-y-auto
+{
+  max-height: calc(100vh - 111px) !important;
+  overflow-y: auto;
+}

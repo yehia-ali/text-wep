@@ -1,0 +1,56 @@
+<layout>
+  <div class="space-configuration p-2">
+    <div class="top-section">
+      <mat-slide-toggle labelPosition="before" color="primary" [(ngModel)]="leaveSystem">
+        <div class="flex gap-x-1">
+          <img src="assets/images/icons/eye.svg" alt="eye icon">
+          <p class="mr-2">{{ 'view_leave_dashboard' | translate }}</p>
+        </div>
+      </mat-slide-toggle>
+
+
+    </div>
+    <div class="content border p-2 rounded mt-2">
+      <h5>{{ 'space_attendance_configuration' | translate }}</h5>
+      <div class="flex-grid gap-y-2 mt-1">
+        <div class="col-lg-4">
+          <input-label key="check-in_time"/>
+          <input [ngxTimepicker]="timeFrom" class="input" [(ngModel)]="from" readonly>
+          <ngx-material-timepicker #timeFrom [minutesGap]="5"></ngx-material-timepicker>
+        </div>
+        <div class="col-lg-4">
+          <input-label key="check-out_time"/>
+          <input [ngxTimepicker]="timeTo" class="input" [(ngModel)]="to" readonly>
+          <ngx-material-timepicker #timeTo [minutesGap]="5"></ngx-material-timepicker>
+        </div>
+        <div class="col-lg-4">
+          <input-label key="working_hours"/>
+          <div class="flex aic gap-x-1">
+            <div class="number-card border rounded minus" (click)="minus()">-</div>
+            <div class="number border rounded">{{ workingHours }}</div>
+            <div class="number-card border rounded add" (click)="add()">+</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="weekend mt-2">
+        <h5>{{ 'weekend_days' | translate }}</h5>
+        <div class="flex gap-x-2 gap-y-2" *ngIf="dataLoaded">
+          <mat-checkbox (change)="weekendChanged($event)" [checked]="weekends.includes('sunday')" value="sunday" color="primary">{{ 'sunday' | translate }}</mat-checkbox>
+          <mat-checkbox (change)="weekendChanged($event)" [checked]="weekends.includes('monday')" value="monday" color="primary">{{ 'monday' | translate }}</mat-checkbox>
+          <mat-checkbox (change)="weekendChanged($event)" [checked]="weekends.includes('tuesday')" value="tuesday" color="primary">{{ 'tuesday' | translate }}</mat-checkbox>
+          <mat-checkbox (change)="weekendChanged($event)" [checked]="weekends.includes('wednesday')" value="wednesday" color="primary">{{ 'wednesday' | translate }}</mat-checkbox>
+          <mat-checkbox (change)="weekendChanged($event)" [checked]="weekends.includes('thursday')" value="thursday" color="primary">{{ 'thursday' | translate }}</mat-checkbox>
+          <mat-checkbox (change)="weekendChanged($event)" [checked]="weekends.includes('friday')" value="friday" color="primary">{{ 'friday' | translate }}</mat-checkbox>
+          <mat-checkbox (change)="weekendChanged($event)" [checked]="weekends.includes('saturday')" value="saturday" color="primary">{{ 'saturday' | translate }}</mat-checkbox>
+        </div>
+      </div>
+
+      <div class="flex aic jcfe mt-3">
+        <button mat-raised-button color="primary" class="px-5" (click)="submit()" [disabled]="loading">
+          <submit-button text="update" [loading]="loading"></submit-button>
+        </button>
+      </div>
+    </div>
+  </div>
+</layout>

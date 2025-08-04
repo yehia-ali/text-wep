@@ -1,0 +1,37 @@
+<user-navbar/>
+<div class="p-2">
+  <layout>
+    <div class="h-100" magicScroll>
+      <table [ngClass]="{'h-100': videos?.length == 0 || loading}" class="table w-100 relative">
+        <thead class="bg-gray border-bottom">
+        <tr>
+          <th class="text-left">{{ 'feature' | translate }}</th>
+          <th class="text-left">{{ 'web_link_arabic' | translate }}</th>
+          <th class="text-left">{{ 'web_link_english' | translate }}</th>
+          <th class="text-left">{{ 'android_link_arabic' | translate }}</th>
+          <th class="text-left">{{ 'android_link_english' | translate }}</th>
+          <th class="text-left">{{ 'ios_link_arabic' | translate }}</th>
+          <th class="text-left">{{ 'ios_link_english' | translate }}</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody *ngIf="videos?.length > 0 && !loading">
+        <tr *ngFor="let video of videos" class="border-bottom">
+          <td class="text-left">{{ video.pageName }}</td>
+          <td class="text-left">{{ video.arLinkWeb }}</td>
+          <td class="text-left">{{ video.enLinkWeb }}</td>
+          <td class="text-left">{{ video.arLinkAndroid }}</td>
+          <td class="text-left">{{ video.enLinkAndroid }}</td>
+          <td class="text-left">{{ video.arLinkIos }}</td>
+          <td class="text-left">{{ video.enLinkIos }}</td>
+          <td class="text-right" (click)="editLink(video)">
+            <i class="bx bx-edit fs-25 primary pointer px-75 py-25"></i>
+          </td>
+        </tr>
+        </tbody>
+        <not-found *ngIf="videos.length == 0 && !loading" class="a-center"></not-found>
+        <loading *ngIf="loading"></loading>
+      </table>
+    </div>
+  </layout>
+</div>

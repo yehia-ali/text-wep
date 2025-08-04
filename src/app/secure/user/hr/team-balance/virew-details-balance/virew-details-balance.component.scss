@@ -1,0 +1,40 @@
+.leaves{
+    overflow: auto;
+  }
+  
+  .bg-pending{
+    color: #606060;
+    background-color: #ECECED;
+  }
+  .bg-approved{
+    color: #29CC99;
+    background-color: rgba($color: #29CC99, $alpha: 0.25);
+  }
+  .bg-rejected{
+    color: #D32F2F;
+    background-color: rgba($color: #D32F2F, $alpha: 0.25);
+  }
+  .leave-card{
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.04);  
+  }
+  .leave-info
+  {
+    position: absolute;
+    inset-inline-end: 10px;
+    top: 10px;
+  }
+  
+  .line-height-35{
+    line-height: 35px;
+  }
+  .image-container {
+    padding: 12px;
+    border-radius: 50%;
+    height: 64px;
+    width: 64px;
+  }
+  .table-container {
+    height: calc(100vh - 250px);
+    overflow: auto;
+  }
+  

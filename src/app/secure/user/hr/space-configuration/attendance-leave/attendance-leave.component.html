@@ -1,0 +1,108 @@
+<div class="m-2 py-2 border h-70vh">
+    <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+        <div class="col-lg-6 text-left">
+            <div class="d-flex align-items-center gap-3">
+                <h3 class="simibold black">
+                    {{'late_checkin_policy' | translate}}
+                </h3> 
+                <span class="fs-12 fw-normal text-gray" *ngIf="updateDate">{{'last_update_in' | translate}} {{updateDate | arabicDate }}</span>
+            </div>
+        </div>
+        <div class="col-lg-6 text-right">
+            <button mat-raised-button [ngClass]="{'bg-primary white': lateList.length < 4}" (click)="addLatencyPolicyItem()" [disabled]="lateList.length == 4">
+                {{ 'add_late_checkin' | translate }} 
+              </button>
+        </div>
+    </div>
+    <div class="px-50">
+        <div class="aic flex jcc py-5" *ngIf="loading">
+            <loading></loading>
+        </div>
+
+        <div class="table-container" *ngIf="lateList.length > 0 && !loading">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="border-bottom fs-12 simibold">
+                        <th class="text-left py-1">{{ 'late_checkin_period_type' | translate }}</th>
+                        <th class="text-left py-1">{{ 'late_checkin_period' | translate }}</th>
+                        <th class="text-left py-1">{{ 'late_checkin_first_repetition' | translate }}</th>
+                        <th class="text-left py-1">{{ 'late_checkin_second_repetition' | translate }}</th>
+                        <th class="text-left py-1">{{ 'late_checkin_third_repetition' | translate }}</th>
+                        <th class="text-left py-1">{{ 'late_checkin_fourth_repetition' | translate }}</th>
+                        <th class="text-left py-1"></th>
+                    </tr>
+                </thead>
+
+                <tbody class="table-body">
+                    <tr class="border-bottom fs-12" *ngFor="let item of lateList; let i = index">
+                        <td class="text-left">{{ 'late_checkin_period' | translate }} {{ i + 1 }}</td>
+                        <td class="text-left">{{ item?.minsFrom }} - {{ item?.minsTo }} {{ 'minutes' | translate }} </td>
+                        <td class="text-left">{{ getRepetitionDisplay(item?.firstRepetitionsType, item?.firstRepetitionsTypeValue) }}</td>
+                        <td class="text-left">{{ getRepetitionDisplay(item?.socondRepetitionsType, item?.socondRepetitionsTypeValue) }}</td>
+                        <td class="text-left">{{ getRepetitionDisplay(item?.thirdRepetitionsType, item?.thirdRepetitionsTypeValue) }}</td>
+                        <td class="text-left">{{ getRepetitionDisplay(item?.fourthRepetitionsType, item?.fourthRepetitionsTypeValue) }}</td>    
+                        
+                        <td class="text-right pl-0" (click)="$event.stopPropagation()">
+                            <div class="flex aic jce gap-x-2">
+                              <div  *ngIf="(!item?.isApproved && loggedInUserId == item?.creatorId) || isAdmin">
+                                <button [matMenuTriggerFor]="menu" class="clickable-btn">
+                                  <i class='bx bx-dots-vertical-rounded fs-25'></i>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                  <button mat-menu-item dir="auto" ngClass="" *ngIf=" isAdmin || (loggedInUserId == item?.creatorId && !item?.isApproved)" (click)="editLatencyPolicyItem(item)">{{'edit' | translate}}</button>
+                                  <button mat-menu-item dir="auto" *ngIf="(isAdmin) || (loggedInUserId == item?.creatorId && !item?.isApproved)" (click)="deleteLatencyPolicyItem(item.id)">{{'delete' | translate}}</button>
+                                </mat-menu>
+                              </div>
+                            </div>
+                          </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="py-5 text-center" *ngIf="lateList.length == 0 && !loading">
+            <not-found message="no_data_found_late_checkin"></not-found>
+        </div>
+    </div>
+</div>
+<!-- 
+<div class="m-2 py-2 border">
+    <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+        <div class="col-lg-6 text-left">
+            <h3>{{'absence_policy' | translate}}</h3>
+        </div>
+        <div class="col-lg-6 text-right">
+            <a (click)="addAbsence()" 
+                class="btn rounded bg-primary white py-75 px-2 fs-14">
+                {{'add_absence' | translate}}
+            </a>
+        </div>
+    </div>
+    <div class="px-50">
+        <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+            <loading></loading>
+        </div>
+        <div class="table-container mx-1" *ngIf="absences.length > 0 && !loading">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="border-bottom fs-12 simibold">
+                        <th class="text-left py-1">{{ 'late_checkin_first_repetition' | translate }}</th>
+                        <th class="text-left py-1">{{ 'late_checkin_second_repetition' | translate }}</th>
+                        <th class="text-left py-1">{{ 'late_checkin_third_repetition' | translate }}</th>
+                        <th class="text-left py-1">{{ 'late_checkin_fourth_repetition' | translate }}</th>
+                        <th class="text-left py-1"></th>
+                    </tr>
+                </thead>
+
+                <tbody class="table-body">
+                    <tr class="border-bottom fs-12" *ngFor="let item of absences">
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="py-5 text-center" *ngIf="absences.length == 0 && !loading">
+            <not-found message="no_data_found_absence"></not-found>
+        </div>
+    </div>
+</div> -->

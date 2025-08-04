@@ -1,0 +1,47 @@
+<form [formGroup]="form">
+  <div class="flex-grid gap-y-1">
+
+    <!-- Task meeting link  -->
+    <div class="col-lg-12" *ngIf="isMeeting">
+      <input-label key="meeting_link" [control]="f['link']"/>
+      <input type="text" class="input" formControlName="link"/>
+      <input-error [control]="f['link']"/>
+    </div>
+
+
+    <!-- Task location  -->
+    <div class="col-md-12 relative" *ngIf="isMeeting || isLocation">
+      <input-label key="location"/>
+      <input
+        type="text"
+        class="input bg-gray"
+        [(ngModel)]="address"
+        [ngModelOptions]="{standalone: true}"
+        [disabled]="true"
+      />
+      <div class="clearAddress pointer" *ngIf="address" (click)="clearAddress()">
+        <i class='bx bx-x'></i>
+      </div>
+    </div>
+
+    <!-- Task Map  -->
+    <div class="col-lg-12 mb-50" *ngIf="isLocation || isMeeting">
+      <google-map
+        (mapClick)="addMarker($event)"
+        height="300px"
+        width="100%"
+        [zoom]="16"
+        [center]="center"
+        [options]="options">
+        <map-marker
+          *ngFor="let marker of markers"
+          [position]="marker.position"
+          [label]="marker.label"
+          [title]="marker.title"
+          [options]="marker.options"
+        >
+        </map-marker>
+      </google-map>
+    </div>
+  </div>
+</form>

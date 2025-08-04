@@ -1,0 +1,51 @@
+<div class="message flex gap-x-1 mb-2" [ngClass]="{'jcfe': message.senderId == currentUserId}">
+  <user-image [img]="message.senderAvatar" [id]="message.senderId" *ngIf="message.messageType != 'server'" [ngClass]="{'order-2': message.senderId == currentUserId}" />
+  <logo *ngIf="message.messageType == 'server'"/>
+  <div class="text flex-column jcc px-1 pt-50 pb-50 rounded bg-gray"
+       [ngClass]="{'order-1 aife bg-light-primary-1 dark': message.senderId == currentUserId}">
+    <div class="w-100 flex aic jcsb gap-x-2">
+      <p class="primary">{{message.senderName || ('taskedin' | translate)}}</p>
+      <ng-container
+        *ngIf="!message.isDeleted && message.messageType == 'text' || (message.messageType !== 'text' && message.senderId == currentUserId && !message.isDeleted)">
+        <i class='bx bx-dots-horizontal-rounded fs-23 pointer' [matMenuTriggerFor]="menu"></i>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="reply(message)"
+                  *ngIf="message.messageType == 'text'">{{'reply' | translate}}</button>
+          <button mat-menu-item (click)="deleteMessage(message)"
+                  *ngIf="message.senderId == currentUserId">{{'delete' | translate}}</button>
+        </mat-menu>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="!message.isDeleted">
+      <ng-container *ngIf="message.isReply">
+        <div class="bg-white w-100 mb-50 pb-50 pt-50 pl-75 pr-75 rounded flex aifs">
+          <p class="max-content" *ngIf="currentUserId != message.message?.senderId">{{message.message?.senderName}}:</p>
+          <p class="max-content" *ngIf="currentUserId == message.message?.senderId">{{'you' | translate}}:</p>
+          <p class="ml-50" *ngIf="message.message?.messageType == 'text'">{{message.message?.text}}</p>
+          <p class="ml-50" *ngIf="message.message?.messageType != 'text'">{{'attachment' | translate}}</p>
+        </div>
+      </ng-container>
+      <app-text [message]="message" *ngIf="message.messageType == 'text' || message.messageType == 'server'"></app-text>
+      <app-image [message]="message" *ngIf="message.messageType == 'image'"></app-image>
+      <app-video [message]="message" *ngIf="message.messageType == 'video'"></app-video>
+      <app-audio [message]="message"
+                 *ngIf="message.messageType == 'audio' || message.messageType == 'record'"></app-audio>
+      <app-files [message]="message" *ngIf="message.messageType == 'document'"></app-files>
+    </ng-container>
+    <ng-container *ngIf="message.isDeleted">
+      <div class="flex aic">
+        <svg viewBox="0 0 24 24" height="24" width="24" preserveAspectRatio="xMidYMid meet" class="" fill="none">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M7.75897 6.43054C8.93584 5.533 10.4057 5 12 5C15.866 5 19 8.13401 19 12C19 13.5943 18.467 15.0642 17.5695 16.241L7.75897 6.43054ZM6.35707 7.85707C5.50399 9.01706 5 10.4497 5 12C5 15.866 8.13401 19 12 19C13.5503 19 14.9829 18.496 16.1429 17.6429L6.35707 7.85707ZM12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z"
+                fill="currentColor"></path>
+        </svg>
+        <p class="muted ml-50" *ngIf="message.senderId != currentUserId">{{'message_was_deleted' | translate}}</p>
+        <p class="muted ml-50" *ngIf="message.senderId == currentUserId">{{'you_deleted_message' | translate}}</p>
+
+      </div>
+    </ng-container>
+
+    <p class="muted fs-13" *ngIf="message.isToday">{{message.date | arabicTime:false}}</p>
+    <p class="muted fs-13" *ngIf="!message.isToday">{{message.date | arabicDate:'long'}}</p>
+  </div>
+</div>

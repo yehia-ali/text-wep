@@ -1,0 +1,68 @@
+<div class="questions">
+  <input-label key="questions" classes="bold"/>
+  <form [formGroup]="form">
+    <section class="flex aic gap-x-1" formArrayName="voteFormQuestions" *ngFor="let questionForm of questions().controls; let questionIndex = index">
+      <ng-container [formGroupName]="questionIndex">
+        <div class="flex aifs gap-x-2 flex-auto p-1 bg-gray rounded">
+          <div class="form flex-auto">
+            <!--      Question title      -->
+            <div class="question">
+              <textarea class="input" [placeholder]="'type_question_here' | translate" rows="1" formControlName="title"></textarea>
+            </div>
+
+            <!--      Options      -->
+            <div class="options mt-75" formArrayName="voteFormQuestionChoices"
+                 *ngFor="let answerForm of answers(questionIndex).controls; let answerIndex = index">
+              <ng-container [formGroupName]="answerIndex">
+                <!--      Option text      -->
+                <div class="option flex aic jcsb gap-x-1 ">
+                  <div class="flex aic flex-auto">
+                    <i class='bx bx-radio-circle-marked fs-25' *ngIf="questions().controls[questionIndex].value.type == 1"></i>
+                    <i class='bx bxs-check-square fs-25' *ngIf="questions().controls[questionIndex].value.type == 2"></i>
+                    <input type="text" class="option-input" formControlName="text" [placeholder]="('option' | translate) +  (answerIndex + 1 | arabicNumbers)">
+                  </div>
+                  <div class="remove-option pointer" (click)="removeAnswer(questionIndex, answerIndex)" *ngIf="answers(questionIndex).length > 2">
+                    <i class='bx bx-x fs-25 danger'></i>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="add-option flex aic primary fs-14 pointer mt-1" (click)="addAnswer(questionIndex)">
+              <i class='bx bx-plus fs-20 mr-50'></i>
+              <p>{{'add_answer' | translate}}</p>
+            </div>
+
+          </div>
+          <div class="question-type">
+            <ng-select [searchable]="false" class="w-22r" formControlName="type" [clearable]="false" [items]="questionType"
+                       bindLabel="name" bindValue="value" appendTo="body" [multiple]="false" [closeOnSelect]="true" [clearSearchOnAdd]="true">
+              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <div class="flex aic">
+                  <i class='bx {{item.icon}} fs-{{item.size}} mr-75'></i>
+                  <span>{{item.name | translate}}</span>
+                </div>
+              </ng-template>
+              <ng-template ng-option-tmp ng-label-tmp let-item="item">
+                <div class="flex aic">
+                  <i class='bx {{item.icon}} fs-{{item.size}}'></i>
+                  <span class="ml-50 fs-15">{{ item.name | translate}}</span>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+        </div>
+        <div class="flex-column gap-y-2">
+          <div class="add-question flex-center pointer" *ngIf="questionIndex == questions().length - 1 " (click)="addQuestion()">
+            <i class='bx bx-plus white fs-25'></i>
+          </div>
+
+          <div class="remove-question bg-gray flex-center pointer" (click)="removeQuestion(questionIndex)"
+               *ngIf="questions().controls.length > 1">
+            <i class='bx bx-trash danger fs-25'></i>
+          </div>
+        </div>
+      </ng-container>
+    </section>
+  </form>
+</div>

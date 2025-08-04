@@ -1,0 +1,41 @@
+@use "src/assets/styles/vars";
+
+.padding {
+  padding: .5rem 1rem;
+}
+
+.audio {
+  overflow: hidden;
+  padding-inline-end: 11px !important;
+}
+
+.recording {
+  height: 5rem !important;
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 100%;
+  transform: translateY(-50%);
+  padding: .2rem .8rem;
+
+  .red-dot {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    margin-inline-end: .5rem;
+    animation: disappear 1s infinite alternate-reverse;
+  }
+}
+
+@keyframes disappear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+
+}
+.sounded-description
+{
+  height: 41.5px;
+}

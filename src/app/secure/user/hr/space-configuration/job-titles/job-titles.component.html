@@ -1,0 +1,77 @@
+
+<div class="py-1">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+      <!-- <div class="col-lg-3">
+      <search [newSearch]="true" (valueChanged)="search($event)"></search>
+    </div> -->
+    <div class="col-lg-12 text-right">
+      <a (click)="addJobTitle()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14">
+        {{'add_job_title' | translate}}
+      </a>
+    </div>
+  </div>
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+
+    <div class="table-container mx-1" *ngIf="jobTitles.length > 0 && !loading">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">{{ 'english_name' | translate }}</th>
+            <th class="text-left py-1">{{ 'arabic_name' | translate }}</th>
+          </tr>
+        </thead>
+
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of jobTitles" >
+            <td class="text-left">{{ item.nameEn }}</td>
+            <td class="text-left">{{ item.nameAr }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="jobTitles.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>
+<ng-template #dialogTemplate>
+
+  <div class="dir">
+    <div class="flex w-100 jcsb">
+      <h4>{{'add_job_title' | translate}}</h4>
+      <i class="bx bx-x fs-25 danger pointer p-1" (click)="closeDialog()"></i>
+    </div>
+    <mat-dialog-content>
+      <form action="" [formGroup]="form">
+        <div class="flex-grid gap-y-2">
+          <div class="col-lg-6">
+            <div class="name">
+              <input-label key="ar_name" [control]="f['nameAr']"/>
+              <input type="text" formControlName="nameAr" class="input">
+              <input-error [control]="f['nameAr']"/>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="name">
+              <input-label key="en_name" [control]="f['nameEn']"/>
+              <input type="text" formControlName="nameEn" class="input">
+              <input-error [control]="f['nameEn']"/>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <div class="text-right w-100">
+        <a (click)="createJobTitle()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14 ">
+          {{'add_job_title' | translate}}
+        </a>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</ng-template>

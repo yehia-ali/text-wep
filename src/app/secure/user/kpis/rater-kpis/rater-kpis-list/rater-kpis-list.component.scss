@@ -1,0 +1,12 @@
+.table-container {
+  height: calc(100vh - 280px);
+  overflow: auto;
+}
+
+.border-bottom-3{
+  border-width: 3px;
+  border-bottom: transparent 2px solid !important;
+}
+.rate-active-btn{
+  border-bottom: #7b5bca 2px solid !important;
+}

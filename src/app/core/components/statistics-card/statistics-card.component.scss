@@ -1,0 +1,8 @@
+.statistics-card {
+  .total {
+    border-radius: 5rem;
+    & > div {
+      height: 4px;
+    }
+  }
+}

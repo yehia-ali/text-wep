@@ -1,0 +1,19 @@
+<div class="h-100 {{header ? '' : 'no-header'}}">
+  <ng-container *ngIf="(room.length > 0 || newRoom) && header == true">
+    <app-top-section [taskDetails]="taskDetails"></app-top-section>
+  </ng-container>
+  <div class="room p-2" id="room" magicScroll="" [ngClass]="{'jcc': room.length === 0, 'withReply': hasReply}">
+    <ng-container *ngIf="room.length > 0 || newRoom">
+      <ng-container *ngFor="let message of room; trackBy: trackBy">
+        <app-message [message]="message"></app-message>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="room.length == 0 && !newRoom">
+      <not-found message="select_chat"></not-found>
+    </ng-container>
+  </div>
+
+  <div class="input-field" *ngIf="room.length > 0 || newRoom">
+    <app-send-message [chatBtns]="chatBtns"></app-send-message>
+  </div>
+</div>

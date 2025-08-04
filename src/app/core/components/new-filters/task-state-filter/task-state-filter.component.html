@@ -1,0 +1,13 @@
+<div
+class="card flex app-dropdown relative flex aic"
+[ngClass]="{ 'app-dropdown-small': small, 'app-dropdown-icon': icon }"
+ >
+  <p-dropdown
+      [options]="list"
+      [(ngModel)]="selectedValue"
+      [filter]="filter"
+      optionLabel="name"
+      (ngModelChange)="onChange()"
+      [placeholder]="'status' | translate" />
+      <i class="bx bx-radio-circle absolute dropdown-icon"></i>
+</div>

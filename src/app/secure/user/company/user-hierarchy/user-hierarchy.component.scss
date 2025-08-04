@@ -1,0 +1,130 @@
+.hier-card{
+  width: 130px;
+  position: relative;;
+  &::after{
+    position: absolute;
+    margin-inline: auto;
+    content: '';
+    height: 30px;
+    width: 0px;
+    border-left: 2px dashed #7B58CA; ;
+    top: -16px;
+  }
+}
+
+.overflow-auto{
+  overflow:auto;
+}
+
+.content-chart{
+  display: inline-block;
+  margin: auto;
+  max-width: calc(100vw - 29rem);
+  height: calc(100vh - 22rem);
+}
+.vertical-chart{
+  height: calc(100vh - 22rem);
+  overflow: auto;
+}
+.p-organizationchart .p-organizationchart-node-content {
+  background-color: transparent;
+  border: none;
+}
+
+td {
+  border-inline: none;
+}
+.p-organizationchart-line-down
+{
+  display: none;
+}
+
+.p-node-toggler
+{
+  left:auto;
+  right:auto;
+  inset-inline-start: 44.5%;
+  bottom: 0px;
+}
+.p-organizationchart-line-top
+{
+  border-top: 3px solid #7B58CA;
+}
+.content-chart
+{
+  .p-accordion{
+    .p-accordion-header-link {
+      background: transparent;
+      border-color: transparent;
+      color: #212529;
+      border-end-end-radius: 0;
+      border-end-start-radius: 0;
+  }
+  }
+}
+.vertical-chart{
+  .vertical-chart-item{
+    width: 390px;
+    position: relative;
+    border:1px dashed;
+    &::after{
+      content: '';
+      height: 0;
+      width: 9rem;
+      position: absolute;
+      border-top: 1px dashed;
+      inset-inline-start: -9rem;
+    }
+  }
+  .children{
+    position: relative;
+    &::after{
+      content: "";
+      position: absolute;
+      height: calc(100% + 9px);
+      width: 0px;
+      top: -35px;
+      border-inline-start: 1px solid;
+      inset-inline-start: -7rem;
+    }
+  }
+}
+
+.change-view-btn{
+  position: absolute;
+  top: 57px;
+  inset-inline-end: 15px;
+  height: 30px;
+  width: 30px;
+  background: rgb(123, 88, 202);
+  color: #fff;
+  z-index: 999;
+}
+
+@function random-color() {
+  $google-colors: (
+    rgb(123, 88, 202),
+    rgb(101, 199, 195),
+    rgb(59, 97, 161),
+    rgb(73, 160, 89),
+    rgb(0, 118, 244),
+    rgb(237, 84, 85),
+  );
+  @return nth($google-colors, random(length($google-colors)));
+}
+
+@for $i from 1 through 20 {
+  $level-color: random-color();
+  .level-#{$i} , .level-#{$i}::after {
+    border-color: $level-color !important;
+  }
+  .btn-level-#{$i}{
+    color: $level-color;
+  }
+}
+.hir-filter{
+  border-bottom: 3px solid #fff;
+  &.active{
+    border-color: #7b55d3 !important;
+  }
+}

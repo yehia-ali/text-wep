@@ -1,0 +1,17 @@
+.header {
+  height: 160px;
+  position: relative;
+}
+
+.appointments {
+  min-height: 20rem;
+}
+
+.content {
+  width: 100%;
+  height: calc(100% - 160px);
+}
+
+.selected-date {
+  width: 25rem;
+}

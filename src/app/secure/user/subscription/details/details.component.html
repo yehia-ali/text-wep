@@ -1,0 +1,40 @@
+<layout *ngIf="details">
+  <div class="subscription-details h-100 pb-3" magicScroll>
+    <div class="top-section flex aic jcsb py-2 px-4">
+      <h2>{{ 'subscription_details' | translate }}</h2>
+      <div [matTooltip]="'billing_history' | translate" class="img pointer" routerLink="/subscription/history">
+        <img alt="history" class="convert-image-color" height="28" src="assets/images/icons/history.svg" width="28">
+      </div>
+    </div>
+    <div [ngClass]="{'rtl': dir == 'rtl'}" class="space-card flex aic jcsb gap-x-5 px-3">
+      <div class="flex-auto actions">
+        <h1 class="white"><span *ngIf="dir == 'rtl'">شركة</span> {{ spaceName }} <span *ngIf="dir == 'ltr'">'s Space</span></h1>
+        <div class="w-100 flex aic gap-x-2 mt-4">
+
+          <button class="flex-50" color="primary" mat-raised-button *ngIf="_package?.paymentPackageId !== 1 && renewable" (click)="renew()">{{ 'renew' | translate }}</button>
+          <button (click)="manageSubscription()" class="flex-50" mat-raised-button>{{ 'manage_subscription' | translate }}</button>
+        </div>
+      </div>
+      <div class="img mr-5">
+        <img alt="" height="183" src="assets/images/icons/wallet.svg" width="181">
+      </div>
+    </div>
+    <div class="details mt-5 px-3">
+      <div class="flex-grid gap-y-5">
+        <div *ngFor="let item of details" class="col-lg-4">
+          <div class="card shadow rounded p-3 text-center w-60 mx-auto bg-gray">
+            <div class="card-body">
+              <div class="card-title flex-center gap-x-1">
+                <div class="img rounded-50 bg-light-primary-2 flex-center">
+                  <img *ngIf="item.icon" [alt]="item.icon" height="20" src="assets/images/icons/{{item.icon}}.svg" width="20">
+                </div>
+                <p class="primary">{{ item.name | translate }}</p>
+              </div>
+              <p class="card-text mt-1">{{ item.value | translate }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</layout>

@@ -1,0 +1,13 @@
+<apx-chart
+*ngIf="!loading"
+[series]="chartOptions?.series"
+[chart]="chartOptions?.chart"
+[labels]="chartOptions?.labels"
+[colors]="chartOptions?.colors"
+[legend]="chartOptions?.legend"
+[dataLabels]="chartOptions?.dataLabels"
+[responsive]="chartOptions?.responsive"
+[title]="chartOptions?.title"
+[subtitle]="chartOptions?.subtitle"
+[plotOptions]="chartOptions.plotOptions"
+></apx-chart>

@@ -1,0 +1,7 @@
+<div class="audio-message">
+  <p class="mb-50" *ngIf="message.text">{{message.text}}</p>
+  <audio controls="controls" class="w-100 rounded border">
+    <source src="{{apiUrl + '/' + message.url}}" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+</div>

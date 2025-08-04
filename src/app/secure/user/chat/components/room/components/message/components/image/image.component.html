@@ -1,0 +1,6 @@
+<div class="image-message pointer" (click)="openImage()">
+  <div class="img mb-50">
+    <img [src]="apiUrl + '/' + message.url" alt="" width="200" class="rounded object-fit-cover">
+  </div>
+  <p class="mt-50" *ngIf="message.text">{{message.text}}</p>
+</div>

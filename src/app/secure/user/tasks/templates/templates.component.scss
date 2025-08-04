@@ -1,0 +1,22 @@
+.table {
+  //min-width: 167rem;
+
+  th, td {
+    padding: 1rem !important;
+    font-size: 1.4rem !important;
+    text-align: start !important;
+  }
+
+  th {
+    padding: 1.5rem 1rem !important;
+  }
+
+  th:first-of-type, td:first-of-type {
+    padding-inline-start: 2.5rem !important;
+  }
+}
+
+.add-category {
+  min-width: auto;
+  padding: .6rem !important;
+}

@@ -1,0 +1,74 @@
+.table {
+  min-width: 180rem;
+  th {
+    font-size: 1.4rem !important;
+  }
+  td {
+    font-size: 1.4rem !important;
+  }
+}
+
+.truncate {
+  width: 15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+// -----
+//
+.table {
+  min-width: 115rem;
+}
+:host ::ng-deep {
+  .search,
+  .ng-select {
+    width: 100%;
+  }
+
+  label {
+    font-size: 11px;
+  }
+}
+
+.table-container {
+  border-radius: 8px; /* Apply border-radius to the container */
+  border: 0;
+  overflow: hidden; /* Ensure overflow is hidden to apply border-radius */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse; /* Ensure there is no space between table cells */
+  border-spacing: 0; /* Ensure no spacing between cells */
+}
+
+th {
+  border: none;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+tbody {
+  padding-bottom: 5px;
+  tr {
+    border-bottom: 1px solid #ddd; /* Border for table rows */
+  }
+
+  td {
+    padding-block: 10px;
+    padding-inline: 15px; /* Add horizontal padding */
+    border: none;
+    font-size: 12px;
+  }
+}
+
+td,
+th {
+  padding-inline: 15px; /* Ensure consistent padding */
+  border: none; /* Remove default border */
+}
+
+tr:last-child {
+  border-bottom: none; /* Remove border from the last row */
+}

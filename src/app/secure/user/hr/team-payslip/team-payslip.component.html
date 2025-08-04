@@ -1,0 +1,102 @@
+<layout-with-filters (pageChange)="service.page.next($event); service.hasChanged.next(true)" [meta]="meta">
+  <ng-container filters>
+    <div class="row align-items-end">
+      <div class="col-lg-5">
+        <div class="d-flex gap-x-2">
+          <search [key]="service.search.value" (valueChanged)="service.loading.next(true); service.search.next($event); service.hasChanged.next(true)"/>
+          <app-date-range  [width]="'w-100'" (valueChanged)="dateChange($event)" [maxDate]="maxDate" [startDate]="startDate" [endDate]="endDate"></app-date-range>
+        </div>
+  
+      </div>
+      <div class="col-lg-7">
+
+        <div class="d-flex justify-content-end gap-x-2">
+          <button mat-raised-button [ngClass]="{'bg-primary white': service.selectedUsersToTakeAction.value.length > 0}" (click)="takeAction(3)"
+                  [disabled]="service.selectedUsersToTakeAction.value.length == 0">
+            {{ 'submitted' | translate }} ({{ service.selectedUsersToTakeAction.value.length }})
+          </button>
+  
+          <button mat-raised-button [ngClass]="{'bg-danger white': service.selectedUsersToTakeAction.value.length > 0}" (click)="takeAction(2)"
+                  [disabled]="service.selectedUsersToTakeAction.value.length == 0">
+            {{ 'rejected' | translate }} ({{ service.selectedUsersToTakeAction.value.length }})
+          </button>
+          <button class="clickable-btn bg-primary white py-75 px-3 rounded" (click)="create()">{{ 'create_payslip' | translate }}</button>
+          <button class="clickable-btn bg-primary white py-75 px-3 rounded" (click)="bulkPayslips()">{{ 'multi_payslip' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': list.length == 0 || service.loading.value}" class="table w-100 relative">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">
+          <div class="flex aic">
+            <mat-checkbox class="mr-1 example-margin" color="primary" (change)="selectAllUsers($event)" [checked]="allChecked"></mat-checkbox>
+            <p>{{ 'employee' | translate }}</p>
+          </div>
+
+
+        </th>
+        <th>{{ 'basic_salary' | translate }}</th>
+        <th>{{ 'total_allowance' | translate }}</th>
+        <th>{{ 'target_kpi_bonus' | translate }}</th>
+        <th>{{ 'total_deductions' | translate }}</th>
+        <th>{{ 'gross_salary' | translate }}</th>
+        <th>{{ 'net_salary' | translate }}</th>
+<!--        <th>{{ 'status' | translate }}</th>-->
+        <th></th>
+      </tr>
+      </thead>
+      <tbody *ngIf="list.length > 0 && !service.loading.value">
+      <tr *ngFor="let item of list | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy" (click)="create(item)"
+          class="border-bottom pointer">
+        <td class="text-left">
+          <div class="flex aic">
+            <mat-checkbox class="mr-1 example-margin" color="primary" [checked]="item.isSelected" (change)="selectUser($event, item)" (click)="$event.stopImmediatePropagation()"></mat-checkbox>
+            <div class="flex aic gap-x-1">
+              <div class="img">
+                <user-image [img]="item.employeePic"/>
+              </div>
+              <div class="info">
+                <p>{{ item.employeeName }}</p>
+                <p class="muted">{{ item.employeeNJobTitle }}</p>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <p>{{ item.basic }}</p>
+        </td>
+        <td>
+          <p>{{ item.totalAllowance }}</p>
+        </td>
+        <td>
+          <p>{{ item.earnedKpiBonus || '-'}}</p>
+        </td>
+        <td>
+          <p>{{ item.totalDeductions }}</p>
+        </td>
+
+        <td>
+          <p>{{ item.gross }}</p>
+        </td>
+        <td>
+          <p>{{ item.totalNet }}</p>
+        </td>
+<!--        <td>-->
+        <!--        <div class="badge">-->
+        <!--          <p class="m-0" *ngIf="item.status == 0">{{ 'pending' | translate }}</p>-->
+        <!--          <p class="m-0" *ngIf="item.status == 1">{{ 'approved' | translate }}</p>-->
+        <!--          <p class="m-0" *ngIf="item.status == 2">{{ 'rejected' | translate }}</p>-->
+        <!--          <p class="m-0" *ngIf="item.status == 3">{{ 'submitted' | translate }}</p>-->
+        <!--        </div>-->
+        <!--        </td>-->
+      </tr>
+      </tbody>
+      <not-found *ngIf="list.length == 0 && !service.loading.value" class="a-center"></not-found>
+      <loading *ngIf="service.loading.value"></loading>
+    </table>
+  </ng-container>
+</layout-with-filters>

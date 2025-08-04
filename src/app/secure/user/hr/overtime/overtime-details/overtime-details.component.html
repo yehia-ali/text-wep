@@ -1,0 +1,167 @@
+<layout>
+  <div class="leaves-details relative h-100">
+    <ng-container *ngIf="!service.loading.value">
+      <div class="top-section flex aic jcsb p-2 border-bottom">
+        <div class="start flex aic gap-x-2">
+          <img src="assets/images/icons/overtime.svg" alt="" width="25" height="25">
+          <p>O-{{ details.id }}</p>
+          <h3>{{ details.title }}</h3>
+        </div>
+        <div class="flex aic jcsb gap-x-1">
+
+          <div class="action flex aic">
+            <ng-container *ngIf="details.overTimeStatus == 0">
+              <span class="rounded py-25 px-1 fs-14 bg-pending">{{ 'pending' | translate }}</span>
+            </ng-container>
+            <ng-container *ngIf="details.overTimeStatus == 1">
+              <span class="px-1 fs-14 text-approved mr-2">
+                <span class="date-start bg-approved"></span>
+                {{ 'approved_at' | translate }}
+                {{ details.lastActionDate | arabicDate }}
+              </span>
+              <span class="rounded py-25 px-1 fs-14 bg-approved">{{ 'approved' | translate }}</span>
+            </ng-container>
+            <ng-container *ngIf="details.overTimeStatus == 2">
+              <span class="px-1 fs-14 text-rejected mr-2">
+                <span class="date-start bg-rejected"></span>
+                {{ 'rejected_at' | translate }}
+                {{ details.lastActionDate | arabicDate }}
+              </span>
+              <span class="rounded py-25 px-1 fs-14 bg-rejected">{{ 'rejected' | translate }}</span>
+            </ng-container>
+            <ng-container *ngIf="details.overTimeStatus == 3">
+              <span class="rounded py-25 px-1 fs-14 bg-canceled">{{ 'canceled' | translate }}</span>
+            </ng-container>
+          </div>
+          <img src="assets/images/icons/history.svg" alt="history icon" class="convert-image-color pointer ml-1"
+               (click)="getHistory()">
+          <i class='bx bx-dots-vertical-rounded fs-25 pointer' *ngIf="details.overTimeStatus == 0 && isEmployee" [matMenuTriggerFor]="more"></i>
+          <mat-menu #more="matMenu">
+            <button mat-menu-item class="fs-16" (click)="cancelRequest()">
+              {{ "cancel" | translate }}
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+      <div class="details-content p-2" magicScroll>
+        <div class="flex-grid gap-y-2">
+          <div class="col-xl-7 border-right">
+            <div class="users flex aic jcsb">
+              <div class="creator">
+                <h4>{{ 'manager' | translate }}</h4>
+                <div class="flex aic mt-1">
+                  <app-img-title [imgSrc]="details.managerPic" [title]="details.managerName" [subTitle]="details.jobTitle" [userId]="details.managerId" />
+                </div>
+              </div>
+
+              <div class="assignee">
+                <h4>{{ 'employee' | translate }}</h4>
+                <div class="flex aic mt-1">
+                  <app-img-title [imgSrc]="details.userPic" [title]="details.userName" [subTitle]="details.jobTitle" [userId]="details.userId" />
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-2" *ngIf="details.taskTitle">
+              <h4>{{ 'task' | translate }}</h4>
+              <a [routerLink]="['/tasks/inbox/details', details.taskId]" class="mt-1 contains-link word-break">{{ details.taskTitle }}</a>
+
+            </div>
+
+            <div class="mt-2" *ngIf="details.requestReason">
+              <h4>{{ 'reason' | translate }}</h4>
+              <p class="mt-1 contains-link word-break" [innerHTML]="details.requestReason"></p>
+            </div>
+
+            <div class=" flex aic jcsb mt-2 mb-1 py-2 pr-2 pl-4 bg-gray rounded">
+              <div class="flex aic">
+                <h4 class="fs-18 bold mr-3"><span class="date-start"></span> {{ 'date' | translate }}</h4>
+                <p class="fs-18">{{ details.date | arabicDate }}</p>
+              </div>
+
+              <div class="flex aic">
+                <div class="ml-4 fs-16 days_num p-1 rounded"
+                     [ngStyle]="{ 'filter': details.overTimeHoursRequsted != details.overTimeHoursApproved && details.overTimeStatus == 1 ? 'grayscale(1)' : 'none' }">
+                  <p class="bold"
+                     [ngStyle]="{ 'text-decoration': details.overTimeHoursRequsted != details.overTimeHoursApproved && details.overTimeStatus == 1 ? 'line-through' : 'none' }">
+                    {{ details.overTimeHoursRequsted | convertToTime }}
+                  </p>
+                  <p class="fs-14">{{ 'hours' | translate }}</p>
+                </div>
+
+                <div class="ml-2 fs-16 days_num p-1 rounded" *ngIf="details.overTimeHoursRequsted != details.overTimeHoursApproved && details.overTimeStatus == 1">
+                  <p class="bold">{{ details.overTimeHoursApproved | convertToTime }}</p>
+                  <p class="fs-14">{{ 'hours' | translate }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class=" mt-2 mb-1 py-2 pr-2 pl-4 bg-rejected rounded" *ngIf="details.rejectionReason">
+              <h4 class="danger flex aic"><i class='bx bxs-error-circle text-rejected fs-25 mr-1'></i> {{ 'rejection_reason' | translate }}</h4>
+              <p class="mt-1 text-black contains-link word-break" [innerHTML]="details.rejectionReason"
+                 *ngIf="details.rejectionReason"></p>
+            </div>
+
+            <div class=" mt-2 mb-1 py-2 pr-2 pl-4 bg-note rounded" *ngIf="details.overTimeHoursRequsted != details.overTimeHoursApproved && details.overTimeStatus == 1">
+              <h4 class="text-note flex aic"><i class='bx bxs-error-circle text-note fs-25 mr-1'></i> {{ 'note' | translate }}</h4>
+              <p class="mt-1 text-black contains-link word-break" [innerHTML]="details.approveReason"
+                 *ngIf="details.approveReason"></p>
+            </div>
+
+            <div class=" mt-2 mb-1 py-2 pr-2 pl-4 custom-shadow rounded text-center" *ngIf="details.overTimeStatus == 0 && isManager">
+              <h4>{{ 'approved_hours' | translate }}</h4>
+              <p class="counter fs-25">
+                <i class='pointer violet bx bxs-plus-circle' (click)="increaseTime()"></i>
+                <span class="mx-1 bold">{{ acceptedHours | convertToTime }}</span>
+                <i class='no-click secondary bx bxs-minus-circle' *ngIf="disableBtn"></i>
+                <i class='pointer violet bx bxs-minus-circle' *ngIf="!disableBtn" (click)="decreaseTime()"></i>
+              </p>
+            </div>
+
+            <div class="flex aic mt-2" *ngIf="details.overTimeStatus == 0 && isManager">
+              <button (click)=" approveRequest()"
+                      class="pointer white clickable-btn bg-primary text-white mr-1 w-100 rounded py-1">
+                {{ "approve" | translate }}
+              </button>
+
+              <button (click)="rejectRequest(details.id)" class="pointer clickable-btn bg-danger w-100 rounded py-1">
+                {{ "reject" | translate }}
+              </button>
+            </div>
+
+          </div>
+          <div class="col-xl-5 relative">
+            <div class="pl- chat-section" *ngIf="!service.chatLoading.value && (details.isEmployee || details.isManager) && details.isEmployee != details.isManager; else noData">
+              <app-room [taskDetails]="true" [header]="false"/>
+              <loading *ngIf="service.chatLoading.value"/>
+            </div>
+
+            <ng-template #noData>
+              <div class="h-100 p-5">
+                <h2 class="flex-center mt-5">
+                  {{ 'no_chats' | translate }}
+                </h2>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <loading class="a-center" *ngIf="service.loading.value"/>
+
+  </div>
+</layout>
+
+
+<info-sidebar [open]="historyIsOpen">
+  <ng-container header>
+    <h2>{{ 'history' | translate }}</h2>
+  </ng-container>
+
+  <ng-container content>
+    <div class="p-2">
+      <history [history]="histories"></history>
+    </div>
+  </ng-container>
+</info-sidebar>

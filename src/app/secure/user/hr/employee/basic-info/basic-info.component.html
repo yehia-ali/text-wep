@@ -1,0 +1,80 @@
+<div class="p-2">
+  <div class="flex-grid" [formGroup]="form">
+    <div class="col-lg-3 mb-2">
+      <div class="name">
+        <label class="fs-11 simibold mb-75" for="name">
+          <i class="mr-50 bx bx-text"></i>
+          <span>{{'name' | translate}}</span>
+        </label>
+        <input id="name" type="text" class="input" formControlName="name">
+        <input-error [control]="f['name']" />
+      </div>
+    </div>
+    <div class="col-lg-3 mb-2">
+      <div class="jobTitle">
+        <label class="fs-11 simibold mb-75" for="jobTitle">
+          <i class="mr-50 bx bx-text"></i>
+          <span>{{'job_title' | translate}}</span>
+        </label>
+        <input id="jobTitle" type="text" class="input" formControlName="jobTitle">
+      </div>
+    </div>
+    <div class="col-lg-3 mb-2">
+      <div class="email">
+        <label class="fs-11 simibold mb-75" for="email">
+          <i class="mr-50 bx bx-envelope"></i>
+          <span>{{'email' | translate}}</span>
+        </label>
+        <input id="email" type="text" class="input" formControlName="email">
+      </div>
+    </div>
+    <div class="col-lg-3 mb-2">
+      <div class="phone">
+        <label class="fs-11 simibold mb-75" for="phone">
+          <i class="mr-50 bx bx-phone"></i>
+          <span>{{'phone' | translate}}</span>
+        </label>
+        <input id="phone" type="text" class="input" formControlName="phoneNumber" readonly>
+        <input-error [control]="f['phoneNumber']" />
+      </div>
+    </div>
+    <div class="col-lg-3 mb-2">
+      <div class="phone">
+        <label class="fs-11 simibold mb-75" for="phone">
+          <i class="mr-50 bx bx-user"></i>
+          <span>{{'manager' | translate}}</span>
+        </label>
+        <space-users-form [labelVisibilty]="false" formControlName="managerId" [label]="'manager'" />
+      </div>
+    </div>
+    <div class="col-lg-3 mb-2">
+      <div class="phone">
+        <label class="fs-11 simibold mb-75" for="phone">
+          <i class="mr-50 bx bx-category"></i>
+          <span>{{'department' | translate}}</span>
+        </label>
+        <departments-form [width]="'w-100'" [formControlName]="'departmentId'" [labelVisibilty]="false" [closeOnSelect]="true" [multiable]="false" />
+      </div>
+    </div>
+    <div class="col-lg-3 mb-2">
+      <div class="phone">
+        <label class="fs-11 simibold mb-75" for="employeeCode">
+          <i class="mr-50 bx bx-user"></i>
+          <span>{{'employee_code' | translate}}</span>
+        </label>
+        <input id="employeeCode" type="text" class="input" formControlName="employeeCode">
+      </div>
+    </div>
+     <!--  job description -->
+    <div class="col-xl-12 mb-2">
+      <input-label [control]="f['jobDescription']" key="job_description"></input-label>
+      <textarea class="input disabled-input" formControlName="jobDescription" rows="4"></textarea>
+    </div>
+
+  </div>
+  <div class="text-right" *ngIf="normalComponent">
+    <button (click)="submit()" class="btn rounded bg-primary white py-75 px-2 fs-14">
+      {{'save' | translate}}
+    </button>
+  </div>
+</div>

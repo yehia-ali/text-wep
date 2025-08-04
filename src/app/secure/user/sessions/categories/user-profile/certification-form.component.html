@@ -1,0 +1,68 @@
+<div class="certification-form" dir="auto">
+  <h3 *ngIf="!data.isEdit">{{'add_certification' | translate}}</h3>
+  <h3 *ngIf="data.isEdit">{{'edit_certification' | translate}}</h3>
+
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-1">
+        <div class="col-lg-12">
+          <input-label [control]="f['name']" [maxLength]="100" key="certificate_name"/>
+          <input class="input" formControlName="name" maxlength="100" type="text">
+          <input-error [control]="f['name']"/>
+        </div>
+        <div class="col-lg-6">
+          <input-label [control]="f['issueDate']" key="issue_date"/>
+<!--          <div (click)="start.open()" class="relative pointer">-->
+<!--            <input [matDatepicker]="start" [max]="today" class="input" formControlName="issueDate" readonly>-->
+<!--            <img alt="date icon" class="picker-icon img" src="../../../../assets/images/icons/date.svg">-->
+<!--          </div>-->
+          <month-filter (onChange)="getDate($event)" [displayLabel]="false"/>
+          <input-error [control]="f['issueDate']"/>
+        </div>
+        <div class="col-lg-6">
+          <input-label [control]="f['issueOrganizationName']" [maxLength]="100"
+                       key="issue_organization"/>
+          <input class="input" formControlName="issueOrganizationName" maxlength="100" type="text">
+          <input-error [control]="f['issueOrganizationName']"/>
+        </div>
+        <div class="col-lg-12">
+          <input-label key="certificate_image"/>
+          <label *ngIf="!selectedImage" class="upload bg-light-primary-10 primary rounded flex-center pointer" for="certificate">
+            <div class="img">
+              <img alt="upload image" src="../../../../assets/images/icons/upload.svg">
+            </div>
+            <p class="ml-75">{{'upload' | translate}}</p>
+          </label>
+          <div *ngIf="selectedImage" class="selected-image upload rounded bg-gray flex aic jcsb fs-14">
+            <p *ngIf="selectedImage.length > 25">
+              {{selectedImage | slice:0:21}}.{{selectedImage.split('.')[1]}}
+            </p>
+            <p *ngIf="selectedImage.length <= 25">
+              {{selectedImage}}
+            </p>
+            <i (click)="removeSelectedFile()" class='bx bx-x danger fs-25 pointer'></i>
+          </div>
+        </div>
+        <!-- <div class="col-lg-6">
+          <input-label key="organization_image" />
+          <label for="certificate" class="upload bg-light-primary-10 primary rounded flex-center pointer">
+            <div class="img">
+              <img src="assets/images/icons/upload.svg" alt="upload image">
+            </div>
+            <p class="ml-75">{{'upload' | translate}}</p>
+          </label>
+        </div> -->
+
+      </div>
+    </form>
+  </div>
+
+  <div align="end" mat-dialog-actions>
+    <button (click)="submit()" class="px-3" color="primary" mat-raised-button>{{'save' | translate}}</button>
+    <button class="shadow-0 border border-dark px-2 ml-1" mat-dialog-close="" mat-raised-button>{{'cancel' | translate}}</button>
+  </div>
+</div>
+
+
+<input (change)="fileChanged($event)" accept="image/*" hidden id="certificate" type="file"/>
+<!--<mat-datepicker #start></mat-datepicker>-->

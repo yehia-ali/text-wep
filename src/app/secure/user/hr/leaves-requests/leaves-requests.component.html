@@ -1,0 +1,56 @@
+<layout-with-filters (pageChange)="service.page.next($event); service.hasChanged.next(true)" [meta]="meta">
+  <ng-container filters>
+    <h2 class="pt-50 pl-1">{{ 'leave_request' | translate }}</h2>
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': requests.length == 0 || loading}" class="table w-100 relative">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">{{ 'member' | translate }}</th>
+        <th>{{ 'leaves_type' | translate }}</th>
+        <th>{{ 'leave_days' | translate }}</th>
+        <th>{{ 'start_date' | translate }}</th>
+        <th>{{ 'end_date' | translate }}</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody *ngIf="requests.length > 0 && !loading">
+      <tr *ngFor="let item of requests | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy"
+          class="border-bottom pointer"
+          routerLink="details/{{item.id}}">
+
+        <td>
+          <div class="flex jcs aic gap-x-2">
+            <user-image [img]="item.image_url"/>
+            <div class="content text-left">
+              <p class="bold">{{ item.user_name }}</p>
+              <p class="">{{ item.job_title == null ? 'test' : item.job_title }}</p>
+            </div>
+          </div>
+        </td>
+        <td>{{ item.leaves_type }}</td>
+        <td>{{ item.leave_days }}</td>
+        <td>{{ item.start_date | arabicDate }}</td>
+        <td>{{ item.end_date | arabicDate }}</td>
+        <td (click)="$event.stopImmediatePropagation()">
+          <div class="flex aic jcc">
+
+            <button (click)="approveRequest(item.id)"
+                    class="pointer border-0 flex aic jcc action rounded-50 bg-success mr-1">
+              <i class="fs-22 bx bx-check"></i>
+            </button>
+
+            <button (click)="rejectRequest(item.id)" class="pointer border-0 flex aic jcc action rounded-50 bg-danger">
+              <i class="fs-22 bx bx-x"></i>
+            </button>
+
+          </div>
+        </td>
+      </tr>
+      </tbody>
+      <not-found *ngIf="requests.length == 0 && !loading" class="a-center"></not-found>
+      <loading *ngIf="loading"></loading>
+    </table>
+  </ng-container>
+</layout-with-filters>

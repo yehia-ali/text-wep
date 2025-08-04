@@ -1,0 +1,84 @@
+<div class="late-form p-2" [dir]="currentLang === 'ar' ? 'rtl' : 'ltr'">
+  <p class="mb-2 fs-18 simibold" *ngIf="data.edit">{{'edit_late_checkin' | translate}}</p>
+  <p class="mb-2 fs-18 simibold" *ngIf="data.add">{{'add_late_checkin' | translate}}</p>
+
+  <form [formGroup]="form">
+    <!-- Delay Period Section -->
+    <div class="mb-3">
+      <div class="flex aic gap-x-1 mb-1">
+        <img src="assets/images/icons/clock.svg" alt="repeat">
+        <p class="fw-medium">{{'late_checkin_period' | translate}}</p>
+      </div>
+      <div class="flex aic gap-x-3 mb-2">
+        <div class="flex aic">
+          <p class="mx-2">{{'from' | translate}}</p>
+          <div class="minutes-container flex aic">
+            <input formControlName="minsFrom" type="number" min="0" class="input-time" readonly>
+          </div>
+          <p class="me-2">{{'minutes' | translate}}</p>
+          <input-error [control]="f['minsFrom']"></input-error>
+        </div>
+
+        <div class="flex aic">
+          <p class="mx-2">{{'to' | translate}}</p>
+          <div class="minutes-container flex aic">
+            <button type="button" class="btn-circle" (click)="minusToMinutes()">
+              <i class='bx bx-minus'></i>
+            </button>
+            <input formControlName="minsTo" type="number" [min]="f['minsFrom'].value + 1" class="input-time">
+            <button type="button" class="btn-circle" (click)="addToMinutes()">
+              <i class='bx bx-plus'></i>
+            </button>
+          </div>
+          <p class="me-2">{{'minutes' | translate}}</p>
+          <input-error [control]="f['minsTo']"></input-error>
+        </div>
+      </div>
+    </div>
+
+    <!-- Repetition Sections -->
+    <app-late-repetition 
+      [form]="form"
+      [repetitionNumber]="1"
+      [label]="'late_checkin_first_repetition'"
+      [placeholder]="'select_repetition_type'">
+    </app-late-repetition>
+
+    <app-late-repetition 
+      [form]="form"
+      [repetitionNumber]="2"
+      [label]="'late_checkin_second_repetition'"
+      [placeholder]="'select_repetition_type'">
+    </app-late-repetition>
+
+    <app-late-repetition 
+      [form]="form"
+      [repetitionNumber]="3"
+      [label]="'late_checkin_third_repetition'"
+      [placeholder]="'select_repetition_type'">
+    </app-late-repetition>
+
+    <app-late-repetition 
+      [form]="form"
+      [repetitionNumber]="4"
+      [label]="'late_checkin_fourth_repetition'"
+      [placeholder]="'select_repetition_type'">
+    </app-late-repetition>
+
+    <!-- Action Buttons -->
+    <div class="text-right mt-4">
+      <button (click)="submit()" type="submit" 
+        class="bg-primary white py-1 px-2 border-primary rounded pointer"
+        mat-button>
+        {{(data.edit ? 'update' : 'add') | translate}}
+      </button>
+      <button (click)="dialogRef.close()" type="button"
+      class="bg-white primary py-1 px-2 border-primary rounded pointer ml-1" mat-button
+      >
+      {{'cancel' | translate}}
+    </button>
+
+    </div>
+  </form>
+</div>
+

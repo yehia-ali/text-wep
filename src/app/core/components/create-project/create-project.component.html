@@ -1,0 +1,84 @@
+<h2 mat-dialog-title>
+  <ng-container *ngIf="!data?.edit">
+    {{'create_project' | translate}}
+  </ng-container>
+  <ng-container *ngIf="data?.edit">
+    {{'update_project' | translate}}
+  </ng-container>
+</h2>
+
+<div mat-dialog-content magicScroll="" dir="auto" class="pb-2">
+    <form [formGroup]="form">
+        <div class="flex-grid gap-y-2">
+            <!--        title     -->
+            <div class="col-lg-8 title" [ngClass]="{'col-lg-12': data?.edit}">
+                <input-label key="title" [control]="f['title']" [maxLength]="100"/>
+                <input type="text" class="input" formControlName="title" maxlength="100">
+                <input-error [control]="f['title']"/>
+            </div>
+
+            <!--        priority     -->
+            <div class="col-lg-4" [ngClass]="{'col-lg-6': data?.edit}">
+                <input-label [control]="f['priority']" key="priority"/>
+                <ng-select [items]="priorities" formControlName='priority' [clearable]="false" bindLabel="name" bindValue="value" appendTo="body">
+                    <ng-template ng-option-tmp ng-label-tmp let-item="item">
+                        <div class="flex aic">
+                            <priority [priority]="item.value"></priority>
+                            <span class="ml-1 fs-15">{{ item.name | translate}}</span>
+                        </div>
+                    </ng-template>
+                </ng-select>
+                <input-error [control]="f['priority']"/>
+            </div>
+
+            <!--        Start Date     -->
+            <div class="col-lg-6" *ngIf="!data?.edit">
+                <input-label [control]="f['startDate']" key="start_date"/>
+                <input [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" class="input" formControlName="startDate" [min]="now">
+                <input-error [control]="f['startDate']"/>
+            </div>
+
+            <!--  End Date  -->
+            <div class="col-lg-6">
+                <input-label [control]="f['endDate']" key="end_date"/>
+                <input [owlDateTimeTrigger]="dt2" [owlDateTime]="dt2" class="input" formControlName="endDate" [min]="f['startDate'].value">
+                <input-error [control]="f['endDate']"/>
+            </div>
+
+
+            <!--        Members     -->
+            <div class="col-lg-12" *ngIf="!data?.edit">
+                <input-label key="members"/>
+                <select-user text="members" classes="w-100" (getSelectedUsers)="selectedMembers = $event"/>
+            </div>
+
+            <!--      description      -->
+            <div class="col-md-12">
+                <input-label [optional]="true" [control]="f['description']" key="description"/>
+                <angular-editor formControlName="description" [config]="config" id="description"></angular-editor>
+            </div>
+
+            <!--      DOD      -->
+            <div class="col-md-12">
+                <input-label [optional]="true" [control]="f['definitionOfDone']" key="dod"/>
+                <angular-editor formControlName="definitionOfDone" [config]="config" id="definitionOfDone"></angular-editor>
+            </div>
+
+
+        </div>
+    </form>
+</div>
+
+<div mat-dialog-actions>
+    <div class="flex jcfe w-100">
+        <button class="px-4 mr-2 dark-color clickable-btn rounded cancel-btn"
+                mat-dialog-close="">{{'cancel' | translate}}</button>
+        <button mat-raised-button color="primary" class="px-4 fs-15" (click)="submit()" [disabled]="form.invalid || loading">
+            <submit-button [text]="'create'" [loading]="loading"></submit-button>
+        </button>
+    </div>
+</div>
+
+
+<owl-date-time #dt1></owl-date-time>
+<owl-date-time #dt2></owl-date-time>

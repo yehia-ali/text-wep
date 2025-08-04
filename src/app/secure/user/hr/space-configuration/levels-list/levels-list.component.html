@@ -1,0 +1,163 @@
+
+<div class="py-1">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <div class="col-lg-3">
+      <search [newSearch]="true" (valueChanged)="search($event)" [hideLabel]="true"></search>
+    </div>
+    <div class="col-lg-3 text-right">
+      <a (click)="openDialog()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14">
+        {{'create_level' | translate}}
+      </a>
+    </div>
+  </div>
+  <div class="px-50">
+
+    <div class="table-container mx-1" *ngIf="levels.length > 0 && !loading">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">{{ 'arabic_name' | translate }}</th>
+            <th class="text-left py-1">{{ 'english_name' | translate }}</th>
+            <th class="text-left py-1">{{ 'date' | translate }}</th>
+            <th class="text-left py-1"></th>
+          </tr>
+        </thead>
+
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of levels" >
+            <td class="text-left">{{ item.nameAr }}</td>
+            <td class="text-left">{{ item.nameEn }}</td>
+            <td class="text-left">{{ item.creationDate | arabicDate }}</td>
+            <td class="text-left">
+              <div class="d-flex align-items-center gap-2">
+                <div class="img pointer" (click)="openDialog(item)">
+                  <img src="assets/images/icons/edit1.svg" alt="edit icon">
+                </div>
+  
+                <i class="bx bx-show fs-30 primary px-50 pointer"  (click)="openLevelDialog(item)"></i>
+              </div>
+              </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="levels.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>
+
+<ng-template #dialogTemplate>
+
+  <div class="dir">
+    <div class="flex w-100 jcsb">
+      <h4>{{(update? 'edit_level' : 'create_level') | translate}}</h4>
+      <i class="bx bx-x fs-25 danger pointer p-1" (click)="closeDialog()"></i>
+    </div>
+    <mat-dialog-content>
+      <form action="" [formGroup]="form">
+        <div class="flex-grid gap-y-1">
+          <div class="col-lg-6">
+            <div class="name">
+              <input-label key="arabic_name" [control]="f['nameAr']"/>
+              <input type="text" formControlName="nameAr" class="input">
+              <input-error [control]="f['nameAr']"/>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="name">
+              <input-label key="english_name" [control]="f['nameEn']"/>
+              <input type="text" formControlName="nameEn" class="input">
+              <input-error [control]="f['nameEn']"/>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="name">
+              <levels-list-form [label]="'parent_level'" [formControlName]="'parentId'"/>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="name">
+              <space-users-form [formControlName]="'managerId'" [label]="'manager'"/>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="name">
+              <input-label key="code" [control]="f['levelCode']"/>
+              <input type="text" formControlName="levelCode" class="input">
+              <input-error [control]="f['levelCode']"/>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="">
+        <app-maps [lat]="form.value.lat" [long]="form.value.long" (mapChanged)="getMapData($event)" />
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <div class="text-right w-100">
+        <a (click)="addLevel()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14 ">
+          {{(update? 'edit_level' : 'create_level') | translate}}
+        </a>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</ng-template>
+
+<ng-template #dialogLevelTemplate>
+
+  <div class="dir">
+    <div class="flex w-100 jcsb">
+      <div class="flex aic pt-1 pl-1">
+        <p class="fs-18 simibold mr-1">{{'level_users' | translate}}</p>
+        <select-user text="assignees" [selectedUsers]="selectedUsers" (getSelectedUsers)="getUsers($event)"/>
+      </div>
+      <i class="bx bx-x fs-25 danger pointer p-1" (click)="closeDialog()"></i>
+    </div>
+    <div>
+      <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+        <loading ></loading>
+      </div>
+      <div class="py-5 text-center" *ngIf="levelUsers.length == 0 && !loading">
+        <not-found></not-found>
+      </div>
+      <div class="table-container mx-1 mt-1 mb-1 " *ngIf="levelUsers.length > 0">
+        <table class="w-100 table">
+          <thead class="border bg-gray">
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">
+
+              {{ 'code' | translate }}</th>
+            <th class="text-left py-1">{{ 'user' | translate }}</th>
+            <th class="text-left py-1">{{ 'manager' | translate }}</th>
+            <th class="text-left py-1">{{ 'department' | translate }}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="border pointer" *ngFor="let user of levelUsers">
+            <td class="fs-13 text-left">{{ user.employeeCode || '-' }}</td>
+            <td class="fs-14 flex aic jcfs text-left gap-x-1">
+              <app-img-title [imgSrc]="user.imageUrl" [subTitle]="user.jobTitle" [title]="user.name.length > 20 ? (user.name | slice:0:20) + '...' : user.name"></app-img-title>
+            </td>
+            <td class="fs-13 text-left">{{ (user.managerName.length > 20 ? (user.managerName | slice:0:20) + '...' : user.managerName) || '-' }}</td>
+            <td class="fs-13 text-left">{{ user.departmentName }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="px-1 py-1" *ngIf="selectedUsers.length > 0">
+      <div class="text-right w-100">
+        <a (click)="addLevelUsers()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14 ">
+          {{'insert_users' | translate}}
+        </a>
+      </div>
+    </div>
+  </div>
+</ng-template>

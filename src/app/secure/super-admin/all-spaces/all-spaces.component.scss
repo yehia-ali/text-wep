@@ -1,0 +1,13 @@
+.table {
+  min-width: 260rem;
+}
+
+th {
+  min-width: max-content !important;
+  width: max-content !important;
+}
+
+mat-chip {
+  width: 9.5rem;
+  min-width: max-content;
+}

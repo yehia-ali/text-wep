@@ -1,0 +1,16 @@
+<div class="filters flex aic jcsb gap-x-4">
+  <div class="flex-auto flex aic flex-wrap gap-x-1 gap-y-1">
+    <search (valueChanged)="filter($event, service.search)" [key]="service.search.value"></search>
+    <category-filter (emitChange)="filter($event, service.category)" [selectedCategories]="service.category.value" [categories]="service.categories | async"></category-filter>
+  </div>
+
+  <div class="flex aic">
+    <div class="mr-1">
+      <button mat-raised-button color="primary" (click)="newTemplate.emit()">{{'new_templates' | translate}}</button>
+    </div>
+    <button mat-raised-button color="primary" (click)="manageCategory.emit()">{{'manage_category' | translate}}</button>
+  </div>
+</div>
+
+
+

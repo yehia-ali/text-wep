@@ -1,0 +1,55 @@
+<div class="px-2 py-1 h-70vh">
+    <div class="content">
+        <!-- Info banner -->
+        <loading *ngIf="loading"></loading>
+        <div *ngIf="!loading" class="content-container">
+        <div class="info-banner">
+            <i class="bx bx-info-circle"></i>
+            <span>{{'payroll_cycle_description' | translate}}</span>
+        </div>
+
+        <form [formGroup]="form" [dir]="currentLanguage === 'ar' ? 'rtl' : 'ltr'">
+            <div class="radio-container mb-1">
+                <mat-radio-group formControlName="crossMonth" class="custom-radio-group" color="primary" (change)="changeFromToDay()">
+                    <mat-radio-button [value]="false" class="radio-option" [disabled]="!isEditing">
+                        <span class="radio-label"><b>{{'regular_payroll_cycle' | translate}}</b> "{{'from_start_to_end_of_month' | translate}}" </span>
+                    </mat-radio-button>
+                    <mat-radio-button [value]="true" class="radio-option" [disabled]="!isEditing">
+                        <span class="radio-label"><b>{{'extended_payroll_cycle' | translate}}</b> "{{'payrolls_that_start_in_a_month_and_end_in_the_next_month' | translate}}"</span>
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div class="d-flex gap-y-1 mb-2" *ngIf="f['crossMonth'].value">
+                <div class="col-lg-2">
+                    <input-label key="start_day" [control]="f['fromDay']" [showIcon]="true"
+                    [icon]="'assets/images/icons/calendar-icon.svg'"/>
+                    <ng-select [items]="daysList" [clearable]="false" bindLabel="label" bindValue="value" (change)="onCrossMonthChange()"
+                    formControlName="fromDay" class="late-select" [placeholder]="'shift_start_time' | translate" [readonly]="!isEditing">
+                  </ng-select>  
+              
+                </div>
+                <div class="col-lg-2">
+                    <input-label [key]="f['crossMonth'].value ? 'end_time_next_month' : 'shift_end_time'" [control]="f['toDay']" [showIcon]="true"
+                    [icon]="'assets/images/icons/calendar-icon.svg'"/>
+                    {{f['toDay'].value}}
+                </div>
+            </div>
+        </form>
+        <div class="buttons-container">
+            <button *ngIf="!isEditing" class="border-primary primary" mat-raised-button
+                [ngClass]="{'border-primary primary': form.valid}" [disabled]="form.invalid" (click)="isEditing = true">
+                {{ 'edit' | translate }}
+            </button>
+            <button *ngIf="isEditing" mat-raised-button color="primary" (click)="updateCycle(); isEditing = false">
+                {{ 'save' | translate }}
+            </button>
+            <button *ngIf="isEditing" class="border-primary primary" mat-raised-button
+                [ngClass]="{'border-primary primary': form.valid}"  (click)="resetToOriginalData(); isEditing = false">
+                {{ 'cancel' | translate }}
+            </button>
+
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<div class="selecte-template dir pb-1 relative">
+  <i class="template-close bx bx-x fs-20 absolute p-1 pointer" (click)="close()"></i>
+  <div class="flex jcsb aic p-2">
+    <div class="flex">
+      <search  [width]="'w-15r'" [hideLabel]="true"   [classes]="'py-50 pr-1 fs-10 mr-1'" (valueChanged)="searchValue = $event ; getTempates(selectedTemplateFilter)"/>
+    </div>
+    <div class="flex aic jce">
+      <ng-container *ngFor="let item of templatesFilterList" >
+        <div class="template ml-1 pointer py-1 px-1 {{selectedTemplateFilter == item.number ? 'primary active' : '' }}" (click)="getTempates(item.number)">{{item.name | translate}}</div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="templates-content-data p-2" *ngIf="templates.length > 0 && !loading">
+    <div class="mt-2 rounded px-2 pb-1 pt-2 shadow bg-white relative template-data-item pointer" *ngFor="let item of templates" (click)="selecteTemplate(item)">
+      <span class="bg-gray absolute template-data-item-category text-center " >
+        {{
+          language == 'ar' ?
+          (item.taskTemplateCategoryArName.length < 15 ? item.taskTemplateCategoryArName : (item.taskTemplateCategoryArName | slice:0:15) + '...')  :
+          (item.taskTemplateCategoryName.length < 15 ? item.taskTemplateCategoryName : (item.taskTemplateCategoryName | slice:0:15) + '...') }}
+      </span>
+      <p class="pt-50">{{item.title.length < 50 ? item.title : (item.title | slice:0:50) + '...'}}</p>
+    </div>
+  </div>
+
+  <div class="py-5 flex aic jcc" *ngIf="templates.length == 0 || loading">
+    <loading *ngIf="loading"/>
+    <not-found *ngIf="templates.length == 0 && !loading"/>
+  </div>
+</div>

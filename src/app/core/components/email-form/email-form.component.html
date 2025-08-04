@@ -1,0 +1,71 @@
+<div class="email-form" dir="auto">
+  <h2 class="flex aic jcsb black">
+    <p>{{ data?.isForward ? ('forward_email' | translate) : data?.isReply ? ('reply' | translate) : ('compose_email' | translate) }}</p>
+    <i class='bx bx-x fs-35 pointer danger' mat-dialog-close></i>
+  </h2>
+
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <ng-container *ngIf="mailConfigured">
+
+        <div class="flex aife gap-x-2 w-100">
+          <div class="to-text flex-50">
+            <div class="flex">
+              <input-label key="to"/>
+              <p class="fs-14 ml-50">{{'to_text_or_choose' | translate}}</p>
+            </div>
+            <input type="text" class="input" [(ngModel)]="toText" [ngModelOptions]="{standalone: true}">
+          </div>
+
+          <div class="to-select flex-50">
+            <!--            <input-label key="to"/>-->
+            <select-user text="select_users" classes="w-100 py-75" [multi]="true" (getSelectedUsers)="getAssignees($event)"/>
+          </div>
+        </div>
+
+        <div class="flex aife gap-x-2 w-100 my-1">
+          <div class="cc-text flex-50">
+            <div class="flex">
+              <input-label key="cc"/>
+              <p class="fs-14 ml-50">{{'to_text_or_choose' | translate}}</p>
+            </div>
+            <input type="text" class="input" [(ngModel)]="ccText" [ngModelOptions]="{standalone: true}">
+          </div>
+
+          <div class="cc-select flex-50">
+            <select-user text="select_users" classes="w-100 py-75" [multi]="true" (getSelectedUsers)="getCC($event)"/>
+          </div>
+        </div>
+
+        <div class="title">
+          <input-label key="subject" [control]="f['subject']"/>
+          <input type="text" class="input" formControlName="subject" [readOnly]="data?.isReply || data?.isForward">
+          <input-error [control]="f['subject']"/>
+        </div>
+
+        <div class="body mt-1">
+          <input-label key="body" [control]="f['htmlBody']"/>
+          <angular-editor formControlName="htmlBody" [config]="config" id="description3"></angular-editor>
+          <input-error [control]="f['htmlBody']"/>
+        </div>
+
+        <!--      attachments      -->
+        <div class="mt-2">
+          <get-attachments (getAttachments)="getAttachments($event)"/>
+        </div>
+      </ng-container>
+      <p class="fs-25 black" *ngIf="!mailConfigured">{{ 'configuration_required' | translate }}</p>
+    </form>
+  </div>
+
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex">
+      <button class="px-4 mr-2 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>
+        {{ 'cancel' | translate }}
+      </button>
+      <button mat-raised-button color="primary" class="px-5 fs-15" (click)="submit()" [disabled]="form.invalid || (assignees.length == 0 && !toText) || loading">
+        <submit-button text="send" [loading]="loading"></submit-button>
+      </button>
+    </div>
+  </div>
+</div>

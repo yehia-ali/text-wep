@@ -1,0 +1,167 @@
+<loading *ngIf="loading"/>
+<user-navbar/>
+<div class="p-2">
+  <layout>
+    <div class="my-calendar">
+      <div class='flex h-100 gap-x-3'>
+        <div class='sidebar border p-2' magicScroll>
+          <div>
+            <div class="flex aic">
+              <mat-checkbox color="primary" [(ngModel)]="tasksToggle" (ngModelChange)="service.tasksToggle.next($event); getMyCalendar()">{{ 'tasks' | translate }}</mat-checkbox>
+              <i class='bx bx-chevron-down fs-30 pointer' [ngClass]="{'bx-rotate-180': filterType == 1}" (click)="changeFilterType(1)"></i>
+            </div>
+            <div class="task-filters bg-gray px-1 py-1" *ngIf="filterType == 1">
+              <div>
+                <!-- <div class="w-100 mb-1">
+                  <select-user text="assignee" [multi]="false" classes="w-100" (getSelectedUsers)="service.taskAssignee.next($event); getMyCalendar()" [selectedUsers]="service.taskAssignee.value"/>
+                </div> -->
+                <div class="w-100">
+                  <select-user text="creator" [multi]="false" classes="w-100" (getSelectedUsers)="service.taskCreator.next($event); getMyCalendar()" [selectedUsers]="service.taskCreator.value"/>
+                </div>
+              </div>
+              <div class="mt-1 ">
+                <div class="w-100">
+                  <task-type classes="w-100" (valueChanged)="service.taskType.next($event); getMyCalendar()" [selectedValue]="service.taskType.value"/>
+                </div>
+                <div class="w-100">
+                  <task-status classes="w-100" (valueChanged)="service.taskStatus.next($event); getMyCalendar()" [selectedValue]="service.taskStatus.value"/>
+                </div>
+              </div>
+              <!--              <div class="mt-1">-->
+              <!--              </div>-->
+              <!-- <div class="mt-1 ">
+                <div class="w-100">
+                  <priority-filter classes="w-100" (valueChanged)="service.taskPriority.next($event); getMyCalendar()" [selectedValue]="service.taskPriority.value"/>
+                </div>
+                <div class="w-100">
+                  <is-rated classes="w-100" (valueChanged)="service.taskRate.next($event); getMyCalendar()" [selectedValue]="service.taskRate.value"/>
+                </div>
+              </div> -->
+              <!--              <div class="mt-1">-->
+              <!--              </div>-->
+              <div class="mt-1 ">
+                <div class="w-100">
+                  <is-overdue classes="w-100" (valueChanged)="service.taskOverdue.next($event); getMyCalendar()" [selectedValue]="service.taskOverdue.value"/>
+                </div>
+                <div class="w-100">
+                  <projects classes="w-100" (valueChanged)="service.taskProject.next($event); getMyCalendar()" [selectedValue]="service.taskProject.value"/>
+                </div>
+              </div>
+              <!--              <div class="mt-1">-->
+              <!--              </div>-->
+            </div>
+          </div>
+          <div>
+            <div class="flex aic">
+              <mat-checkbox class="meeting" color="primary" [(ngModel)]="meetingsToggle" (ngModelChange)="service.meetingsToggle.next($event); getMyCalendar()">{{ 'meetings' | translate }}
+              </mat-checkbox>
+              <!-- <i class='bx bx-chevron-down fs-30 pointer' [ngClass]="{'bx-rotate-180': filterType == 2}" (click)="changeFilterType(2)"></i> -->
+            </div>
+            <div class="meeting-filters bg-gray px-1 py-1" *ngIf="filterType == 2">
+              <div>
+                <!-- <div class="w-100 mb-1">
+                  <select-user text="assignee" [multi]="false" classes="w-100" (getSelectedUsers)="service.taskAssignee.next($event); getMyCalendar()" [selectedUsers]="service.taskAssignee.value"/>
+                </div> -->
+                <div class="w-100">
+                  <select-user text="creator" [multi]="false" classes="w-100" (getSelectedUsers)="service.taskCreator.next($event); getMyCalendar()" [selectedUsers]="service.taskCreator.value"/>
+                </div>
+              </div>
+              <div class="mt-1 ">
+                <div class="w-100">
+                  <task-type classes="w-100" (valueChanged)="service.taskType.next($event); getMyCalendar()" [selectedValue]="service.taskType.value"/>
+                </div>
+                <div class="w-100">
+                  <task-status classes="w-100" (valueChanged)="service.taskStatus.next($event); getMyCalendar()" [selectedValue]="service.taskStatus.value"/>
+                </div>
+              </div>
+              <!--              <div class="mt-1">-->
+              <!--              </div>-->
+              <div class="mt-1 ">
+                <div class="w-100">
+                  <priority-filter classes="w-100" (valueChanged)="service.taskPriority.next($event); getMyCalendar()" [selectedValue]="service.taskPriority.value"/>
+                </div>
+                <div class="w-100">
+                  <is-rated classes="w-100" (valueChanged)="service.taskRate.next($event); getMyCalendar()" [selectedValue]="service.taskRate.value"/>
+                </div>
+              </div>
+              <!--              <div class="mt-1">-->
+              <!--              </div>-->
+              <div class="mt-1 ">
+                <div class="w-100">
+                  <is-overdue classes="w-100" (valueChanged)="service.taskOverdue.next($event); getMyCalendar()" [selectedValue]="service.taskOverdue.value"/>
+                </div>
+                <div class="w-100">
+                  <projects classes="w-100" (valueChanged)="service.taskProject.next($event); getMyCalendar()" [selectedValue]="service.taskProject.value"/>
+                </div>
+              </div>
+              <!--              <div class="mt-1">-->
+              <!--              </div>-->
+            </div>
+          </div>
+          <div>
+            <div class="flex aic">
+              <mat-checkbox class="vote" color="primary" [(ngModel)]="votesToggle" (ngModelChange)="service.votesToggle.next($event); getMyCalendar()">{{ 'votes' | translate }}</mat-checkbox>
+              <i class='bx bx-chevron-down fs-30 pointer' [ngClass]="{'bx-rotate-180': filterType == 3}" (click)="changeFilterType(3)"></i>
+            </div>
+            <div class="vote-filters bg-gray px-1 py-1" *ngIf="filterType == 3">
+              <div>
+                <!-- <div class="w-100 mb-1">
+                  <select-user text="assignee" [multi]="false" classes="w-100" (getSelectedUsers)="service.voteAssignees.next($event); getMyCalendar()" [selectedUsers]="service.voteAssignees.value"/>
+                </div> -->
+                <div class="w-100">
+                  <select-user text="creator" [multi]="false" classes="w-100" (getSelectedUsers)="service.voteCreators.next($event); getMyCalendar()" [selectedUsers]="service.voteCreators.value"/>
+                </div>
+              </div>
+              <div class="mt-1">
+                <div class="w-100">
+                  <vote-status classes="w-100" (valueChanged)="service.voteStates.next($event); getMyCalendar()" [selectedValue]="service.voteStates.value"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="flex aic">
+              <mat-checkbox class="leave" color="primary" [(ngModel)]="leavesToggle" (ngModelChange)="service.leavesToggle.next($event); getMyCalendar()">{{ 'leaves' | translate }}</mat-checkbox>
+              <i class='bx bx-chevron-down fs-30 pointer' [ngClass]="{'bx-rotate-180': filterType == 4}" (click)="changeFilterType(4)"></i>
+            </div>
+            <div class="leaves-filters bg-gray px-1 py-1" *ngIf="filterType == 4">
+              <div>
+                <!-- <div class="w-100 mb-1">
+                  <select-user text="user" [multi]="false" classes="w-100" (getSelectedUsers)="service.leaveUser.next($event); getMyCalendar()" [selectedUsers]="service.leaveUser.value"/>
+                </div>
+                <div class="w-100">
+                  <select-user text="manager" [multi]="false" classes="w-100" (getSelectedUsers)="service.leaveManager.next($event); getMyCalendar()" [selectedUsers]="service.leaveManager.value"/>
+                </div> -->
+                <div class="w-100 mt-1">
+                  <leave-status classes="w-100" (valueChanged)="service.leaveStatus.next($event); getMyCalendar()" [selectedValue]="service.leaveStatus.value"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <mat-checkbox class="holiday" color="primary" [(ngModel)]="holidaysToggle" (ngModelChange)="service.holidaysToggle.next($event); getMyCalendar()">{{ 'holiday_of_egypt' | translate }}
+            </mat-checkbox>
+          </div>
+        </div>
+        <full-calendar [options]='calendarOptions' [events]="events" [deepChangeDetection]="true" #calendar>
+          <ng-template #eventContent let-arg>
+            <div class="calendar-chip rounded px-75 flex aic white pointer"
+                 [ngClass]="{'bg-primary': arg.event?.extendedProps.calenderType == 1, 'bg-meeting': arg.event?.extendedProps.calenderType == 5, 'bg-vote': arg.event?.extendedProps.calenderType == 2, 'bg-leave': arg.event?.extendedProps.calenderType == 3, 'bg-holiday': arg.event?.extendedProps.calenderType == 4}"
+                 [matTooltip]="arg.event.title">
+              <div class="flex aic">
+                <div class="img">
+                  <img src="assets/images/main-sidebar/tasks.svg" width="17" alt="icon" class="convert-image-color" *ngIf="arg.event?.extendedProps.calenderType == 1">
+                  <img src="assets/images/main-sidebar/voting.svg" width="17" alt="icon" class="convert-image-color" *ngIf="arg.event?.extendedProps.calenderType == 2">
+                  <img src="assets/images/icons/leave.svg" width="17" alt="icon" class="convert-image-color" *ngIf="arg.event?.extendedProps.calenderType == 3">
+                  <img src="assets/images/icons/holiday.svg" width="17" alt="icon" class="convert-image-color" *ngIf="arg.event?.extendedProps.calenderType == 4">
+                  <img src="assets/images/main-sidebar/meeting.svg" width="17" alt="icon" class="convert-image-color" *ngIf="arg.event?.extendedProps.calenderType == 5">
+                </div>
+                <p class="ml-50">{{ arg.event.title }}</p>
+              </div>
+            </div>
+          </ng-template>
+        </full-calendar>
+      </div>
+    </div>
+  </layout>
+</div>

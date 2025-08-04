@@ -1,0 +1,96 @@
+<div class="kpis-user-dashboard pr-2" >
+  <p class="mb-2 simibold bg-light-danger p-1 rounded ">{{'beta' | translate}}</p>
+  <div class="dir pt-1">
+    <div class="flex jcsb aic mb-2">
+      <p class="fs-17 black simibold ">{{'kpi' | translate}}</p>
+
+    </div>
+    </div>
+  <div class="filter flex aic jcs mb-2 gap-x-1" *ngIf="!categoryId && isManager">
+    <app-users-filter [getMyTeam]="true" (valueChanged)="getfilterData($event , 'user')" [multi]="false" *ngIf="isManager"/>
+    <app-date-filter (valueChanged)="getfilterData($event , 'date')" />
+    <!-- <app-task-state-filter (valueChanged)="getfilterData($event , 'state')" [kpis]="true" [filter]="false"/> -->
+    <!-- <app-date-filter (valueChanged)="getfilterData($event , 'date')" /> -->
+  </div>
+  <div class="bg-white p-2 rounded shadow mb-2 fs-14" *ngIf="categoryDetails">
+    <p class="pb-1 mb-1 border-bottom flex aic fs-18 fw-500">
+      <i class="bx bx-category primary mr-1"></i>
+      <span>{{categoryDetails.categoryName}}</span>
+    </p>
+    <div class="mb-1 flex aic">
+      <i class="bx bx-align-justify fs-18"></i>
+      <p [innerHTML]="categoryDetails.categoryDescribtion"></p>
+    </div>
+    <div class="flex aic jcsb">
+      <div>
+        <div class="flex aic gap-x-1">
+          <i class="bx bx-target-lock fs-18"></i>
+          <span>{{'target' | translate}}</span>
+        </div>
+        <p class="pl-25">{{categoryDetails.targetCategory}}</p>
+      </div>
+      <div>
+        <div class="flex aic gap-x-1">
+          <i class="bx bx-trophy fs-18"></i>
+          <span>{{'achieved' | translate}}</span>
+        </div>
+        <p class="pl-25">{{categoryDetails.categoryValue}}</p>
+      </div>
+      <div>
+        <div class="flex aic gap-x-1">
+          <i class="bx bx-dumbbell fs-18"></i>
+          <span>{{'weight' | translate}}</span>
+        </div>
+        <p class="pl-25">{{categoryDetails.categoryWeight}}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white p-3 rounded shadow flex jcsb mb-2 user-dashboard-chart" *ngIf="!loading">
+    <div class="content flex-column jcc">
+      <div class="fs-15 mb-1">
+        <span class="simibold dark">{{'achieved' | translate}} : </span>
+        <span class="simibold {{dashboard?.percentage < 35 ? 'danger' : dashboard?.percentage < 70 ? 'warning' : 'success'}}">{{dashboard?.percentage | arabicNumbers}}%</span>
+      </div>
+      <div class="fs-15">
+        <span class="simibold dark">{{(!categoryId ? 'total_kpi_categories' : 'total_kpis') | translate}} : </span>
+        <span class="simibold dark">{{dashboard?.totalCount | arabicNumbers}}</span>
+      </div>
+    </div>
+    <div class="dash-header-chart flex aic jce" >
+      <chart-radial-bar [details]="dashboard" [hideDetails]="true"/>
+    </div>
+  </div>
+
+  <div class="user-kpis-items flex-grid" *ngIf="!loading && dashboardItems.length > 0">
+    <div class="col-lg-3 mb-3" *ngFor="let item of dashboardItems">
+      <div class="bg-white shadow rounded py-2 pointer" [routerLink]="getKpiLink(item)" [queryParams]="getQueryParams()">
+        <div class="title px-2 mb-2">
+          <h5 class="mb-1">{{item.title}}</h5>
+          <div class="flex jcsb aic">
+            <span class="px-1 rounded-5 kpi-status-{{item.kpiStatus}}">{{kpiStatus[item.kpiStatus] | translate}}</span>
+            <span class="px-1 rounded-5 bg-gray">{{item.endDate | arabicDate}}</span>
+          </div>
+        </div>
+        <chart-radial-bar
+        [details]="item"
+        [full]="true"
+        [fillType]="'gradient'"
+        [percentSize]="'18px'"
+        [percentWeight]="600"
+        [percentOffset]="-16"
+        [percentColor]="'#222'"
+        [labelOffset]="10"
+        [labelColor]="'#222'"
+        [labelFontSize]="'10px'"
+        [labelWeight]="500"
+        [label]="'achieved'"
+        [labelValueColor]="false"
+        [small]="true"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+  <loading *ngIf="loading"/>

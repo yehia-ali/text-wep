@@ -1,0 +1,73 @@
+<user-navbar />
+<div class="py-2 px-1">
+  <layout>
+    <div class="dashboard h-100">
+      <div class="content h-100 py-2" magicScroll>
+        <!-- <div class="team-attendance px-2">
+          <team-attendance-page/>
+        </div> -->
+        <div class="relative section">
+          <div class="task-statistics  px-2" *ngIf="data && !(service.loading | async)">
+            <div class="flex aic gap-x-3 mb-2">
+              <h3>{{ 'team_tasks' | translate }}</h3>
+              <div class="filters flex aic gap-x-2 flex-wrap">
+                <div class="pt-2">
+                  <select-user text="select_user" (getSelectedUsers)="getAssinee($event); service.hasChanged.next(true)"
+                    [selectedUsers]="service.assignee.value" />
+                </div>
+                <!-- <div class="pt-2">
+                  <select-user text="creator" [multi]="false" (getSelectedUsers)="service.creator.next($event); service.hasChanged.next(true)" [selectedUsers]="service.creator.value"/>
+                </div> -->
+
+                <div class="date_filter w-22r">
+                  <filter-label key="date_range" />
+                  <div (click)="rangePicker.open()" class="flex aic relative input date-picker pr-2">
+                    <mat-date-range-input [rangePicker]="rangePicker">
+                      <input matStartDate placeholder="Start date" [(ngModel)]="startDate" class="input" />
+                      <input matEndDate placeholder="End date" [(ngModel)]="endDate" class="input" />
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle [for]="rangePicker" class="picker-icon" matSuffix></mat-datepicker-toggle>
+                    <mat-date-range-picker #rangePicker>
+                      <mat-date-range-picker-actions>
+                        <button mat-button matDateRangePickerCancel>
+                          {{ "cancel" | translate }}
+                        </button>
+                        <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateChanged()">
+                          {{ "apply" | translate }}
+                        </button>
+                      </mat-date-range-picker-actions>
+                    </mat-date-range-picker>
+                  </div>
+                </div>
+
+                <priority-filter (valueChanged)="getPriority($event); service.hasChanged.next(true)"
+                  [selectedValue]="priority" />
+                <task-type (valueChanged)="getType($event); service.hasChanged.next(true)" [selectedValue]="type" />
+                <projects (valueChanged)="getProject($event); service.hasChanged.next(true)"
+                  [selectedValue]="project" />
+                <departments (valueChanged)="getDepartments($event); service.hasChanged.next(true)"
+                  [selectedDepartment]="departments" />
+              </div>
+            </div>
+            <div class="flex-grid">
+              <div class="col-lg-6 border-right">
+                <team-tasks-statistics [data]="data?.combinedReportInbox" label="inbox_tasks"
+                  [filterData]="filterData" />
+              </div>
+              <div class="col-lg-6">
+                <team-tasks-statistics [data]="data?.combinedReportSent" label="sent_tasks" [filterData]="filterData" />
+              </div>
+            </div>
+          </div>
+          <!-- <loading *ngIf="service.loading | async"/> -->
+        </div>
+        <div class="relative section">
+          <div class="team-timing px-2" *ngIf="data && !(service.loading | async)">
+            <team-timing [data]="data?.teamTimingVM" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <loading *ngIf="service.loading | async" />
+  </layout>
+</div>

@@ -1,0 +1,307 @@
+<div class="task-details relative h-100 dir bg-white rounded shadow w-100">
+  <ng-container *ngIf="details">
+    <top-section (rateAdded)="rateAdded($event)" [taskId]="id" [data]="route.snapshot.queryParams['id'] ? true : false" [details]="details" />
+    <div class="">
+      <div class="flex-grid w-100">
+        <div class="{{this.chatData ?'col-xl-9 col-lg-8': 'col-lg-12'}} border-right task-details-dialog-content">
+          <div class="pb-4">
+            <div class="pt-2">
+              <div class="flex-grid">
+                <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0">
+                  <div class="flex aic">
+                    <div class="info-title simibold flex aic">
+                      <i class="fs-16 bx bx-check-circle mr-50"></i>
+                      <span class="">{{'status' | translate}}</span>
+                    </div>
+                    <div class="info-data">
+                      <ng-container>
+                        <span *ngIf="details?.rate || !taskStarted || !isAssinee || details?.taskGroupType == 8 && details?.taskStateId == 2" class="px-1 rounded  border status-{{details?.taskStateId}}">{{getTaskStatusByValue(details?.taskStateId)?.name | translate}}</span>
+                        <span *ngIf="!taskStarted " class="px-1 rounded  border status-6 ml-50">{{'not_started' | translate}}</span>
+                        <span *ngIf="details?.taskStateId == 6" class="px-1 rounded  border status-4 ml-50">{{'canceled' | translate}}</span>
+                      </ng-container>
+
+                      <p-splitButton
+                        [model]="items"
+                        [label]="getTaskStatusByValue(details?.taskStateId)?.name | translate"
+                        styleClass="{{details?.taskStateId == 1 ? 'p-button-p-button-primary' : details?.taskStateId == 2 ? 'p-button-success' : details?.taskStateId == 3 ? 'p-button-warning' : ''}}"
+                        *ngIf="(details?.taskStateId == 1 || details?.taskStateId == 2 || details?.taskStateId == 3) && !details?.rate && taskStarted && isAssinee && details?.taskGroupType != 8"
+                      />
+                      <button
+                        (click)="changeStatus(2)"
+                        class="py-25 fs-14 px-2 rounded-3 border-0 bg-primary shadow pointer white"
+                        *ngIf="details?.taskGroupType == 8 && details?.taskStateId == 1 && taskStarted">
+                        {{'noted' | translate}}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0" *ngIf="details?.stageName">
+                  <div class="flex aic">
+                    <div class="info-title simibold flex aic">
+                      <i class="fs-16 bx bx-git-pull-request mr-50"></i>
+                      <span class="">{{'stage' | translate}}</span>
+                    </div>
+                    <div class="info-data">
+                        <span class="px-1 rounded  border status-5 ml-50">{{details?.stageName}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0">
+                  <div class="flex aic">
+                    <div class="info-title simibold flex aic">
+                      <i class="fs-16 bx bx-flag mr-50"></i>
+                      <span class="">{{'priority' | translate}}</span>
+                    </div>
+                    <div class="info-data">
+                      <span class="px-1 rounded">{{Priority[details?.priority]?.name | translate}} <i
+                          class="bx bxs-flag fs-16 priority-{{details?.priority}}"></i></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0">
+                  <div class="flex aic">
+                    <div class="info-title simibold flex aic">
+                      <i class="fs-16 bx bx-user mr-50"></i>
+                      <span class="">{{'creator' | translate}}</span>
+                    </div>
+                    <div class="info-data">
+                      <app-img-title [userId]="details?.taskGroupCreatorId" [fontSize]="'fs-16'"
+                        [title]="details?.taskGroupCreatorName" [imgSrc]="details?.taskGroupCreatorImageUrl"
+                        [imgSize]="25" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0">
+                  <div class="flex aic">
+                    <div class="info-title simibold flex aic">
+                      <i class="fs-16 bx bx-user mr-50"></i>
+                      <span class="">{{'assignee' | translate}}</span>
+                    </div>
+                    <div class="info-data">
+                      <app-img-title [userId]="details?.assigneeId" [fontSize]="'fs-16'" [title]="details?.assigneeName"
+                        [imgSrc]="details?.assigneeImageUrl" [imgSize]="25" />
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0">
+                  <div class="flex aic">
+                    <div class="info-title simibold flex aic">
+                      <i class="fs-16 bx bx-calendar-week mr-50"></i>
+                      <span class="">{{'start' | translate}}</span>
+                    </div>
+                    <div class="info-data">
+                      <span>{{(details?.startDate |arabicDate:'long') + ' , '+ (details?.startDate |arabicTime)}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0">
+                  <div class="flex aic">
+                    <div class="info-title simibold flex aic">
+                      <i class="fs-16 bx bx-calendar-week mr-50"></i>
+                      <span class="">{{'due' | translate}}</span>
+                    </div>
+                    <div class="info-data">
+                      <span>{{(details?.endDate |arabicDate:'long') + ' , '+ (details?.endDate |arabicTime)}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0" *ngIf="details?.taskGroupType != 8">
+                  <div class="flex aic">
+                    <div class="info-title simibold flex aic">
+                      <i class="fs-16 bx bx-hourglass mr-50"></i>
+                      <span class="">{{'expected' | translate}}</span>
+                    </div>
+                    <div class="info-data">
+                      <span>{{(details?.expectedTime |convertMinutes:'minutes') + ('h' | translate)}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0"
+                  *ngIf="details?.actualTime && details?.taskStateId == 2 && details?.taskGroupType != 8">
+                  <div class="flex aic">
+                    <div class="info-title simibold flex aic">
+                      <i class="fs-16 bx bx-stopwatch mr-50"></i>
+                      <span class="">{{'actual' | translate}}</span>
+                    </div>
+                    <div class="info-data flex aic">
+                      <span class="ml-75">{{(details?.actualTime |convertMinutes:'minutes') + ('h' | translate)}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12 mb-2 fs-16 pl-0"
+                  *ngIf="!details?.actualTime && (details?.taskStateId == 1 || details?.taskStateId == 3 ) && isAssinee && details?.taskGroupType != 8">
+                  <div class="flex aic">
+                    <div class="info-title simibold flex aic">
+                      <i class="fs-16 bx bx-stopwatch mr-50"></i>
+                      <span class="">{{'actual' | translate}}</span>
+                    </div>
+                    <div class="info-data flex aic">
+                      <i class="fs-16 bx bx-play-circle success pointer fs-18" (click)="logTime()"></i>
+                      <span class="ml-75">{{(loggedTime ) + ('h' | translate)}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  -->
+            <div class="rejection-reason mb-2 danger" *ngIf="details?.taskStateId == 8 || details?.stateReason">
+              <p class="fs-20 simibold mb-75">{{ 'rejection_reason' | translate }}</p>
+              <p class="word-break">{{ details?.stateReason }}</p>
+            </div>
+            <div class="mt-2" *ngIf="details?.soundDescription">
+              <task-description [task]="details"></task-description>
+            </div>
+
+            <div class="mt-2" *ngIf="details?.description || details?.soundDescription">
+              <!-- <task-description [task]="details"></task-description> -->
+              <p class="fs-17 bold">{{ 'description' | translate }}</p>
+              <p class="mt-1 contains-link word-break" [appSafeHtml]="details?.description"></p>
+            </div>
+
+            <div *ngIf="details.kpi" class="col-lg-6">
+              <div class="card-shadow pt-3 rounded mt-2 ">
+                <div class="title px-2 mb-2">
+                  <h5 class="mb-1">{{details?.kpi.kpiName}}</h5>
+                  <div class="flex jcsb aic">
+                    <span class="px-1 rounded-5 kpi-status-{{details?.kpi.kpiStatus}}">{{kpiStatus[details?.kpi.kpiStatus] | translate}}</span>
+                    <span class="px-1 rounded-5 bg-gray">{{details?.kpi.endDate | arabicDate}}</span>
+                  </div>
+                </div>
+                <chart-radial-bar
+                [details]="details.kpi"
+                [full]="true"
+                [fillType]="'gradient'"
+                [percentSize]="'18px'"
+                [percentWeight]="600"
+                [percentOffset]="-16"
+                [percentColor]="'#222'"
+                [labelOffset]="10"
+                [labelColor]="'#222'"
+                [labelFontSize]="'10px'"
+                [labelWeight]="500"
+                [label]="'achieved'"
+                [labelValueColor]="false"
+                [small]="true"
+                />
+              </div>
+            </div>
+
+            <div class="mt-2" *ngIf="details?.definitionOfDone">
+              <p class="fs-17 bold">{{ 'dod' | translate }}</p>
+              <p class="mt-1 contains-link word-break" [appSafeHtml]="details?.definitionOfDone"></p>
+            </div>
+
+            <div class="mt-2" *ngIf="details?.link">
+              <p class="fs-17 bold">{{ 'meeting_link' | translate }}</p>
+              <a href="{{details?.link}}" target="_blank" class="font-small-4 primary">{{ details?.link }}</a>
+            </div>
+
+            <div class="location mt-2" *ngIf="details?.longitude">
+              <h4>{{ 'location' | translate }}</h4>
+              <google-map height="300px" width="100%" [zoom]="16"
+                [center]="{lat: this.details?.latitude, lng: this.details?.longitude}" [options]="options">
+                <map-marker [position]="{lat: this.details?.latitude, lng: this.details?.longitude}"></map-marker>
+              </google-map>
+            </div>
+
+            <div class="mt-2" *ngIf="details?.taskGroupAttachments && details?.taskGroupAttachments.length > 0">
+              <task-attachments [images]="details?.taskGroupAttachments"></task-attachments>
+            </div>
+
+            <div class="mt-2"
+              *ngIf="(details?.taskStateId == 3 || details?.taskStateId == 2 ) && details?.taskGroupType != 8">
+              <task-update-progress [details]="details" (progressUpdated)="getTaskDetails()" />
+            </div>
+            <div class="mt-2" *ngIf="questions && questions.length > 0">
+              <p class="fs-17 bold">{{ 'questions' | translate }}</p>
+              <ng-container *ngFor="let item of questions;let i = index">
+                <p>{{item.name}}</p>
+                <ng-container *ngIf="item.dataType == 1">
+                  <input [(ngModel)]="item.value" [disabled]="item.isAnswered" type="text"
+                    class="answer-input border-bottom w-100 fs-16 px-2 py-1 mb-1"
+                    placeholder="{{'answer' | translate}}">
+                </ng-container>
+                <ng-container *ngIf="item.dataType == 2">
+                  <!-- <mat-checkbox *ngIf="!item.isAnswered && isAssinee" [(ngModel)]="item.value" class="example-margin" color="primary"></mat-checkbox> -->
+                  <div *ngIf="!item.isAnswered && isAssinee">
+                    <label class="inline-flex aic mr-2" for="true-{{i}}">
+                      <span class="pr-25">{{'yes' | translate}}</span>
+                      <input type="radio" name="select-{{i}}" value="true" id="true-{{i}}" [(ngModel)]="item.value">
+                    </label>
+
+                    <label class="inline-flex aic mr-2" for="false-{{i}}">
+                      <span class="pr-25">{{'no' | translate}}</span>
+                      <input type="radio" name="select-{{i}}" value="false" id="false-{{i}}" [(ngModel)]="item.value">
+                    </label>
+                  </div>
+                  <i class='bx bx-checkbox fs-30 px-2' *ngIf="!item.isAnswered && !isAssinee"></i>
+                  <i class='bx bx-x-circle fs-30 px-2 danger'
+                    *ngIf="(item.isAnswered && item.value == 'false') || (!isAssinee && item.value == 'false')"></i>
+                  <i class='bx bx-check-circle fs-30 px-2 success'
+                    *ngIf="(item.isAnswered && item.value == 'true') || (!isAssinee && item.value == 'true')"></i>
+                </ng-container>
+
+                <ng-container *ngIf="item.dataType == 3">
+                  <input [(ngModel)]="item.value" [disabled]="item.isAnswered" type="number"
+                    class="answer-input border-bottom w-100 fs-16 px-2 py-1 mb-1"
+                    placeholder="{{'answer' | translate}}">
+                </ng-container>
+
+                <ng-container *ngIf="item.dataType == 4">
+                  <p-calendar *ngIf="!item.isAnswered" inputId="calendar-12h" [(ngModel)]="item.value" [showTime]="true"
+                    hourFormat="12" />
+                  <span *ngIf="item.isAnswered">{{item.value | arabicDate:'withTime'}}</span>
+                </ng-container>
+
+                <ng-container *ngIf="item.dataType == 5">
+                  <input type="file" hidden [id]="'fileInput' + item.id" (change)="onFileSelect($event, item)"
+                    accept=".jpg, .jpeg, .png, .gif, .bmp, .tiff, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .csv, .zip, .rar, .7z, .xml, .json, .mp3, .wav, .mp4, .avi, .mov, .mkv" />
+                  <button (click)="uploadFile(item)" class="btn mr-1 rounded bg-primary white py-50 px-2 fs-12"
+                    *ngIf="!uploadFileBtns[item.id] && !item.isAnswered">
+                    {{ "add_file" | translate }}
+                  </button>
+                  <div class="inline-flex aic btn mr-1 rounded bg-light py-50 px-2 fs-12"
+                    *ngIf="uploadFileBtns[item.id] && !item.isAnswered">
+                    <span class="pr-1">{{ selectedFiles[item.id]?.name }}</span>
+                    <i class="bx bx-x danger pointer fs-18" (click)="clearFile(item)"></i>
+                  </div>
+                  <a *ngIf="item.isAnswered" class="primary" target="_blank"
+                    [href]="url + 'Companies/' + spaceId + '/attachments/' + item.value">{{ item.value }}</a>
+                </ng-container>
+
+
+              </ng-container>
+              <div class="flex jce" *ngIf="isAssinee && !isAnswered">
+                <button (click)="saveAnswers()"
+                  class="btn mr-1 rounded bg-primary white py-50 px-2 fs-12">{{'save_answers' | translate}}</button>
+              </div>
+            </div>
+
+            <div class="mt-2" *ngIf="details?.taskTodosList && details?.taskTodosList.length > 0">
+              <task-todo [task]="details"></task-todo>
+            </div>
+
+            <div class="mt-2" *ngIf="details?.isRepeated || (details?.parentTaskGroupId && !details?.isSubTasks)">
+              <task-repeat [details]="details" />
+            </div>
+          </div>
+        </div>
+        <div class="{{this.chatData ?'col-xl-3 col-lg-4': ''}} relative  h-100 px-0">
+          <div class="pl- chat-section">
+            <app-room [chatBtns]="chatBtn" [taskDetails]="true" [header]="false" *ngIf="!service.chatLoading.value" />
+            <loading *ngIf="service.chatLoading.value" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <loading class="a-center" *ngIf="loading.value" />
+</div>

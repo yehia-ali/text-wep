@@ -1,0 +1,101 @@
+@use "src/assets/styles/vars" as *;
+
+// Floating button styling
+#floating-button {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: $primary;
+  position: fixed;
+  bottom: 15px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.75) 6px 8px 48px -4px;
+
+  .bx {
+    position: absolute;
+  }
+}
+
+#container-floating {
+  position: fixed;
+  bottom: 50px;
+  z-index: 100;
+  .bx-edit {
+    opacity: 0;
+  }
+  .bx-plus {
+    opacity: 1;
+  }
+  .bx {
+    transform: rotate(-180deg);
+    transition: ease-in 0.2s;
+  }
+
+  &:hover {
+    .bx {
+      transform: rotate(0);
+    }
+    height: 530px;
+    width: 90px;
+
+    .bx-plus {
+      opacity: 0;
+    }
+    .bx-edit {
+      opacity: 1;
+    }
+  }
+}
+
+.nds {
+  width: 35px;
+  height: 35px;
+  margin-inline-end: 5px;
+  border-radius: 50%;
+  position: fixed;
+  z-index: 300;
+  transform: scale(0);
+  cursor: pointer;
+  background: #353434;
+  transition: ease all 0.1s;
+  img{filter: brightness(0) invert(1); }
+  &:hover {
+    background: $primary;
+  }
+
+  @for $i from 1 through 9 {
+    &.nd#{$i} {
+      bottom: calc(70px + (#{$i} - 1) * 50px);
+      $delay: 0.3s - ($i * 0.05s);
+      animation: bounce-out-nds $delay linear;
+      animation-fill-mode: forwards;
+    }
+  }
+}
+
+#container-floating:hover .nds {
+  animation: bounce-nds 0.1s linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes bounce-nds {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce-out-nds {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+

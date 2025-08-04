@@ -1,0 +1,58 @@
+<layout-with-filters [meta]="meta" (pageChange)="changePage($event)" [admin]="true" [limit]="service.limit.value" (limitChanged)="limitChanged($event)">
+  <ng-container filters>
+    <reports-filter (export)="exportToExcel()" [service]="service"/>
+  </ng-container>
+  <ng-container content>
+    <table *ngIf="reports && reports.length > 0 && !loading" class="table" id="assignees-table">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-center">#</th>
+        <th class="text-left w-auto">{{'user' | translate}}</th>
+        <th class="text-left">{{'job_title' | translate}}</th>
+        <th class="text-left">{{'department' | translate}}</th>
+        <th class="bg-light-success-1">
+          <div class="flex-center">
+            <p class="mr-50">{{'total_tasks' | translate}}</p>
+            <sorting (up)="sort('1', '0')" (down)="sort('1', '1')"></sorting>
+          </div>
+        </th>
+        <th class="bg-light-danger-1">
+          <div class="flex-center">
+            <p class="mr-50">{{'overdue' | translate}}</p>
+            <sorting (up)="sort('2', '0')" (down)="sort('2', '1')"></sorting>
+          </div>
+        </th>
+        <th>
+          <div class="flex-center">
+            <p class="mr-50">{{'ended_count' | translate}}</p>
+            <sorting (up)="sort('3', '0')" (down)="sort('3', '1')"></sorting>
+          </div>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of reports | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy" class="border-bottom">
+        <td class="text-center">{{item.id}}</td>
+        <td class="text-left">
+          <div class="flex aic gap-x-1">
+            <app-img-title [imgSrc]="item.imageUrl" [title]="item.name" [subTitle]="item.jobTitle"  [userId]="item.id" />
+          </div>
+        </td>
+        <td class="text-left">{{item.jobTitle}}</td>
+        <td class="text-left">{{item.departmentName}}</td>
+        <td class="bg-light-success-1">
+          <div class="text-center">{{item.totalCount}}</div>
+        </td>
+        <td class="bg-light-danger-1">
+          <div class="text-center">{{item.overDueCount}}</div>
+        </td>
+        <td>
+          <div class="text-center">{{item.endedCount}}</div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <not-found *ngIf="reports && reports.length == 0 && !loading"></not-found>
+    <loading *ngIf="loading"></loading>
+  </ng-container>
+</layout-with-filters>

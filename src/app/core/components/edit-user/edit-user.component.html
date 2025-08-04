@@ -1,0 +1,202 @@
+<mat-dialog-content class="mb-1 dir">
+  <div class="flex-grid pt-2">
+    <div class="col-md-4 flex-column-center">
+      <user-image [dim]="70" [img]="user.imageUrl"></user-image>
+      <p class="primary mt-75 fs-17">{{ user.name }}</p>
+      <p class="mt-25 mb-25">
+        {{ "joined_on" | translate }}
+        {{ user.creationDate | arabicDate : "typicalDate" }}
+      </p>
+      <ngx-star-rating
+        [(ngModel)]="rate"
+        [disabled]="true"
+        style="min-width: 12.5rem"
+      ></ngx-star-rating>
+
+      <div class="cv w-25r flex aic gap-x-1 mt-50 mb-25" *ngIf="user.profileCV">
+        <a
+          [href]="env + '/' + user.profileCV.filePath"
+          class="clickable-btn edit bg-primary white flex-85 flex-center rounded"
+          target="_blank"
+          >Show CV</a
+        >
+        <label
+          class="fs-11 simibold mb-75"
+          for="cv"
+          class="clickable-btn edit bg-primary white flex-15 flex-center rounded"
+          [matTooltip]="'update_cv' | translate"
+        >
+          <i class="bx bxs-edit fs-20"></i>
+        </label>
+      </div>
+
+      <label
+        class="fs-11 simibold mb-75"
+        for="cv"
+        class="w-25r clickable-btn bg-primary white flex-center rounded pt-50 pb-50 mt-75 mb-50"
+        *ngIf="!user.profileCV"
+      >
+        <p class="ml-1 fs-16">{{ "add_cv" | translate }}</p>
+      </label>
+
+      <div class="w-25r flex aic jcsb gap-x-2 my-1 d-none">
+        <div
+          class="inbox rounded bg-gray p-1 flex aic flex-50 pointer"
+          (click)="inbox()"
+        >
+          <img
+            src="assets/images/user-info/inbox.png"
+            width="30"
+            alt="inbox icon"
+          />
+          <p class="ml-1">{{ "inbox" | translate }}</p>
+        </div>
+        <div
+          class="sent rounded bg-gray p-1 flex aic flex-50 pointer"
+          (click)="sent()"
+        >
+          <img
+            src="assets/images/user-info/sent.png"
+            width="30"
+            alt="sent icon"
+          />
+          <p class="ml-1">{{ "sent" | translate }}</p>
+        </div>
+      </div>
+      <div
+        class="actions"
+        *ngIf="data.user.id != currentUserId && !data.isSuperAdmin"
+      >
+        <button
+          mat-raised-button
+          class="mt-1 w-25r bg-primary white"
+          *ngIf="!user.isActivated"
+          (click)="activateAccount(true)"
+        >
+          {{ "activate" | translate }}
+        </button>
+        <button
+          mat-raised-button
+          class="mt-1 w-25r"
+          *ngIf="user.isActivated"
+          (click)="activateAccount(false)"
+        >
+          {{ "deactivate" | translate }}
+        </button>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <form [formGroup]="form">
+        <div class="flex-grid gap-y-1">
+          <div class="col-md-6">
+            <div class="name">
+              <input-label [control]="f['name']" key="name"></input-label>
+              <input type="text" class="input" formControlName="name" />
+              <input-error [control]="f['name']"></input-error>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="department">
+              <input-label
+                [control]="f['departmentId']"
+                key="department"
+              ></input-label>
+              <ng-select
+                [items]="departments$ | async"
+                formControlName="departmentId"
+                bindLabel="name"
+                bindValue="id"
+                appendTo="body"
+              ></ng-select>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="phone-number">
+              <input-label
+                [control]="f['phoneNumber']"
+                key="phone"
+              ></input-label> 
+              <input formControlName="phoneNumber" class="input"  readonly/>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="email">
+              <input-label [control]="f['email']" key="email"></input-label>
+              <input formControlName="email" class="input" />
+            </div>
+          </div>
+          <div
+            class="col-md-6"
+            *ngIf="data.user.profileRoles[0]?.roleName != 'SpaceSuperAdmin'"
+          >
+            <div class="manager">
+              <input-label
+                [control]="f['managerId']"
+                key="manager"
+              ></input-label>
+              <select-user
+                text="manager"
+                [multi]="false"
+                (getSelectedUsers)="
+                  selectedManager = $event || [
+                    { name: user.managerName, id: user.managerId }
+                  ]
+                "
+                [selectedUsers]="
+                  selectedManager || [
+                    { name: user.managerName, id: user.managerId }
+                  ]
+                "
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="job-title">
+              <input-label
+                [control]="f['jobTitle']"
+                key="job_title"
+              ></input-label>
+              <input formControlName="jobTitle" class="input" />
+            </div>
+          </div>
+          <div class="col-md-12">
+            <input-label
+              [control]="f['jobDescription']"
+              key="job_description"
+            ></input-label>
+            <textarea
+              class="input"
+              formControlName="jobDescription"
+              rows="4"
+            ></textarea>
+            <!--            <app-input-error [control]="f['jobDescription']"></app-input-error>-->
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dir">
+  <div class="start mr-1">
+    <button mat-raised-button [mat-dialog-close]="true">
+      {{ "cancel" | translate }}
+    </button>
+  </div>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="updateUser()"
+    [disabled]="form.invalid || loading"
+  >
+    <submit-button [loading]="loading" text="save"></submit-button>
+  </button>
+</mat-dialog-actions>
+
+<input
+  type="file"
+  id="cv"
+  [hidden]="true"
+  accept=".DOC,.PDF"
+  (change)="addCV($event)"
+/>

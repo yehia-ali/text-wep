@@ -1,0 +1,31 @@
+<div class="notification-container relative">
+  <button class="bell relative clickable-btn flex">
+    <div class="img" (click)="$event.stopImmediatePropagation(); menuOpen = !menuOpen">
+      <img ngSrc="assets/images/icons/notification.svg" alt="notification icon" width="27" height="27" class="convert-image-color">
+    </div>
+    <span *ngIf="unSeen > 0" class="red-dot"></span>
+  </button>
+
+  <div (click)="$event.stopImmediatePropagation()" [ngClass]="{ 'active': !menuOpen }"
+       class="menu shadow rounded-3 bg-white">
+    <div class="header border-bottom flex aic jcsb p-2">
+      <h4>{{'notifications' | translate}}</h4>
+      <div *ngIf="unSeen > 0" class="py-1 px-2 bg-light-primary-1 rounded-5">{{unSeen | arabicNumbers}} {{'new' | translate}}</div>
+    </div>
+
+    <div #container class="all-notifications" magicScroll="40rem">
+      <div (click)="markAsSeen(item)" *ngFor="let item of notifications; trackBy: trackBy" class="notification-content flex border-bottom aifs px-2 py-1 pointer">
+        <user-image [img]="item.fromUserImageUrl"></user-image>
+        <div class="right-side ml-1">
+          <h3 [ngClass]="{'': !item.isSeen}" class="fs-12 simibold one-line">{{item.title}}</h3>
+          <p [ngClass]="{'black': !item.isSeen}" class="fs-14">{{item.message}}</p>
+          <small class="fs-13">{{item.creationDate | arabicDate:'long'}}</small>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="unSeen > 0" class="read p-2 border-top">
+      <button (click)="markAllAsSeen()" class="d-block w-100" color="primary" mat-raised-button>{{'mark_as_read' | translate}}</button>
+    </div>
+  </div>
+</div>

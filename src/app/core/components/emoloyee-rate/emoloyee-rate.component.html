@@ -1,0 +1,31 @@
+<div class="add-rate dir">
+  <h2 class="black text-center">{{'whats_your_rate' | translate}}</h2>
+
+  <div mat-dialog-content>
+    <div class="flex-center flex-column mt-1">
+      <ngx-star-rating (change)="ratedFun()" [(ngModel)]="rate" id="rate"></ngx-star-rating>
+    <p class="mt-50 mb-50 text-center fs-14" *ngIf="rated">{{'average_rate' | translate}} {{rate | arabicNumbers}}</p>
+
+    </div>
+    <div class="flex-grid mb-1">
+      <div class="col-md-6">
+        <app-date-range (valueChanged)="dateChanged($event)"></app-date-range>
+      </div>
+      <div class="col-md-6">
+        <space-users [isUserManager]="true" (valueChanged)="selectUser($event)" ></space-users>
+      </div>
+    </div>
+
+    <div class="reason" >
+      <label class="fs-11 simi-bold">{{'rate_reason' | translate}}</label>
+      <textarea class="input mb-1" rows="3" [(ngModel)]="rateReason"></textarea>
+    </div>
+  </div>
+
+  <div class="mt-50" mat-dialog-actions>
+    <div class="flex aic gap-x-2 w-100">
+      <button mat-dialog-close="" mat-raised-button class="flex-50 w-100 dark-color rounded cancel-btn">{{'cancel' | translate}}</button>
+      <button mat-raised-button color="primary" class="flex-50 w-100 rounded" [disabled]="!rate || (rateReason.length < 1 && rate < 3)" (click)="submit()">{{'save' | translate}}</button>
+    </div>
+  </div>
+</div>

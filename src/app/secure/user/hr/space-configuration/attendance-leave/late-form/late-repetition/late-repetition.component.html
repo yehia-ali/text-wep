@@ -1,0 +1,46 @@
+<div class="flex-grid aife gap-y-1 mb-2">
+  <div class="col-lg-6">
+    <div class="flex aic gap-x-1 mb-1">
+      <img src="assets/images/icons/repeat-icon.svg" alt="repeat">
+      <p class="fs-14">{{label | translate}}</p>
+    </div>
+    <ng-select [items]="repetitionTypesList" [clearable]="false" bindLabel="label" bindValue="value"
+      [formControl]="repetitionControl" class="late-select" [placeholder]="placeholder | translate">
+    </ng-select>  
+  </div>
+  <div class="col-lg-6">
+    <!-- Warning Type -->
+    <div *ngIf="repetitionValue === 1" class="deduction-value flex aic">
+      <i class="bx bx-info-circle"></i>
+      <p class="mx-1 fs-14">{{'no_deduction' | translate}}</p>
+    </div>
+
+    <!-- Minutes Type -->
+    <div *ngIf="repetitionValue === 2" class="deduction-value flex aic">
+      <i class="bx bx-info-circle"></i>
+      <p class="mx-1 fs-14">{{'auto_deduction' | translate}}</p>
+    </div>
+
+    <!-- Hours Type -->
+    <div *ngIf="repetitionValue === 3" class="value-container">
+      <input-label key="deduction_value" [control]="deductionControl" [showIcon]="true"
+        [icon]="'assets/images/icons/text-block.svg'"/>
+      <div class="flex aic position-relative">
+        <input type="number" class="input" min="0.1" [formControl]="deductionControl" />
+        <span class="input-suffix">{{'h' | translate}}</span>
+      </div>
+      <input-error [control]="deductionControl" [message]="'min_value_0_1' | translate" />
+    </div>
+
+    <!-- Days Type -->
+    <div *ngIf="repetitionValue === 4" class="value-container">
+      <input-label key="deduction_value" [control]="deductionControl" [showIcon]="true"
+        [icon]="'assets/images/icons/text-block.svg'" />
+      <div class="flex aic position-relative">
+        <input type="number" class="input" min="0.1" [formControl]="deductionControl" />
+        <span class="input-suffix">{{'day' | translate}}</span>
+      </div>
+      <input-error [control]="deductionControl" [message]="'min_value_0_1' | translate" />
+    </div>
+  </div>  
+</div>

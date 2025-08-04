@@ -1,0 +1,28 @@
+<div *ngIf="!forChat" [ngClass]="{'padding': !url}" class="sounded-description border flex aic jcsb rounded px-1">
+  <div class="img flex-auto audio">
+    <img *ngIf="!url && !recording" alt="wave" src="../../../../assets/images/icons/wave.svg" width="100%">
+    <img *ngIf="!url && recording" alt="wave" src="../../../../assets/images/icons/wave2.svg" width="100%">
+    <audio *ngIf="url" controls="">
+      <source [src]="url" type="audio/wav"/>
+    </audio>
+  </div>
+
+  <div class="img pointer">
+    <img (click)="startRecording()" *ngIf="!recording && !url" alt="wave" src="../../../../assets/images/icons/mic.svg">
+    <i (click)="stopRecording()" *ngIf="recording" class='bx bx-check primary fs-30'></i>
+    <i (click)="deleteRecording()" *ngIf="url" class='bx bx-x danger fs-30'></i>
+  </div>
+</div>
+
+<div *ngIf="forChat" class="relative">
+  <i (click)="startRecording()" *ngIf="!recording" class='bx bx-microphone fs-22 pointer'></i>
+  <i (click)="stopRecording()" *ngIf="recording" class='bx bx-check fs-30 pointer success'></i>
+  <div *ngIf="recording" class="recording bg-gray flex aic jcfe rounded">
+    <!--        <div class="red-dot bg-danger"></div>-->
+    <i (click)="stopAndDelete()" class='bx bx-trash fs-20 pointer mr-50 danger'></i>
+    <div class="timing">{{minutes | number:'2.0-0'}}:{{seconds | number:'2.0-0'}}</div>
+    <div class="img ml-1">
+      <img alt="" height="50" src="../../../../assets/images/wave.gif" width="200">
+    </div>
+  </div>
+</div>

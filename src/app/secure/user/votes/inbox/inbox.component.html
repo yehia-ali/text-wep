@@ -1,0 +1,88 @@
+<layout-with-filters (pageChange)="service.page.next($event); service.hasChanged.next(true)" [meta]="meta">
+  <ng-container filters>
+    <inbox-filters/>
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': inbox.length == 0 || loading}" class="table relative">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th>#</th>
+        <th class="text-left">{{'title' | translate}}</th>
+        <th class="text-left">{{'creator' | translate}}</th>
+        <th>{{'start_date' | translate}}</th>
+        <th>{{'end_date' | translate}}</th>
+        <th>{{'remaining_time' | translate}}</th>
+        <th>{{'report' | translate}}</th>
+        <th>{{'status' | translate}}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="inbox.length > 0 && !loading">
+      <tr *ngFor="let vote of inbox | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy" class="border-bottom pointer"
+          routerLink="{{vote.voteFormId}}">
+
+        <!-- id -->
+        <td class="text-center">
+          <p class="fs-13">{{vote.voteFormId}}</p>
+        </td>
+
+        <!--    title    -->
+        <td>
+          <div class="flex aic bold">
+            <priority [priority]="vote.priority" class="mr-1"></priority>
+            <!-- title -->
+            <span *ngIf="vote?.title?.length! <= 25">{{vote.title}}</span>
+
+            <!-- trimmed title -->
+            <span *ngIf="vote?.title?.length! > 25" [matTooltip]="vote.title">{{vote.title | slice:0:25}}...</span>
+          </div>
+        </td>
+
+
+        <!-- creator -->
+        <td class="text-left">
+          <div class="flex aic gap-x-1">
+            <user-image (click)="$event.stopImmediatePropagation()" [id]="vote.creatorId" [img]="vote.creatorImageUrl"></user-image>
+            <div>
+              <p class="fs-14">{{vote.creatorName}}</p>
+              <p class="fs-12 muted">{{vote.creatorJob}}</p>
+            </div>
+          </div>
+        </td>
+
+        <td>
+          <p>{{vote.startDate | arabicDate:'withTime'}}</p>
+        </td>
+
+        <td>
+          <p>{{vote.endDate | arabicDate:'withTime'}}</p>
+        </td>
+
+        <!-- remaining -->
+        <td>
+          <div class="flex-center">
+            <time-left *ngIf="vote.timeLeft && vote.voteStateId == 3" [bullet]="vote.bullet"
+                       [label]="vote.timeLeftLabel" [timeLeft]="vote.timeLeft"></time-left>
+            <span *ngIf="vote.voteStateId != 3">-</span>
+          </div>
+        </td>
+
+        <td>
+          <div class="flex-center">
+            <img (click)="$event.stopImmediatePropagation()" *ngIf="vote.isReportPublic" alt="" class="convert-image-color pointer mr-50"
+                 routerLink="/votes/report/{{vote.voteFormId}}" src="assets/images/icons/report.svg">
+            <span *ngIf="!vote.isReportPublic">-</span>
+          </div>
+        </td>
+
+        <!-- state -->
+        <td>
+          <vote-status [state]="vote.voteStateId"></vote-status>
+        </td>
+      </tr>
+      </tbody>
+      <not-found *ngIf="inbox && inbox.length == 0 && !loading" class="a-center"></not-found>
+      <loading *ngIf="loading"></loading>
+    </table>
+  </ng-container>
+</layout-with-filters>

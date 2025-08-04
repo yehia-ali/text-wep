@@ -1,0 +1,16 @@
+:host ::ng-deep{
+  .map-container{
+    width: 100% !important;
+    height:250px !important;
+  }
+}
+
+.map-container {
+  width: 100% !important;
+  height: 250px !important;
+}
+:host ::ng-deep{
+  .clock-face__container{
+    margin-inline:100px !important;
+  }
+}

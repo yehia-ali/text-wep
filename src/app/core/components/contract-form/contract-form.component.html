@@ -1,0 +1,145 @@
+<div class="create-task" dir="auto">
+  <h2>{{ data.isEdit ? ('contract_details' | translate) : ('create_contract' | translate) }}</h2>
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-1">
+
+        <div class="col-lg-4">
+          <input-label key="assignee"/>
+          <select-user text="assignee" classes="w-100" *ngIf="!data.isEdit" [multi]="false" (getSelectedUsers)="userSelected($event)"/>
+          <input formControlName="user" type="text" class="input" *ngIf="data.isEdit" readonly/>
+        </div>
+
+        <div class="col-lg-4">
+          <input-label [control]="f['gender']" key="gender"/>
+          <ng-select [items]="gender" formControlName='gender' [clearSearchOnAdd]="true" [readonly]="data.isEdit" bindLabel="label" bindValue="value" appendTo="body">
+            <ng-template ng-option-tmp ng-label-tmp let-item="item">
+              {{ item.label | translate }}
+            </ng-template>
+          </ng-select>
+          <input-error [control]="f['gender']"/>
+        </div>
+
+        <div class="col-lg-4">
+          <input-label [control]="f['birthDay']" key="birthday"/>
+          <date-filter [readOnly]="data.isEdit" [clearable]="!data.isEdit" [selectedValue]="birthday" (valueChanged)="birthdaySelected($event)" classes="w-100"/>
+          <input-error [control]="f['birthDay']"/>
+        </div>
+
+        <div class="col-lg-4">
+          <input-label [control]="f['maritalStatus']" key="martial_status"/>
+          <ng-select [items]="martialStatus" formControlName='maritalStatus' [readonly]="data.isEdit" [clearSearchOnAdd]="true" bindLabel="label" bindValue="value" appendTo="body">
+            <ng-template ng-option-tmp ng-label-tmp let-item="item">
+              {{ item.label | translate }}
+            </ng-template>
+          </ng-select>
+          <input-error [control]="f['maritalStatus']"/>
+        </div>
+
+        <div class="col-lg-4">
+          <input-label [control]="f['countryId']" key="country"/>
+          <ng-select [items]="countries" formControlName='countryId' [readonly]="data.isEdit" [clearSearchOnAdd]="true" [bindLabel]="dir == 'rtl'? 'arName' : 'enName'" bindValue="id"
+                     appendTo="body"></ng-select>
+          <input-error [control]="f['countryId']"/>
+        </div>
+
+        <div class="col-lg-4">
+          <input-label [control]="f['typeOfContract']" key="type_of_contract"/>
+          <ng-select [items]="typeOfContract" formControlName='typeOfContract' [readonly]="data.isEdit" [clearSearchOnAdd]="true" bindLabel="name" bindValue="value" appendTo="body">
+            <ng-template ng-option-tmp ng-label-tmp let-item="item">
+              {{ item.name | lowercase | translate }}
+            </ng-template>
+          </ng-select>
+          <input-error [control]="f['typeOfContract']"/>
+        </div>
+
+
+        <div class="col-lg-4">
+          <input-label [control]="f['startDate']" key="start_date"/>
+          <date-filter [readOnly]="data.isEdit" [clearable]="!data.isEdit" [selectedValue]="startDate" (valueChanged)="startDateSelected($event)" classes="w-100"/>
+          <input-error [control]="f['startDate']"/>
+        </div>
+
+
+        <div class="col-lg-4">
+          <input-label [control]="f['endDate']" key="end_date"/>
+          <date-filter [readOnly]="data.isEdit" [clearable]="!data.isEdit" [selectedValue]="endDate" [minDate]="form.value?.startDate" (valueChanged)="endDateSelected($event)" classes="w-100"/>
+          <input-error [control]="f['endDate']"/>
+        </div>
+
+        <div class="col-lg-4">
+          <input-label [control]="f['statusOfContract']" key="status_of_employment"/>
+          <ng-select [items]="employmentStatus" [readonly]="data.isEdit" formControlName='statusOfContract' [clearSearchOnAdd]="true" bindLabel="name" bindValue="value" appendTo="body">
+            <ng-template ng-option-tmp ng-label-tmp let-item="item">
+              {{ item.name | lowercase | translate }}
+            </ng-template>
+          </ng-select>
+          <input-error [control]="f['statusOfContract']"/>
+        </div>
+
+        <div class="col-lg-4">
+          <input-label [control]="f['basicSalary']" key="basic_salary"/>
+          <input formControlName="basicSalary" [readonly]="data.isEdit" type="text" class="input"/>
+          <input-error [control]="f['basicSalary']"/>
+        </div>
+
+        <div class="col-lg-4">
+          <input-label [control]="f['insuranceSalary']" key="insurance_salary"/>
+          <input formControlName="insuranceSalary" [readonly]="data.isEdit" type="text" class="input"/>
+          <input-error [control]="f['insuranceSalary']"/>
+        </div>
+
+        <div class="col-lg-4">
+          <input-label [control]="f['allowance']" key="total_of_allowance"/>
+          <input formControlName="allowance" type="text" [readonly]="data.isEdit" class="input"/>
+          <input-error [control]="f['allowance']"/>
+        </div>
+
+        <div class="col-lg-4" *ngIf="data.isEdit">
+          <input-label [control]="f['grossSalary']" key="gross_salary"/>
+          <input formControlName="grossSalary" type="text" [readonly]="data.isEdit" class="input"/>
+          <input-error [control]="f['grossSalary']"/>
+        </div>
+
+        <div class="col-lg-4" >
+          <input-label [control]="f['targetKPIBonus']" key="target_kpi_bonus"/>
+          <input formControlName="targetKPIBonus" type="number" [readonly]="data.isEdit" class="input"/>
+          <input-error [control]="f['targetKPIBonus']"/>
+        </div>
+
+        <div class="col-lg-4">
+          <input-label [control]="f['bankName']" key="bank_name"/>
+          <input formControlName="bankName" type="text" [readonly]="data.isEdit" class="input"/>
+          <input-error [control]="f['bankName']"/>
+        </div>
+
+        <div class="col-lg-4">
+          <input-label [control]="f['bankAccount']" key="bank_account"/>
+          <input formControlName="bankAccount" type="text" [readonly]="data.isEdit" class="input"/>
+          <input-error [control]="f['bankAccount']"/>
+        </div>
+
+
+        <div class="col-lg-4" *ngIf="!data.isEdit">
+          <input-label [control]="f['notes']" key="notes"/>
+          <input formControlName="notes" type="text" [readonly]="data.isEdit" class="input"/>
+          <input-error [control]="f['notes']"/>
+        </div>
+
+        <div class="col-lg-12" *ngIf="data.isEdit">
+          <input-label [control]="f['notes']" key="notes"/>
+          <textarea formControlName="notes" type="text" readonly class="input inline-block fs-15" rows="4"></textarea>
+          <input-error [control]="f['notes']"/>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex">
+      <button class="px-4 py-50 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>{{ 'close' | translate }}</button>
+      <button mat-raised-button color="primary" class="px-5 fs-15 ml-2" *ngIf="!data.isEdit" (click)="submit()" [disabled]="form.invalid || loading">
+        <submit-button text="create" [loading]="loading"></submit-button>
+      </button>
+    </div>
+  </div>
+</div>

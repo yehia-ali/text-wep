@@ -1,0 +1,64 @@
+<div class="py-1">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <div class="col-lg-3">
+      <search [newSearch]="true" (valueChanged)="service.search.next($event) ;service.hasChanged.next(true)"></search>
+    </div>
+    <div class="col-lg-3 text-right">
+      <a (click)="openDialog()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14">
+        {{'create_shift' | translate}}
+      </a>
+    </div>
+  </div>
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+
+    <div class="table-container mx-1" *ngIf="shifts.length > 0 && !loading">
+      <table class=" w-100 rounded">
+        <thead class="border-bottom fs-12 simibold">
+        <tr>
+          <th class="text-left py-1">{{ 'shift_name_type' | translate }}</th>
+          <th class="text-left py-1">{{ 'shift_start_time' | translate }}</th>
+          <th class="text-left py-1">{{ 'shift_end_time' | translate }}</th>
+          <th class="text-left py-1">{{ 'late_checkin_margin' | translate }}</th>
+          <th class="text-left py-1">{{ 'weekend_days' | translate }}</th>
+          <th class="text-left py-1">{{ 'daily_working_hours' | translate }}</th>
+          <th class="text-left py-1">{{ 'monthly_working_hours' | translate }}</th>
+          <th class="text-left py-1"></th>
+        </tr>
+        </thead>
+        <tbody *ngIf="shifts.length > 0 && !loading">
+        <tr
+          *ngFor="let item of shifts | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy ; let i = index"
+          class="border-bottom">
+          <td class="text-left simibold">{{ item.shiftName }}</td>
+          <td class="text-left">{{ item.checkIn | arabicTime }}</td>
+          <td class="text-left">{{ item.checkOut | arabicTime }}</td>
+          <td class="text-left">{{ item.allowanceInMinutes | arabicNumbers }} {{ 'min' | translate }}</td>
+          <td class="text-left">{{ item.weekEnds }}</td>
+          <td class="text-left">{{ item.requiredWorkingHoursDaily | arabicNumbers }} {{ 'h' | translate }}</td>
+          <td class="text-left">{{ item.requiredWorkingHoursMonthly | arabicNumbers }} {{ 'h' | translate }}</td>
+          <td class="text-left">
+            <div class="flex aic gap-x-2">
+              <div class="img pointer" (click)="getUsers(item.id, item.isDefault)">
+                <img src="assets/images/icons/users.svg" alt="users icon">
+              </div>
+              <div class="img pointer" (click)="editShift(item.id)">
+                <img src="assets/images/icons/edit1.svg" alt="edit icon">
+              </div>
+              <div class="img pointer" (click)="deleteShift(item)" *ngIf="!item.isDefault">
+                <i class="bx bx-trash danger fs-30"></i>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="shifts.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>

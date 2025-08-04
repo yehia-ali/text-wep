@@ -1,0 +1,130 @@
+
+<div class="py-1">
+  <div class="flex-grid mx-0 px-50 mb-2 mt-2 border-bottom pb-3" *ngIf="activeInsurance  && !loading">
+    <ng-container *ngIf="activeInsurance">
+      <div class="col-lg-3">
+        <div class="border rounded p-2">
+
+          <h4 class="fw-bold dark">
+            <i class="bx bx-check-shield bold mr-75"></i>
+            <span>{{'insurance_status' | translate}}</span>
+          </h4>
+          <p class="gray fs-16 pl-1">{{'insured'| translate}}</p>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="border rounded p-2">
+
+          <h4 class="fw-bold dark">
+            <i class="bx bx-money bold mr-75"></i>
+            <span>{{'insurance_salary' | translate}}</span>
+          </h4>
+          <p class="gray fs-16 pl-1">{{activeInsurance.insuranceSalary | number:'0.2-2' }}</p>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="border rounded p-2">
+
+          <h4 class="fw-bold dark">
+            <i class="bx bx-buildings bold mr-75"></i>
+            <span>{{'company_ratio' | translate}}</span>
+          </h4>
+          <p class="gray fs-16 pl-1">{{activeInsurance.insuranceSalary * 0.1875 | number:'0.2-2' }}</p>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="border rounded p-2">
+
+          <h4 class="fw-bold dark">
+            <i class="bx bx-user bold mr-75"></i>
+            <span>{{'employee_ratio' | translate}}</span>
+          </h4>
+          <p class="gray fs-16 pl-1">{{activeInsurance.insuranceSalary * 0.11 | number:'0.2-2' }}</p>
+        </div>
+      </div>
+    </ng-container>
+
+  </div>
+
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <!-- <div class="col-lg-3">
+      <search [newSearch]="true" (valueChanged)="search($event)"></search>
+    </div> -->
+    <div class="col-lg-12 text-right">
+      <a (click)="openDialog()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14">
+        {{'add_insurance' | translate}}
+      </a>
+    </div>
+  </div>
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+
+    <div class="table-container mx-1" *ngIf="insurances.length > 0 && !loading">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">{{ 'insurance_number' | translate }}</th>
+            <th class="text-left py-1">{{ 'insurance_salary' | translate }}</th>
+            <th class="text-left py-1">{{ 'date' | translate }}</th>
+            <th class="text-left py-1">{{ 'status' | translate }}</th>
+          </tr>
+        </thead>
+
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of insurances" >
+            <td class="text-left">{{ item.insuranceNumber }}</td>
+            <td class="text-left {{!item.isActive ?'line-through' : ''}}">{{ item.insuranceSalary }}</td>
+            <td class="text-left">{{ item.creationDate | arabicDate }}</td>
+            <td class="text-left">
+              <i class="bx bx-check-circle fs-18 success" *ngIf="item.isActive"></i>
+              <i class="bx bx-x-circle fs-18 danger" *ngIf="!item.isActive"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="insurances.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>
+<ng-template #dialogTemplate>
+
+  <div class="dir">
+    <div class="flex w-100 jcsb">
+      <h4>{{'add_insurance' | translate}}</h4>
+      <i class="bx bx-x fs-25 danger pointer p-1" (click)="closeDialog()"></i>
+    </div>
+    <mat-dialog-content>
+      <form action="" [formGroup]="form">
+        <div class="flex-grid gap-y-2">
+          <div class="{{insurances.length > 0 ? 'col-lg-12' : 'col-lg-6'}}">
+            <div class="name">
+              <input-label key="insurance_salary" [control]="f['insuranceSalary']"/>
+              <input type="text" formControlName="insuranceSalary" class="input">
+              <input-error [control]="f['insuranceSalary']"/>
+            </div>
+          </div>
+
+          <div class="col-lg-6" *ngIf="insurances.length == 0">
+            <div class="name">
+              <input-label key="insurance_number" [control]="f['insuranceNumber']"/>
+              <input type="text" formControlName="insuranceNumber" class="input">
+              <input-error [control]="f['insuranceNumber']"/>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <div class="text-right w-100">
+        <a (click)="createInsurance()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14 ">
+          {{'add_insurance' | translate}}
+        </a>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</ng-template>

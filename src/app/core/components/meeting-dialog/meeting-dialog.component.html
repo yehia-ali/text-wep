@@ -1,0 +1,18 @@
+<div class="meeting-message" dir="auto">
+  <h3>{{'new_meet' | translate}}</h3>
+
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <input-label key="meeting_name" [control]="form.controls['name']"/>
+      <input type="text" class="input" formControlName="name">
+      <input-error [control]="form.controls['name']"/>
+    </form>
+  </div>
+
+  <div mat-dialog-actions>
+    <div class="flex aic w-100 gap-x-1">
+      <button [mat-dialog-close]="false" mat-raised-button class="flex-auto w-100 dark-color clickable-btn rounded cancel-btn">{{'cancel' | translate}}</button>
+      <button class="flex-auto rounded w-100 bg-primary white" mat-raised-button (click)="submit()">{{'start_meeting' | translate}}</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="late-form p-2">
+    <p class="mb-2 fs-18 simibold">{{'add_absence' | translate}}</p>
+    <form [formGroup]="form">
+        <div class="form-group">
+            <div class="flex-grid aife gap-y-1 mb-2">
+                <div class="col-lg-6">
+                    <input-label key="first_repetition_discount" [control]="f['firstRepetitionDiscount']" [showIcon]="true"
+                    [icon]="'assets/images/icons/number.svg'" />
+                  <div class="flex aic position-relative">
+                    <input type="text" class="input" formControlName="firstRepetitionDiscount" />
+                    <span class="input-suffix">{{'day' | translate}}</span>
+                  </div>
+                  <input-error [control]="f['firstRepetitionDiscount']" />
+                </div>
+                <div class="col-lg-6">
+                    <input-label key="second_repetition_discount" [control]="f['secondRepetitionDiscount']" [showIcon]="true"
+                    [icon]="'assets/images/icons/number.svg'" />
+                  <div class="flex aic position-relative">
+                    <input type="text" class="input" formControlName="secondRepetitionDiscount" />
+                    <span class="input-suffix">{{'day' | translate}}</span>
+                  </div>
+                  <input-error [control]="f['secondRepetitionDiscount']" />
+                </div>
+            </div>
+            <div class="flex-grid aife gap-y-1 mb-2">
+                <div class="col-lg-6">
+                    <input-label key="third_repetition_discount" [control]="f['thirdRepetitionDiscount']" [showIcon]="true"
+                    [icon]="'assets/images/icons/number.svg'" />
+                  <div class="flex aic position-relative">
+                    <input type="text" class="input" formControlName="thirdRepetitionDiscount" />
+                    <span class="input-suffix">{{'day' | translate}}</span>
+                  </div>
+                  <input-error [control]="f['thirdRepetitionDiscount']" />
+                </div>
+                <div class="col-lg-6">
+                    <input-label key="fourth_repetition_discount" [control]="f['fourthRepetitionDiscount']" [showIcon]="true"
+                    [icon]="'assets/images/icons/number.svg'" />
+                  <div class="flex aic position-relative">
+                    <input type="text" class="input" formControlName="fourthRepetitionDiscount" />
+                    <span class="input-suffix">{{'day' | translate}}</span>
+                  </div>
+                  <input-error [control]="f['fourthRepetitionDiscount']" />
+                </div>
+            </div>
+        </div>
+            <!-- Action Buttons -->
+    <div class="text-right mt-4">
+        <button (click)="submit()" type="submit" 
+          class="bg-primary white py-1 px-2 border-primary rounded pointer"
+          mat-button>
+          {{(editMode ? 'save' : 'add') | translate}}
+        </button>
+        <button (click)="cancel()" type="button"
+        class="bg-white primary py-1 px-2 border-primary rounded pointer ml-1" mat-button>
+        {{'cancel' | translate}}
+      </button>
+  
+      </div>
+    </form>
+</div>

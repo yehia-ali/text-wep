@@ -1,0 +1,88 @@
+<layout-with-filters [meta]="meta" (pageChange)="pageChanged($event)" [admin]="true" (limitChanged)="limitChanged($event)" [limit]="service.limit.value">
+  <ng-container filters>
+    <templates-filter (emitChange)="getTemplates()" (manageCategory)="manageCategory()" (newTemplate)="templateForm()" [counter]="meta?.totalItems"></templates-filter>
+  </ng-container>
+
+  <ng-container content>
+    <table *ngIf="templates && templates.length > 0 && !loading" class="table">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">{{'template_name' | translate}}</th>
+        <th>{{'creator' | translate}}</th>
+        <th>{{'creation_date' | translate}}</th>
+        <th class="text-center">{{'category' | translate}}</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr
+        *ngFor="let template of templates | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy"
+        class="border-bottom">
+        <td>
+          <div class="flex aic">
+            <priority [priority]="template.priority"></priority>
+            <div class="ml-1">{{template.title}}</div>
+          </div>
+        </td>
+        <td class="primary">{{template.creatorName || 'taskedin' | translate}}</td>
+        <td>{{template.creationDate | arabicDate}}</td>
+        <td class="text-center">{{template.taskTemplateCategoryName}}</td>
+        <td>
+          <div (click)="selectedTemplate = template" class="pointer">
+            <i class='bx bx-dots-vertical-rounded fs-25 px-1 jcfe' [matMenuTriggerFor]="menu"></i>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <not-found *ngIf="templates && templates.length == 0 && !loading"></not-found>
+    <loading *ngIf="loading"></loading>
+  </ng-container>
+</layout-with-filters>
+
+
+<info-sidebar [open]="openSidebar">
+  <div header class="flex aic jcsb w-100">
+    <p class="bold">{{'categories' | translate}}</p>
+    <button class="add-category flex-center bg-primary white clickable-btn rounded" (click)="categoryForm()">
+      <i class='bx bx-plus fs-20'></i>
+    </button>
+  </div>
+  <div class="p-2" [ngClass]="{'h-100': categories.length == 0}" content>
+    <ng-container *ngIf="categories.length > 0">
+      <div class="category-card bg-gray mb-2 rounded p-2" *ngFor="let category of categories">
+        <div class="flex aic jcsb border-bottom pb-2">
+          <p class="fs-14 bold" *ngIf="dir == 'ltr'">{{category.name}}</p>
+          <p class="fs-14 bold" *ngIf="dir == 'rtl'">{{category.arName}}</p>
+          <div class="settings pointer" [matMenuTriggerFor]="afterMenu" (click)="selectedCategory = category">
+            <i class='bx bx-dots-vertical-rounded fs-25'></i>
+          </div>
+          <mat-menu #afterMenu="matMenu" xPosition="before">
+            <button mat-menu-item (click)="categoryForm(true)">{{'edit' | translate}}</button>
+            <button mat-menu-item (click)="deleteCategory()">{{'delete' | translate}}</button>
+          </mat-menu>
+        </div>
+        <div class="category-numbers flex aic jcsb mt-2">
+          <div class="count flex aic">
+            <div class="img">
+              <img src="assets/images/icons/templates.svg" alt="templates icon" class="convert-image-color">
+            </div>
+            <p class="fs-13 ml-50">{{category.taskTemplateCount | arabicNumbers}} {{'templates' | translate}}</p>
+          </div>
+          <div class="date flex aic">
+            <div class="img">
+              <img src="assets/images/icons/calendar1.svg" alt="calendar icon" class="convert-image-color">
+            </div>
+            <p class="fs-13 ml-50">{{category.creationDate | arabicDate}}</p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <not-found *ngIf="categories.length == 0"></not-found>
+  </div>
+</info-sidebar>
+
+<mat-menu #menu="matMenu" xPosition="before">
+  <button mat-menu-item (click)="templateForm(true)">{{'edit' | translate}}</button>
+  <button mat-menu-item (click)="deleteTemplate()">{{'delete' | translate}}</button>
+</mat-menu>

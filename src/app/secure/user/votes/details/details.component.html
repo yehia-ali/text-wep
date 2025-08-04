@@ -1,0 +1,96 @@
+<layout>
+  <div class="h-100 relative">
+    <div *ngIf="details$ | async as vote; else loadingBlock" class="vote-details relative">
+      <div class="top-section py-2 px-3 flex aic jcsb gap-x-2 border-bottom bg-white">
+        <div class="start auto flex aic gap-x-1">
+          <priority [priority]="vote.priority" [size]="20"></priority>
+          <h3>{{vote.title}}</h3>
+        </div>
+        <div class="end flex aic gap-x-2">
+          <vote-status [state]="vote.voteStateId"></vote-status>
+          <vote-actions [callbackService]="service" [hasEnded]="vote.hasEnded" [hasStarted]="vote.hasStarted" [id]="vote.id" [isCreator]="vote.isCreator"
+                        [isReportPublic]="vote.isReportPublic"
+                        [voteFormStateId]="vote.voteFormStateId"/>
+        </div>
+      </div>
+
+      <div class="content py-2 px-3 relative" magicScroll="">
+        <div class="users-date flex aifs jcsb gap-x-5 w-75">
+          <div class="creator">
+            <h4>{{'created_by' | translate}}</h4>
+            <div class="flex aic mt-1">
+              <user-image [id]="19587" [img]="vote.creatorImageUrl"></user-image>
+              <p class="ml-1">{{vote.creatorName}}</p>
+            </div>
+          </div>
+
+          <div class="start-date">
+            <h4>{{'start_date' | translate}}</h4>
+            <p>{{vote.startDate | arabicDate: 'withTime'}}</p>
+          </div>
+
+          <div class="end-date">
+            <h4>{{'end_date' | translate}}</h4>
+            <p>{{vote.endDate | arabicDate:'withTime'}}</p>
+          </div>
+        </div>
+        <div *ngIf="vote.isAnonymous" class="bg-light-warning p-1 rounded flex-center mt-4 anonymous mx-auto">{{'voting_anonymously' | translate}}</div>
+
+        <div *ngIf="vote.description" class="description mt-4">
+          <h4>{{'description' | translate}}</h4>
+          <p [innerHTML]="vote.description"></p>
+        </div>
+
+        <div class="questions mt-5">
+          <form>
+            <div *ngFor="let question of vote.voteFormQuestions; let i = index" class="question mb-2">
+              <h4 class="question-title flex aic  jcsb">
+                <span>{{i + 1 | arabicNumbers}}. {{question.title}}</span>
+                <img (click)="edit()" *ngIf="i == 0 && !vote.hasEnded && vote.isAssignee && vote.voteStateId == 4" alt="" class="img mr-1 pointer" src="assets/images/icons/edit1.svg">
+              </h4>
+              <div class="answers mt-1 ml-2">
+                <div *ngFor="let answer of question.voteFormQuestionChoices; let index = index">
+                  <mat-checkbox (change)="addMultiAnswers(i,answer, $event)" *ngIf="question.type == 2" [checked]="answer.isSelected"
+                                [disabled]="(!vote.isAssignee || vote.voteStateId != 3 || !vote.hasStarted) && !editable" color="primary">{{answer.text}}</mat-checkbox>
+                </div>
+                <mat-radio-group (change)="addSingleAnswer(i, $event)" *ngIf="question.type == 1" [disabled]="(!vote.isAssignee || vote.voteStateId != 3 || !vote.hasStarted) && !editable"
+                                 aria-labelledby="example-radio-group-label">
+                  <div *ngFor="let answer of question.voteFormQuestionChoices; let index = index">
+                    <mat-radio-button [checked]="answer.isSelected" [value]="answer.id" color="primary">
+                      {{answer.text}}
+                    </mat-radio-button>
+                  </div>
+                </mat-radio-group>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div *ngIf="vote.isAssignee" class="submit">
+          <!--        ((!vote.isAssignee || invalid) && ((vote.voteStateId == 3 || (vote.voteStateId == 4 && editable)) && vote.hasStarted)) || loading-->
+          <button (click)="((vote.voteStateId == 3 && vote.hasStarted) || (vote.voteStateId == 4 && editable)) && submit()"
+                  [disabled]="(((vote.voteStateId == 3 && invalid) || (vote.voteStateId == 4 && editable && invalid)) && vote.hasStarted) || loading"
+                  [ngClass]="{'bg-archived': vote.voteStateId == 1, 'bg-danger': vote.voteStateId == 2, 'bg-primary': (vote.voteStateId == 3 || editable && !invalid) && !loading || (vote.voteStateId == 3 && !vote.hasStarted), 'bg-success': vote.voteStateId == 4 && !editable}"
+                  class="flex aic gap-x-1 fs-16 white"
+                  mat-raised-button>
+            <ng-container *ngIf="!loading">
+          <span class="img mr-75">
+            <img *ngIf="vote.voteStateId == 2 || vote.voteStateId == 1 || (vote.voteStateId == 3 && !vote.hasStarted)" alt="warning" src="assets/images/icons/warning.svg" width="19">
+            <img *ngIf="vote.voteStateId == 4 && !editable" alt="warning" src="assets/images/icons/check.svg" width="19">
+          </span>
+              <span *ngIf="vote.voteStateId == 4 && !editable">{{'voting_submitted' | translate}}</span>
+              <span *ngIf="vote.voteStateId == 3 && !vote.hasStarted">{{'not_started_yet' | translate}}</span>
+              <span *ngIf="(vote.voteStateId == 3 && vote.hasStarted) || editable">{{'submit_voting' | translate}}</span>
+              <span *ngIf="vote.voteStateId == 2">{{'voting_missed' | translate}}</span>
+              <span *ngIf="vote.voteStateId == 1">{{'voting_archived' | translate}}</span>
+            </ng-container>
+            <span *ngIf="loading" class="dark">{{'loading' | translate}}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <ng-template #loadingBlock>
+      <loading/>
+    </ng-template>
+  </div>
+</layout>

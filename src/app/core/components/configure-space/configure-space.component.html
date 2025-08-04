@@ -1,0 +1,57 @@
+<div class="space-configuration" dir="auto">
+  <h2 mat-dialog-title>{{ 'edit_space' | translate }}</h2>
+
+  <form mat-dialog-content [formGroup]="form">
+    <div class="flex-grid gap-y-2">
+      <div class="col-lg-6">
+        <p class="mb-1 muted">{{ 'space_name' | translate }}:</p>
+        <p class="fs-25 lighter">{{ space.spaceName }}</p>
+      </div>
+      <div class="col-lg-6">
+        <p class="mb-1 muted">{{ 'package' | translate }}:</p>
+        <ng-select class="w-19r" [items]="packages" formControlName="package"
+                   bindLabel="name" bindValue="id" appendTo="body" [multiple]="false" [closeOnSelect]="true" [clearable]="false">
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            {{ item.name | translate }}
+          </ng-template>
+          <ng-template ng-label-tmp let-item="item" let-clear="clear">
+            <span class="fs-14">{{ item.name | translate }}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div class="col-lg-6">
+        <p class="mb-1 muted">{{ 'cost' | translate }}:</p>
+        <p class="lighter">{{ space.paymentSubscribtionTotalPrice | arabicNumbers }} {{ 'EGP' | translate }}</p>
+      </div>
+      <div class="col-lg-6">
+        <p class="mb-1 muted">{{ 'expiry_date' | translate }}:</p>
+        <p class="lighter">{{ space.paymentSubscribtionEndDate ? (space.paymentSubscribtionEndDate | arabicDate) : '--' }}</p>
+      </div>
+      <div class="col-lg-6">
+        <p class="mb-1 muted">{{ 'number_of_users' | translate }}:</p>
+        <div class="w-19r border rounded flex aic jcsb">
+          <div class="minus border-right p-1 pointer" (click)="minus()">
+            -
+          </div>
+          <div class="number px-5">{{ numberOfEmployees | arabicNumbers }}</div>
+          <div class="add border-left p-1 pointer" (click)="add()">+</div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <p class="mb-1 muted">{{ 'usage' | translate }}:</p>
+        <p class="lighter">
+          <span>{{ space.numberOfActiveUser | arabicNumbers }}</span>
+          /
+          <span>{{ space.paymentSubscribtionTotalNumberOfUsers | arabicNumbers }}</span>
+        </p>
+      </div>
+    </div>
+  </form>
+
+  <div mat-dialog-actions class="flex aic jcfe gap-x-1">
+    <button mat-raised-button color="primary" class="px-4 fs-15" (click)="submit()" [disabled]="loading">
+      <submit-button text="save" [loading]="loading"></submit-button>
+    </button>
+    <button mat-raised-button class="px-4 border" mat-dialog-close="">{{ 'cancel' | translate }}</button>
+  </div>
+</div>

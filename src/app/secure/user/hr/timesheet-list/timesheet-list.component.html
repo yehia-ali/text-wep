@@ -1,0 +1,125 @@
+<layout>
+  <div class="timesheet p-2 h-100" magicScroll>
+    <div class="flex aic "
+         [ngClass]="{'jcsb': service.userId.value != currentUser, 'jcfe': service.userId.value == currentUser}">
+      <p *ngIf="service.userId.value != currentUser">{{ timesheet.userName }}</p>
+      <div class="date-picker flex aic jcfe gap-x-1">
+        <mat-form-field appearance="fill" class="example-form-field" (click)="rangePicker.open()">
+          <mat-label class="fs-15">{{ "date_range" | translate }}</mat-label>
+          <mat-date-range-input [rangePicker]="rangePicker">
+            <input matStartDate placeholder="Start date" [(ngModel)]="startDate"/>
+            <input matEndDate placeholder="End date" [(ngModel)]="endDate"/>
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #rangePicker>
+            <mat-date-range-picker-actions>
+              <button mat-button matDateRangePickerCancel>{{ "cancel" | translate }}</button>
+              <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateChanged()">
+                {{ "apply" | translate }}
+              </button>
+            </mat-date-range-picker-actions>
+          </mat-date-range-picker>
+        </mat-form-field>
+        <button mat-raised-button class="bg-primary white export" (click)="exportToExcel()">{{'export' | translate}}</button>
+      </div>
+    </div>
+
+    <div class="time-logged flex aic jcsb white px-5 rounded mt-1">
+      <div class="start">
+        <!--        <p class="mb-1">Feb</p>-->
+        <div class="flex aic gap-x-5">
+          <div class="logged">
+            <div class="flex-center">
+              <div class="hours bold">
+                {{ Math.floor(timesheet.totalHours || 0) | arabicNumbers}}{{ 'h' | translate }}
+              </div>
+              <div class="mx-50">:</div>
+              <div class="minutes bold">
+                {{ Math.floor((((timesheet.totalHours * 60) % 60) || 0)) | arabicNumbers }} {{ 'm' | translate }}
+              </div>
+            </div>
+            <p>{{ 'logged' | translate }}</p>
+          </div>
+          <div class="required">
+            <p class="bold">{{ timesheet.requiredMonthlyHours }}{{ 'h' | translate }}</p>
+            <p>{{ 'required_word' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="end img">
+        <img src="assets/images/clock.svg" alt="clock image">
+      </div>
+    </div>
+
+    <table [ngClass]="{'h-100': timesheet.length == 0 || loading}" class="table w-100 mt-2 relative" id="timesheet-list">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th class="text-left">{{ 'date' | translate }}</th>
+        <th>{{ 'total_time' | translate }}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="timesheet.dataList?.length > 0 && !loading">
+      <ng-container *ngFor="let item of timesheet.dataList; trackBy: trackBy">
+        <tr class="border-bottom pointer" [ngClass]="{'bg-gray': item.expanded}"
+            (click)="item.expanded = !item.expanded">
+          <td class="flex aic gap-x-1">
+            <i class='bx bxs-chevron-down fs-21' [ngClass]="{'bx-rotate-180': item.expanded}"></i>
+            <p>{{ item.day | arabicDate }}</p>
+          </td>
+          <td>
+            <div class="flex-center">
+              <div class="hours">
+                {{ Math.floor(item.total) | arabicNumbers }} {{ 'h' | translate }}
+              </div>
+              <div class="mx-50">:</div>
+              <div class="minutes">
+                {{ ((item.total * 60) % 60) | arabicNumbers }} {{ 'm' | translate }}
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="log-details border-bottom bg-gray" *ngIf="item.expanded">
+          <td colspan="2">
+            <table class="table w-100 px-0 relative">
+              <thead class="bg-gray border-bottom" *ngIf="item.logs">
+              <tr>
+                <th class="text-left">{{ 'title' | translate }}</th>
+                <th>{{ 'time' | translate }}</th>
+                <th class="text-right">{{ 'total_time' | translate }}</th>
+                <th class="text-right"></th>
+              </tr>
+              </thead>
+              <tbody *ngIf="item.logs">
+              <ng-container *ngFor="let log of item.logs; trackBy: trackBy">
+                <tr class="border-bottom">
+                  <td class="text-left">{{ log.title }}</td>
+                  <td>{{ log.time | arabicTime }}</td>
+                  <td class="text-right">
+                    <div class="flex aic jcfe pr-50">
+                      <div class="hours">
+                        {{ Math.floor(log.hours) | arabicNumbers }} {{ 'h' | translate }}
+                      </div>
+                      <div class="mx-50">:</div>
+                      <div class="minutes">
+                        {{ ((log.hours * 60) % 60) | arabicNumbers }} {{ 'm' | translate }}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <a class="bx bx-show pointer fs-18 primary" [routerLink]="['/tasks/details/' + log.taskId]" routerLinkActive="router-link-active" ></a>
+                  </td>
+                </tr>
+              </ng-container>
+              </tbody>
+              <p *ngIf="!item.logs && !loading" class='text-center'>{{ 'no_data_found' | translate }}</p>
+              <loading *ngIf="loading"></loading>
+            </table>
+          </td>
+        </tr>
+      </ng-container>
+      </tbody>
+      <not-found *ngIf="timesheet.dataList?.length == 0 && !loading" class="a-center"></not-found>
+      <loading *ngIf="loading"></loading>
+    </table>
+  </div>
+</layout>

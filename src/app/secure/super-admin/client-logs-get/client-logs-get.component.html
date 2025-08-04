@@ -1,0 +1,37 @@
+<div class="min-50 dir">
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+
+    <div class="table-container" *ngIf="logs.length > 0 && !loading">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">{{'type' | translate}}</th>
+            <th class="text-left py-1">{{'date' | translate}}</th>
+            <th class="text-left py-1">{{'description' | translate}}</th>
+            <th class="text-left py-1">{{'file' | translate}}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of logs" >
+            <td>{{item.type}}</td>
+            <td>{{item.date | arabicDate}}</td>
+            <td>{{item.describtion}}</td>
+            <td>
+              <a (click)="deleteLog(item.id)" class="danger bx fs-18 bx-trash pointer"></a>
+              <a *ngIf="item.filePath != 'No File'" href="{{url+ 'employeeFiles/' +item.filePath}}" target="_blank" class="primary bx fs-18 bx-file pointer"></a>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="logs.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>

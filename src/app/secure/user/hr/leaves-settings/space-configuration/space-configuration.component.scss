@@ -1,0 +1,14 @@
+.number-card {
+  padding: .8rem 2rem;
+  cursor: pointer;
+  user-select: none;
+
+  &:active {
+    background: rgba(gray, .1);
+  }
+}
+
+.number {
+  padding: .8rem 3.5rem;
+  margin-top: .2rem;
+}

@@ -1,0 +1,69 @@
+.bg-pending {
+  color: #606060;
+  background-color: #ececed;
+}
+.bg-approved {
+  color: #29cc99;
+  background-color: rgba($color: #29cc99, $alpha: 0.25);
+}
+.bg-rejected {
+  color: #d32f2f;
+  background-color: rgba($color: #d32f2f, $alpha: 0.25);
+}
+
+.days_num {
+  background-color: #efebf8;
+}
+
+.details-content {
+  height: calc(100% - 69px);
+}
+
+.chat-section {
+  position: sticky;
+  top: -1px;
+  width: 100%;
+  height: calc(calc(100vh - 11rem) - 191px);
+}
+
+
+.leaves-timeline {
+  .timeline {
+    &:before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      inset-inline-start: -15px;
+      height: calc(100% - 48px);
+      width: 2px;
+      border-inline-start: 2px dashed #e0e0e0;
+    }
+
+    .start, .end {
+      position: relative;
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 5px;
+        inset-inline-start: -19px;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+      }
+    }
+
+    .start {
+      &:before {
+        background: #C7C7CC;
+      }
+    }
+
+    .end {
+      &:before {
+        background: #CF4747;
+      }
+    }
+
+  }
+}

@@ -1,0 +1,118 @@
+<user-navbar></user-navbar>
+<div class="p-2">
+  <layout>
+    <ng-container filters>
+      <div class="flex-grid aic jcsb mb-1 p-1 ">
+        <div class="col-md-3">
+          <search [newSearch]="true" (valueChanged)="search($event)"></search>
+        </div>
+        <div class="col-md-6 text-right">
+          <div *ngIf="selectedSpaces.length > 0" class="mt-1">
+            <button class="mr-50" (click)="changeMultiSpacesStatus(true)" mat-raised-button color="primary">
+              {{('activate' | translate) + ' ' + selectedSpaces.length}}
+            </button>
+            <button (click)="changeMultiSpacesStatus(false)" mat-raised-button color="primary">
+              {{('deactivate' | translate) + ' ' + selectedSpaces.length}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container content>
+      <div class="table-container">
+        <table *ngIf="spaces && spaces.length > 0 && !loading" class="table" id="spaces-table">
+          <thead class="">
+            <tr class="border-bottom fs-12 simibold">
+              <th class="text-left">
+                <mat-checkbox (change)="toggleSelectAll($event.checked)" color="primary"></mat-checkbox>
+                {{ 'id' | translate }}
+              </th>
+              <th class="text-left">
+                <div class="flex aic">
+                  <p class="mr-50">{{ 'name' | translate }}</p>
+                </div>
+              </th>
+              <th class="text-left">{{ 'phone' | translate }}</th>
+              <th class="text-left">{{ 'email' | translate }}</th>
+              <th class="text-left">
+                <div class="flex aic">
+                  <p class="mr-50">{{ 'creation_date' | translate }}</p>
+                </div>
+              </th>
+              <th>{{ 'is_active' | translate }}</th>
+              <th class="text-left">{{ 'country' | translate }}</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let space of spaces | paginate: { itemsPerPage: limit, currentPage: page, totalItems: totalItems }; trackBy: trackBy" class="border-bottom">
+              <td class="text-left">
+                <mat-checkbox (change)="selectSpace(space.id)" [checked]="selectedSpaces.includes(space.id)" color="primary"></mat-checkbox>
+                {{ space.id }}
+              </td>
+              <td class="text-left">
+                <p class="bold primary flex aic">
+                  <i class="bx bx-file blue fs-18 pointer mr-1" (click)="showLogs(space.id)"></i>
+                  <span>{{ space.name }}</span>
+                </p>
+              </td>
+              <td class="text-left">
+                <a class="mr-50 bx bxl-whatsapp fs-18 success" (click)="createLog(space, 'whatsapp')" [href]="'https://wa.me/' + '+' + (space.phone | slice:2)" target="_blank"></a>
+                <a class="mr-50 bx bx-phone fs-18 blue" (click)="createLog(space, 'call')" [href]="'tel:' + '+' + (space.phone | slice:2)"></a>
+                <span class="bold">{{ space.phone }}</span>
+              </td>
+              <td class="text-left">
+                <a class="bold" [href]="'mailto:' + (space.email || '')" (click)="createLog(space, 'email')">
+                  <i class="mr-50 bx bx-envelope fs-18 blue"></i>
+                  {{ space.email || '-' }}
+                </a>
+              </td>
+              <td>
+                <mat-slide-toggle (change)="toggleSpace($event, space.id, space)" [checked]="space.isActive" class="example-margin" color="primary"></mat-slide-toggle>
+                <p class="print">
+                  <span *ngIf="space.isActive">{{ 'active' | translate }}</span>
+                  <span *ngIf="!space.isActive">{{ 'inactive' | translate }}</span>
+                </p>
+              </td>
+              <td class="text-left">
+                <p *ngIf="space.country">{{ dir == 'rtl' ? space.countryArName : space.country }}</p>
+                <p *ngIf="!space.country">-</p>
+              </td>
+              <td>
+                <i (click)="goToSpace(space)" [matTooltip]="'go_to_space' | translate" [ngClass]="{'bx-rotate-180': dir == 'rtl'}" class="bx bx-right-arrow-circle fs-25 pointer primary"></i>
+              </td>
+              <td (click)="spaceConfiguration(space)" [matTooltip]="'space_configuration' | translate">
+                <i class="bx bxs-edit fs-23 primary pointer"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-content flex aic jcsb py-1 bg-white border-top border-bottom px-2" >
+        <div class="flex aic">
+          <p class="fs-12 simibold">{{ 'pagination_per_page' | translate }} </p>
+          <input type="number" style="width:50px" class="input ml-75 limit text-center py-50 px-0" min="1" [(ngModel)]="limit" (ngModelChange)="changeLimit()">
+          <p class="ml-50 primary fs-12" >{{ 'record' | translate }}</p>
+        </div>
+        <pagination-controls
+          (pageChange)="pageChanged($event)"
+          [maxSize]="7"
+          [directionLinks]="true"
+          [previousLabel]="'previous' | translate"
+          [nextLabel]="'next' | translate"
+                             >
+        </pagination-controls>
+        <p class="fs-12 simibold pr-3">{{ 'pagination_total_records' | translate }} <span
+          class="primary">{{ totalItems | arabicNumbers }} {{ 'record' | translate }}</span>
+        </p>
+      </div>
+
+      <not-found *ngIf="spaces && spaces.length == 0 && !loading"></not-found>
+      <loading *ngIf="loading"></loading>
+    </ng-container>
+  </layout>
+</div>
+

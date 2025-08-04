@@ -1,0 +1,28 @@
+<layout>
+  <div class="flex aic jcsb px-2 py-1">
+    <search (valueChanged)="service.search.set($event)"/>
+    <favourite (getValue)="service.isFavorite.set($event)" [isFavourite]="service.isFavorite()"/>
+  </div>
+  <categories-list></categories-list>
+  <div class="sub-categories-list p-2 relative border-top" magicScroll="calc(100% - 191px)">
+    <div *ngIf="subCategories().length > 0 && !loading()" class="flex-grid gap-y-2 relative">
+      <div *ngFor="let subCategory of subCategories()" class="col-lg-6">
+        <div [routerLink]="subCategory.id + '/service-providers'" class="sub-category flex aic jcsb bg-gray py-1 px-2 rounded pointer">
+          <div class="flex aic gap-x-2">
+            <div class="img">
+              <img [src]="imageUrl + subCategory.iconUrl" alt="sub category image" width="25">
+            </div>
+            <p class="fs-17">{{language == 'en' ? subCategory.enName : subCategory.arName}}</p>
+          </div>
+          <div (click)="$event.stopImmediatePropagation()" class="fav">
+            <favourite (getValue)="toggleFavourite(!$event, subCategory.id)" [isFavourite]="subCategory.isFavorite"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="subCategories().length == 0 || loading()" class="a-center">
+      <not-found *ngIf="subCategories().length == 0 && !loading()"/>
+      <loading *ngIf="loading()"/>
+    </div>
+  </div>
+</layout>

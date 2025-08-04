@@ -1,0 +1,54 @@
+<div >
+  <div *ngIf="!hideDetails">
+    <div class="kpi-values flex-grid aic jcc "  *ngIf="details && !small">
+      <div class=" text-center col-sm-4 mb-1">
+        <div class="simibold">{{(details?.weight || 0 )| arabicNumbers}}%</div>
+        <div class="success  fs-15">{{"weight" | translate}}</div>
+      </div>
+
+      <div class=" text-center col-sm-4 mb-1">
+        <div class="simibold">{{(details?.target || 0) | arabicNumbers}}</div>
+        <div class="primary ">{{"target" | translate}}</div>
+      </div>
+
+      <div class="text-center col-sm-4 mb-1 ">
+        <div class="simibold " *ngIf="details?.kpi && details?.kpi == true">
+          {{( details?.value || 0) | arabicNumbers}}
+        </div>
+        <div class="success">{{"achieved" | translate}}</div>
+
+      </div>
+    </div>
+    <div class="kpi-values flex-grid aic jcc "  *ngIf="details && small">
+      <div class=" text-center col-sm-4 mb-1 fs-14">
+        <div class="success">{{"weight" | translate}}</div>
+        <div class="fw-500">{{(details?.weight || 0)  | arabicNumbers}}%</div>
+      </div>
+
+      <div class=" text-center col-sm-4 mb-1 fs-14">
+        <div class="primary">{{"target" | translate}}</div>
+        <div class="fw-500">{{(details?.target || details?.target || 0) | arabicNumbers}}</div>
+      </div>
+
+      <div class="text-center col-sm-4 mb-1 ">
+        <div class="success">{{"achieved" | translate}}</div>
+        <div class="fw-500">
+          {{( details?.value || 0) | arabicNumbers}}
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="{{small ? 'small-chart' : ''}}">
+    <div id="chart" >
+      <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [plotOptions]="chartOptions.plotOptions"
+      [labels]="chartOptions.labels"
+      [fill]="chartOptions.fill"
+      />
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,32 @@
+<!-- if pending -->
+<div class="flex aic gap-x-2" *ngIf="session.sessionAttendeesStatus == 1">
+  <ng-container *ngIf="session.isConsultant">
+    <button class="clickable-btn bg-primary rounded white py-1 px-4 bold" (click)="approveRequest(session.id)">{{'approve' | translate}}</button>
+    <button class="clickable-btn bg-danger rounded white py-1 px-5 bold" (click)="rejectRequest(session.id)">{{'reject' | translate}}</button>
+  </ng-container>
+
+  <ng-container *ngIf="session.isAttendee">
+    <button class="clickable-btn disabled-btn rounded py-1 btn-width bold" disabled>{{'pending_for_approval' | translate}}</button>
+  </ng-container>
+</div>
+
+
+<!-- if new -->
+<div class="flex aic gap-x-2" *ngIf="session.sessionAttendeesStatus == 2">
+  <button class="clickable-btn bg-primary rounded white py-1 bold btn-width" (click)="startSession()">{{'open_session' | translate}}</button>
+</div>
+
+
+<!-- if in progress -->
+<div class="flex aic gap-x-2" *ngIf="session.sessionAttendeesStatus == 5">
+  <button class="clickable-btn bg-primary rounded white py-1 bold btn-width" (click)="startSession()">{{'open_session' | translate}}</button>
+  <button class="clickable-btn rounded primary border-primary py-1 bold btn-width" (click)="endSession()">{{'end_session' | translate}}</button>
+</div>
+
+
+<!-- if completed -->
+<div class="flex aic gap-x-2" *ngIf="session.sessionAttendeesStatus == 6">
+  <button class="clickable-btn bg-success rounded white py-1 bold btn-width" (click)="getRecord()">{{'get_record' | translate}}</button>
+</div>
+
+

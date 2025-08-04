@@ -1,0 +1,24 @@
+<div class="reply w-100 bg-gray flex aic jcsb px-2" *ngIf="reply">
+  <p class="muted reply-text" *ngIf="reply.messageType == 'text'">{{reply.text}}</p>
+  <p class="muted reply-text" *ngIf="reply.messageType != 'text'">{{'attachment' | translate}}</p>
+  <i class='bx bx-x fs-25 danger pointer' (click)="clearReply()"></i>
+</div>
+<div class="send-message flex aic relative">
+  <input type="text" id="send-message" class="rounded-0 border-top dark fs-16 bg-gray flex-auto" [placeholder]="'send_message' | translate" [(ngModel)]="message"
+         [ngClass]="{'isRecording': isRecording}" (keyup.enter)="sendMessage()">
+  <div class="flex absolute px-2 aic pb-50 {{chatBtns? 'mr-4' : ''}}">
+  <div class="record mr-1 mt-50" [matTooltip]="'sound_description' | translate">
+    <record [forChat]="true" (soundDescription)="record($event)" (isRecording)="isRecording = $event"></record>
+  </div>
+
+  <label for="files" class="mt-50 mr-1" [matTooltip]="'upload_files' | translate">
+    <i class="bx bx-paperclip fs-22 pointer"></i>
+  </label>
+
+  <div class="send-message-btn img" [ngClass]="{'pointer': message}" [matTooltip]="message ? ('send' | translate) : ''" (click)="sendMessage()">
+    <i class='bx bx-send fs-22' [ngClass]="{'primary': message, 'bx-rotate-180': dir == 'rtl'}"></i>
+  </div>
+</div>
+</div>
+
+<input type="file" hidden (change)="uploadFiles($event)" multiple #fileInput id="files">

@@ -1,0 +1,54 @@
+.attendance-label {
+  &:not(:last-of-type) {
+    margin-bottom: 1rem;
+  }
+}
+ ::ng-deep month-filter input.ng-invalid.ng-touched,
+ ::ng-deep month-filter .input.ng-invalid.ng-touched{
+  border-color: #e7e7e7 !important;
+}
+.date {
+  width: 20rem;
+}
+
+.sticky {
+  position: sticky;
+  top: -20px;
+  z-index: 99;
+}
+
+thead {
+  top: 100px !important;
+}
+.bg-custom-light{
+  background: rgba($color: #eee, $alpha: 0.5);
+}
+.date-picker-card {
+  position: relative;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 0.5px solid  #9D9D9D66;
+
+  .date-picker-card-body {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-block-end: 8px;
+  }
+
+}
+
+.clear-btn {
+  background: #D32F2F40;
+  border: none;
+  border-radius: 50%;
+  height: 16px;
+  width: 16px;
+  color: #D32F2F; 
+}
+.bg-exceeded{
+  background: #C6C4BD;
+  color: #554104;
+}

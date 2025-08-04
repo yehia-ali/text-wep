@@ -1,0 +1,27 @@
+<div class="department-form" dir="auto">
+  <h3>{{data?.title | translate}}</h3>
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="name">
+        <input-label [control]="f['name']" key="department_name"/>
+        <input type="text" class="input" formControlName="name">
+        <input-error [control]="f['name']"/>
+      </div>
+      <div class="parent_department">
+        <input-label [control]="f['name']" key="parent_department"/>
+        <departments-form [width]="'w-100'" [formControlName]="'parentId'" [closeOnSelect]="true" [labelVisibilty]="false" [multiable]="false" />
+        <input-error [control]="f['name']"/>
+      </div>
+      <div class="manager mt-2 mb-1">
+        <input-label [control]="f['managerId']" key="department_manager"/>
+        <select-user text="select_user" (getSelectedUsers)="getUser($event)" [multi]="false" [selectedUsers]="selectedUser"></select-user>
+        <input-error [control]="f['managerId']"/>
+      </div>
+    </form>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close>{{'cancel' | translate}}</button>
+    <button mat-raised-button color="primary" class="px-3" [disabled]="!form.valid" (click)="submit()">{{'save' | translate}}</button>
+  </div>
+</div>

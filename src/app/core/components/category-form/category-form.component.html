@@ -1,0 +1,25 @@
+<div class="category-form" dir="auto">
+  <h2 mat-dialog-title class="black title" *ngIf="data.formType == 'edit'">{{ 'edit_category' | translate}}</h2>
+  <h2 mat-dialog-title class="black title" *ngIf="data.formType != 'edit'">{{ 'add_category' | translate}}</h2>
+  <form [formGroup]="form" mat-dialog-content>
+    <div class="name">
+      <input-label key="name" [control]="f['name']"></input-label>
+      <input type="text" class="input" formControlName="name">
+      <input-error [control]="f['name']"></input-error>
+    </div>
+
+    <div class="arName mt-1">
+      <input-label key="arName" [control]="f['arName']"></input-label>
+      <input type="text" class="input" formControlName="arName">
+      <input-error [control]="f['arName']"></input-error>
+    </div>
+  </form>
+  <div mat-dialog-actions>
+    <div class="flex gap-x-1 w-100">
+      <button mat-dialog-close="" class="w-100 flex-auto dark-color clickable-btn rounded cancel-btn">{{'cancel' | translate}}</button>
+      <button mat-raised-button color="primary" class="w-100 flex-auto rounded bg-primary white" [disabled]="loading" (click)="submit()">
+        <submit-button [text]="data.formType == 'edit' ? 'edit' : 'add'" [loading]="loading"></submit-button>
+      </button>
+    </div>
+  </div>
+</div>

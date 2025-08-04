@@ -1,0 +1,55 @@
+<layout>
+  <div magicScroll="" class="h-100">
+    <table
+      [ngClass]="{ 'h-100': requests?.length == 0 || loading }"
+      class="table w-100 relative"
+    >
+      <thead class="bg-gray border-bottom">
+        <tr>
+          <th>#</th>
+          <th class="text-left">{{ "member" | translate }}</th>
+          <th>{{ "title" | translate }}</th>
+          <th>{{ "requested_hours" | translate }}</th>
+          <th>{{ "date" | translate }}</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="requests?.length > 0 && !loading">
+        <tr
+          *ngFor="
+            let item of requests
+              | paginate
+                : {
+                    itemsPerPage: meta.pageSize,
+                    currentPage: meta.currentPage,
+                    totalItems: meta.totalItems
+                  };
+            trackBy: trackBy;
+            let i = index
+          "
+          class="border-bottom pointer"
+          routerLink="details/{{ item.id }}"
+        >
+          <td>{{ item.id }}</td>
+          <td>
+            <div class="flex aic">
+              <app-img-title [imgSrc]="item.userPic" [title]="item.userName" [subTitle]="item.jobTitle" [userId]="item.userId" />
+            </div>
+          </td>
+          <td>{{ item.title }}</td>
+          <td>{{ item.overTimeHoursRequsted | convertToTime }}</td>
+          <td>{{ item.date | arabicDate }}</td>
+        </tr>
+      </tbody>
+      <div
+        class="flex aic jcc absolute"
+        *ngIf="requests?.length == 0 || loading"
+      >
+        <not-found
+          *ngIf="requests?.length == 0 && !loading"
+          class=""
+        ></not-found>
+        <loading *ngIf="loading"></loading>
+      </div>
+    </table>
+  </div>
+</layout>

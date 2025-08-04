@@ -1,0 +1,165 @@
+
+<div class="py-1">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <!-- <div class="col-lg-3">
+      <search [newSearch]="true" (valueChanged)="search($event)"></search>
+    </div> -->
+    <div class="col-lg-12 text-right">
+      <a (click)="openDialog()" *ngIf="space" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14">
+        {{'add_kpis' | translate}}
+      </a>
+    </div>
+  </div>
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+
+    <div class="table-container mx-1" *ngIf="spaceKpis.length > 0 && !loading">
+      <table class="w-100 rounded">
+
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1" *ngIf="!space">{{ 'status' | translate }}</th>
+            <th class="text-left py-1">{{ 'tasks_value' | translate }}</th>
+            <th class="text-left py-1">{{ 'task_rate_value' | translate }}</th>
+            <th class="text-left py-1">{{ 'manager_rate_value' | translate }}</th>
+            <th class="text-left py-1">{{ 'timesheet_value' | translate }}</th>
+            <th class="text-left py-1">{{ 'attendance_value' | translate }}</th>
+            <th class="text-left py-1"></th>
+          </tr>
+        </thead>
+
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of spaceKpis" >
+            <td class="text-left" *ngIf="!space">
+              <div class="flex aic">
+                <i class="fs-18 success bx bx-check-circle" *ngIf="userKpi?.id == item.id"></i>
+                <i class="fs-18 danger bx bx-x-circle" *ngIf="userKpi?.id != item.id"></i>
+              </div>
+            </td>
+            <td class="text-left">{{ (item.tasksKPIValue | arabicNumbers) + ' %' }}</td>
+            <td class="text-left">{{ (item.rateKPIValue | arabicNumbers) + ' %' }}</td>
+            <td class="text-left">{{ (item.managerRateKPIValue | arabicNumbers) + ' %' }}</td>
+            <td class="text-left">{{ (item.timeSheetKPIValue | arabicNumbers) + ' %' }}</td>
+            <td class="text-left">{{ (item.attendanceKPIValue | arabicNumbers) + ' %' }}</td>
+            <td class="text-left">
+          <div class="flex aic gap-x-2">
+                <div class="img pointer" (click)="activateKpi(item.id)" *ngIf="userKpi?.id != item.id && !space">
+                  <i class="bx bx-check success fs-30"></i>
+                </div>
+                <div class="img pointer" (click)="openDialog(item.id)" *ngIf="space">
+                  <img src="assets/images/icons/edit1.svg" alt="edit icon">
+                </div>
+                <div class="img pointer" (click)="getKpiUsers(item)" *ngIf="space">
+                  <i class="bx bx-show primary fs-30"></i>
+                </div>
+              </div>
+
+              <!-- <i class="fs-20 success bx bx-check pointer" (click)="activateKpi(item.id)"  matTooltip="{{'activate' | translate}}"></i>
+              <i class="fs-20 success bx bx-edit warning pointer mr-1" (click)="openDialog(item)"  matTooltip="{{'edit' | translate}}" *ngIf="space"></i>
+              <i class="fs-20 success bx bx-show primary pointer" (click)="getKpiUsers(item)"  matTooltip="{{'show_employees' | translate}}" *ngIf="space"></i> -->
+              <!-- <i class="fs-20 danger bx bx-x pointer" (click)="deactivateKpi()"  matTooltip="{{'deactivate' | translate}}" *ngIf="userKpi?.id == item.id"></i> -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="spaceKpis.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>
+<ng-template #dialogTemplate>
+  <div class="dir">
+    <div class="flex w-100 jcsb">
+      <h4>{{(!selectedKpi ? 'add_kpis' : 'edit_kpis') | translate}}</h4>
+      <i class="bx bx-x fs-25 danger pointer p-1" (click)="closeDialog()"></i>
+    </div>
+    <mat-dialog-content>
+      <form action="" [formGroup]="form">
+        <div class="flex-grid gap-y-2">
+
+          <div class="col-lg-6">
+            <div class="name">
+              <input-label key="tasks_value" [control]="f['tasksKPIValue']"/>
+              <input type="number" max="100" formControlName="tasksKPIValue" class="input">
+              <input-error [control]="f['tasksKPIValue']"/>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="name">
+              <input-label key="rate_value" [control]="f['rateKPIValue']"/>
+              <input type="number" max="100" formControlName="rateKPIValue" class="input">
+              <input-error [control]="f['rateKPIValue']"/>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="name">
+              <input-label key="manager_rate_value" [control]="f['managerRateKPIValue']"/>
+              <input type="number" max="100" formControlName="managerRateKPIValue" class="input">
+              <input-error [control]="f['managerRateKPIValue']"/>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="name">
+              <input-label key="timesheet_value" [control]="f['timeSheetKPIValue']"/>
+              <input type="number" max="100" formControlName="timeSheetKPIValue" class="input">
+              <input-error [control]="f['timeSheetKPIValue']"/>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="name">
+              <input-label key="attendance_value" [control]="f['attendanceKPIValue']"/>
+              <input type="number" max="100" formControlName="attendanceKPIValue" class="input">
+              <input-error [control]="f['attendanceKPIValue']"/>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <div class="text-right w-100">
+        <a (click)="createKpi()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14 ">
+          {{(!selectedKpi ? 'add_kpis' : 'edit_kpis') | translate}}
+        </a>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</ng-template>
+
+
+<ng-template #userDialogTemplate>
+
+  <div class="dir">
+    <div class="flex w-100 jcsb">
+      <h4 >{{'employees' | translate}}</h4>
+      <i class="bx bx-x fs-25 danger pointer p-1" (click)="closeDialog()"></i>
+    </div>
+    <mat-dialog-content>
+      <ng-container>
+        <div class="aic flex jcc py-2 h-50v" *ngIf="loading">
+          <loading ></loading>
+        </div>
+        <ng-container *ngIf="users.length > 0 && !loading">
+          <p class="py-1 border-bottom" *ngFor="let user of users">
+            <app-img-title [imgSrc]="user?.imageUrl" [title]="user?.name" [subTitle]="user.jobTitle"/>
+          </p>
+        </ng-container>
+        <div class="py-2 text-center" *ngIf="users.length == 0 && !loading">
+          <not-found></not-found>
+        </div>
+      </ng-container>
+    </mat-dialog-content>
+    <div class="flex jce" mat-dialog-actions  *ngIf="!loading">
+      <a (click)="activateKpi(selectedKpi.id)" *ngIf="selectedUsers.length > 0" class="flex aic py-75 shadow mr-1 rounded bg-primary white px-3 fs-14 pointer">
+        {{'save' | translate}}
+      </a>
+      <select-user text="assignees" (getSelectedUsers)="getSelectedUsers($event)"/>
+    </div>
+  </div>
+</ng-template>

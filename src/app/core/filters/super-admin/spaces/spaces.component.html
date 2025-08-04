@@ -1,0 +1,87 @@
+<div class="tasks-filters flex aic jcsb gap-x-1">
+  <div class="start flex flex-wrap aic gap-x-1 gap-y-1">
+    <search (valueChanged)="search($event, service.search)" [key]="service.searchValue"></search>
+    <div class="status">
+      <input-label [key]="'status'"/>
+      <ng-select class="w-15r" [items]="[{name: translate.instant('paid'), id: 1}, {name: translate.instant('unpaid'), id: 0}]"
+                 (change)="filter($event?.id == 1 || $event?.id == 0 ? $event.id : null, service.paymentStatus)" bindLabel="name" bindValue="id"
+                 appendTo="body" [multiple]="false" [closeOnSelect]="true">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          {{ item.name | translate }}
+        </ng-template>
+        <ng-template ng-label-tmp let-item="item" let-clear="clear">
+          <span class="fs-14">{{ item.name | translate }}</span>
+        </ng-template>
+      </ng-select>
+    </div>
+    <div class="packages">
+      <input-label key="packages"/>
+      <ng-select class="w-22r" [items]="packages" (change)="filter($event, service.packages)" bindLabel="name" bindValue="id" appendTo="body"
+                 [multiple]="true" [closeOnSelect]="false">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          {{ item.name | translate }}
+        </ng-template>
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value flex aic">
+            <span class="ng-value-label">
+              <span class="flex aic fs-11">
+                <span *ngIf="items[0].name.length >= 10">{{ items[0].name | slice:0:10 }}...</span>
+                <span *ngIf="items[0].name.length < 10">{{ items[0].name | translate}}</span>
+              </span>
+            </span>
+            <span class="ng-value-icon right" (click)="clear(items[0])" aria-hidden="true">×</span>
+          </div>
+          <div class="ng-value rounded-2" *ngIf="items.length > 1">
+            <span class="ng-value-label fs-11">{{ items.length - 1 }} {{ 'more' | translate}}...</span>
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+    <div class="country">
+      <input-label key="country"/>
+      <ng-select class="w-22r" [items]="countries" (change)="filter($event, service.countries)" [bindLabel]="dir == 'rtl'? 'arName' : 'enName'"
+                 bindValue="id" appendTo="body">
+      </ng-select>
+    </div>
+    <date-filter (valueChanged)="changeDate($event , service.creationDateFrom)" key="creationDateFrom" [selectedValue]="service.creationDateFromValue"></date-filter>
+    <date-filter (valueChanged)="changeDate($event , service.creationDateTo)" key="creationDateTo" [selectedValue]="service.creationDateToValue"></date-filter>
+    <date-filter (valueChanged)="changeDate($event , service.expiredDateFrom)" key="expiredDateFrom" [selectedValue]="service.expiredDateFromValue"></date-filter>
+    <date-filter (valueChanged)="changeDate($event , service.expiredDateTo)" key="expiredDateTo" [selectedValue]="service.expiredDateFromTo"></date-filter>
+    <div class="user-amount-from">
+      <input-label key="UserCountFrom"></input-label>
+      <input class="input w-15" type="number" min="0" (input)="emitFilter($event, service.userCountFrom)">
+    </div>
+    <div class="user-amount-to">
+      <input-label key="UserCountTo"></input-label>
+      <input class="input w-15" type="number" min="0" (input)="emitFilter($event, service.userCountTo)">
+    </div>
+    <div class="cost-from">
+      <input-label key="costFrom"></input-label>
+      <input class="input w-15" type="number" min="0" (input)="emitFilter($event, service.costFrom)">
+    </div>
+    <div class="cost-to">
+      <input-label key="costTo"></input-label>
+      <input class="input w-15" type="number" min="0" (input)="emitFilter($event, service.costTo)">
+    </div>
+  </div>
+  <div class="end flex aic gap-x-2 pt-75">
+    <button mat-raised-button *ngIf="canExport" class="bg-success export" (click)="exportFun()">{{ 'export' | translate }}</button>
+    <!--<div class="img relative pointer" *ngIf="moreFilters"
+         (click)="$event.stopImmediatePropagation(); showFilters = true">
+      <img class="convert-image-color" src="assets/images/icons/filters.svg" alt="">
+      <div class="filters-menu bg-white p-1 rounded" magicScroll="" *ngIf="showFilters"
+           (click)="$event.stopImmediatePropagation()">
+        <div class="menu-item" *ngFor="let filter of filtersArray">
+          <mat-checkbox
+            [indeterminate]="false"
+            [labelPosition]="'after'"
+            color="primary"
+            [checked]="visibleFilters[filter]"
+            (change)="unCheck(filter)">
+            {{filter | translate}}
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>-->
+  </div>
+</div>

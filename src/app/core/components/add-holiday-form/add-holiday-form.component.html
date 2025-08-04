@@ -1,0 +1,66 @@
+<div class="add-leave dir">
+  <h2 class="fs-18 black bold">{{(editMode ? 'edit_holiday': 'add_holiday') | translate }}</h2>
+  <div mat-dialog-content>
+    <form [formGroup]="form">
+      <div class="flex-grid gap-y-2">
+        <div class="col-lg-6">
+          <div class="name">
+            <input-label key="arabic_name" [control]="f['nameAr']" [showIcon]="true" icon="assets/images/icons/text-block.svg" />
+            <input appArabicText [appArabicTextAllowSpaces]="true" [appArabicTextAllowNumbers]="false" type="text" formControlName="nameAr" class="input">
+            <input-error [control]="f['nameAr']"/>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="name">
+            <input-label key="english_name" [control]="f['nameEn']" [showIcon]="true" icon="assets/images/icons/text-block.svg" />
+            <input appEnglishText [appEnglishTextAllowSpaces]="true" [appEnglishTextAllowNumbers]="false" [appEnglishTextAllowSpecialChars]="false" type="text" formControlName="nameEn" class="input">
+            <input-error [control]="f['nameEn']"/>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <input-label key="select_date" [control]="f['date']" [showIcon]="true" icon="assets/images/icons/calendar-icon-2.svg" />
+          <div class="d-flex align-items-center gap-x-2">
+            <mat-form-field appearance="outline" class="w-85" (click)="rangePicker.open()">
+              <mat-label class="fs-15">{{ "date_range" | translate }}</mat-label>
+              <mat-date-range-input [rangePicker]="rangePicker">
+                <input matStartDate [placeholder]="'start_date' | translate" formControlName="dateFrom" [min]="today"/>
+                <input matEndDate [placeholder]="'end_date' | translate" formControlName="dateTo"/>
+              </mat-date-range-input>
+              <mat-datepicker-toggle matSuffix [for]="rangePicker">
+              </mat-datepicker-toggle>
+              <mat-date-range-picker #rangePicker>
+                <mat-date-range-picker-actions>
+                  <button mat-button matDateRangePickerCancel>
+                    {{ "cancel" | translate }}
+                  </button>
+                  <button mat-raised-button color="primary" matDateRangePickerApply (click)="dateChanged()">
+                    {{ "apply" | translate }}
+                  </button>
+                </mat-date-range-picker-actions>
+              </mat-date-range-picker>
+            </mat-form-field>
+            <div class="days_num w-10">
+              <p class="text-center d-flex align-items-center justify-content-center gap-1">
+                <span class="num fs-14">{{ daysNumber | arabicNumbers }}</span>
+                <br>
+                <span class="title fs-14">{{ "day" | translate }}</span>
+              </p>
+            </div>
+          </div>
+          <input-error [control]="f['dateFrom']"/>
+        </div>
+
+      </div>
+
+    </form>
+  </div>
+  <div class="mt-1" mat-dialog-actions align="end" dir="auto">
+    <div class="flex">
+      <button mat-raised-button color="primary" class="px-2 mr-2 fs-15 flex-50" (click)="submit()">
+        <submit-button text="{{editMode ? 'update': 'add'}}" [loading]="loading"></submit-button>
+      </button>
+      <button class="px-2 flex-50 dark-color clickable-btn rounded cancel-btn" mat-dialog-close>{{ 'cancel' | translate }}</button>
+    </div>
+  </div>
+
+</div>

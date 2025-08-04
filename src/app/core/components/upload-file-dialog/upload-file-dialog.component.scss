@@ -1,0 +1,17 @@
+.alert {
+    border-radius: 8px;
+    padding: 8px 16px;
+}
+
+
+.alert-danger {
+    background: rgba(211, 47, 47, 0.05);
+}
+
+.alert-warning {
+    background: rgba(255, 169, 92, 0.15);
+}
+
+.alert-success {
+    background: rgba(41, 204, 153, 0.15);
+}

@@ -1,0 +1,30 @@
+<div class="p-2 dir">
+  <form [formGroup]="form">
+    <div class="flex-grid">
+      <div class="col-lg-4 mb-2">
+        <div class="country">
+          <countries [noReagon]="true" [col]="'col-lg-12'" [formControlCountry]="'countryId'" ></countries>
+        </div>
+      </div>
+
+      <div class="col-lg-8 mb-2">
+        <div class="bank">
+          <banks [formControlBank]="'bankId'" [formControlBrache]="'bankBranchId'"></banks>
+        </div>
+      </div>
+
+      <div class="col-lg-4 mb-2">
+        <div class="bank_account">
+          <label class="fs-11 simibold mb-75" for="bank_account">
+            <i class="mr-50 bx bx-text"></i>
+            <span>{{ "bank_account" | translate }}</span>
+          </label>
+          <input id="bank_account" type="text" class="input" formControlName="accountNumber" />
+        </div>
+      </div>
+    </div>
+    <div class="text-right">
+      <button type="submit" class="bg-primary white py-1 px-2 border-0 rounded  pointer" mat-button (click)="onSubmit()">{{'create' | translate}}</button>
+    </div>
+  </form>
+</div>

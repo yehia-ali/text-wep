@@ -1,0 +1,17 @@
+<div class="flex aic gap-x-1">
+  <user-image [img]="user.avatar"></user-image>
+  <div class="chat-content w-100">
+    <div class="flex aic jcsb">
+      <div class="task-title fs-14" [matTooltip]="user.name.length > 25 ? user.name : ''">
+        {{user.name | slice:0:25}}
+        <span *ngIf="user.name && user.name.length > 25">...</span>
+      </div>
+      <div class="date fs-13">
+        <span *ngIf="chat.dateType == 'yesterday'">{{'yesterday' | translate}}</span>
+        <span *ngIf="chat.dateType == 'today'">{{this.chat.date | arabicTime:false}}</span>
+        <span *ngIf="chat.dateType == 'unknown'">{{chat.date | arabicDate:'long'}}</span>
+      </div>
+    </div>
+    <app-last-message [chat]="chat" [notSeen]="notSeen"></app-last-message>
+  </div>
+</div>

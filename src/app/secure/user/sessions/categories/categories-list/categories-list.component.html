@@ -1,0 +1,7 @@
+<div class="categories-list flex aic gap-x-2 scrolling p-2">
+  <div (click)="getSubCategories(category.id)" *ngFor="let category of categories()" [ngClass]="{'active': category.id == subCategorySer.categoryId()}"
+       class="category bg-gray flex-column-center py-1 px-2 rounded">
+    <img [src]="imageUrl + category.iconUrl" alt="category image" class="primary-image" height="30" width="30">
+    <p class="mt-50 primary">{{language == 'en' ? category.enName : category.arName}}</p>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<div class="">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <!-- <div class="col-lg-3">
+      <search [newSearch]="true" (valueChanged)="search($event)"></search>
+    </div> -->
+    <div class="col-lg-12 text-right pt-1">
+      <a [routerLink]="['./employee']" class="btn rounded bg-primary white py-75 px-2 fs-14" (click)="addLeave()">
+        {{'add_penalty' | translate}}
+      </a>
+    </div>
+  </div>
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+    <div class="table-container mx-1" *ngIf="allPenalties.length > 0  && !loading">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1" rowspan="2">{{'date' | translate}}</th>
+            <th class="py-1 border-left border-right text-center text-cebter" rowspan="2">{{'penalty_type' | translate}}</th>
+            <th class="border-left border-right py-50 text-center" colspan="4">{{'penalty_level' | translate}}</th>
+            <th rowspan="2"></th>
+          </tr>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="border-left border-right py-50 text-center">{{'first_time' | translate}}</th>
+            <th class="border-left border-right py-50 text-center">{{'second_time' | translate}}</th>
+            <th class="border-left border-right py-50 text-center">{{'third_time' | translate}}</th>
+            <th class="border-left border-right py-50 text-center">{{'fourth_time' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of allPenalties" >
+            <td class="">{{item.penaltyDate | arabicDate}}</td>
+            <td class="border-left border-right text-center">{{item.penalityTypeName}}</td>
+            <td class="border-left border-right text-center">{{item.level == 1 ? (item.deductionAmount || ('alert' | translate)) : '-'}}</td>
+            <td class="border-left border-right text-center">{{item.level == 2 ? item.deductionAmount : '-'}}</td>
+            <td class="border-left border-right text-center">{{item.level == 3 ? item.deductionAmount : '-'}}</td>
+            <td class="border-left border-right text-center">{{item.level > 3 ? item.deductionAmount : '-'}}</td>
+            <td class="">
+              <div class="d-flex align-items-center gap-2">
+                <div class="img pointer" [routerLink]="'./employee/'+item.id">
+                  <img src="assets/images/icons/edit1.svg" alt="edit icon">
+                </div>
+
+                <i class="bx bx-trash danger fs-30 pointer"></i>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="allPenalties.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>

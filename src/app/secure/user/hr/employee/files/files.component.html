@@ -1,0 +1,38 @@
+<div class="p-2 flex-column jcsb">
+  <div class="flex-grid">
+    <div class="w-100 py-5"  *ngIf="!files && ! loading">
+      <not-found></not-found>
+    </div>
+    <loading *ngIf="loading"/>
+    <ng-container *ngIf="files && !loading">
+      <div class="col-lg-3 col-md-4 mb-2" *ngFor="let item of files">
+        <!-- "name": "asdf",
+        "description": "asdfasdf",
+        "issuingDate": "2024-08-02T00:00:00",
+        "expireDate": "2024-08-01T00:00:00",
+        "filePath": "14761567-11e6-4024-b97a-85a6672cc350-Screenshot 2024-08-04 164523.png",
+        "typeName": "سترنج2" -->
+        <div class="">
+          <span class="fs-11 simibold mb-75 ">
+            <i class="mr-50 bx bx-text"></i>
+            <span>{{ item.typeName }}</span>
+          </span>
+          <a target="_blank" href="{{imageUrl + item.filePath}}" class="fs-11 simibold mb-75 btn btn-block gray rounded p-1 text-center border">
+            <i class="bx bx-show mr-1"></i>
+            <span>{{item.name}}</span>
+          </a>
+          <!-- <button class="fs-11 simibold mb-75 w-100 btn btn-block white bg-primary rounded p-1 text-center" >
+            {{ "upload" | translate }}
+          </button> -->
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+  <div class="text-right " *ngIf="!loading">
+    <button (click)="createFile('')" class=" fs-11 simibold mb-75 btn white bg-primary rounded py-1 px-2 text-center" >
+      {{ "add_file" | translate }}
+    </button>
+  </div>
+
+</div>

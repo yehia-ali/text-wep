@@ -1,0 +1,40 @@
+@use "src/assets/styles/vars" as *;
+
+.red-dot {
+  position: absolute;
+  top: 1px;
+  inset-inline-end: 4px;
+  background-color: $danger;
+  border-radius: 50%;
+  height: 7px;
+  width: 7px;
+}
+
+.menu {
+  position: absolute;
+  top: 50px;
+  inset-inline-end: -50px;
+  opacity: 0;
+  width: min(88vw, 500px);
+  transition: all 0.1s linear;
+  background-color: #fff;
+  cursor: auto;
+  visibility: hidden;
+  z-index: 100;
+
+  .all-notifications {
+    overflow-x: hidden !important;
+
+    .notification-content {
+      &:hover {
+        background-color: rgba(gray, .1);
+      }
+    }
+  }
+}
+
+.active.menu {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 1111;
+}

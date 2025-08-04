@@ -1,0 +1,10 @@
+@use "src/assets/styles/vars" as *;
+
+.img {
+  width: 3rem;
+  height: 3rem;
+}
+
+.border-color {
+  border-color: $primary !important;
+}

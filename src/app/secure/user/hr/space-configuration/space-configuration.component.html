@@ -1,0 +1,94 @@
+<layout>
+  <div class=" pb-2 overflow-y-auto bg-white">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0s" class="leaves-group"  (selectedTabChange)="onTabChange($event)">
+      <mat-tab [label]="'leave_types' | translate" >
+        <div class="" *ngIf="activeTab === 0">
+          <leaves-list/>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'holidays' | translate">
+        <div class="" *ngIf="activeTab === 1">
+          <holidays-list/>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'job_titles' | translate">
+        <div class="" *ngIf="activeTab === 2">
+          <job-titles></job-titles>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'banks' | translate">
+        <div class="" *ngIf="activeTab === 3">
+          <space-banks></space-banks>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'penalty_types' | translate">
+        <div class="" *ngIf="activeTab === 4">
+          <penalty-types></penalty-types>
+        </div>
+      </mat-tab>
+      <!-- <mat-tab [label]="'work_types' | translate">
+        <div class="" *ngIf="activeTab === 5">
+          <work-types ></work-types>
+        </div>
+      </mat-tab> -->
+      <mat-tab [label]="'experiences_level' | translate">
+        <div class="" *ngIf="activeTab === 5">
+          <experience-levels ></experience-levels>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'file_types' | translate">
+        <div class="" *ngIf="activeTab === 6">
+          <file-types></file-types>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'shifts' | translate">
+        <div class="" *ngIf="activeTab === 7">
+          <shifts-config></shifts-config>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'rewards_types' | translate">
+        <div class="" *ngIf="activeTab === 8">
+          <rewards-types></rewards-types>
+        </div>
+      </mat-tab>
+
+      <mat-tab [label]="'departments' | translate">
+        <div class="" *ngIf="activeTab === 9">
+          <departments-list></departments-list>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'places' | translate">
+        <div class="" *ngIf="activeTab === 10">
+          <places-list></places-list>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'levels' | translate">
+        <div class="" *ngIf="activeTab === 11">
+          <levels-list></levels-list>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'kpis' | translate">
+        <div class="" *ngIf="activeTab === 12">
+          <kpis [space]="true"></kpis>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'tasks' | translate">
+        <div class="" *ngIf="activeTab === 13">
+          <tasks-config></tasks-config>
+        </div>
+      </mat-tab>
+
+      <mat-tab [label]="'payroll_cycle' | translate">
+        <div class="" *ngIf="activeTab === 14">
+          <payroll-cycle></payroll-cycle>
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'attendance_and_leave' | translate">
+        <div class="" *ngIf="activeTab === 15">
+          <attendance-leave></attendance-leave>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+  </div>
+</layout>

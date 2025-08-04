@@ -1,0 +1,120 @@
+<p class="mb-1 flex aic gap-x-1 " *ngIf="service.userInbox.value">
+  <span>{{'inbox' | translate}}</span>
+  <i class='bx bx-chevron-right fs-20' [ngClass]="{'bx-flip-horizontal': lang == 'ar'}"></i>
+  <span class="primary flex aic gap-x-1 pointer" (click)="removeUser()" [matTooltip]="'click_to_remove' | translate">
+    <span>{{service.userName.value}}</span>
+    <i class='bx bx-x danger'></i>
+  </span>
+</p>
+
+<layout-with-filters (pageChange)="service.page.next($event); service.hasChanged.next(true)" [meta]="meta" [hasTitle]="!!service.userInbox.value">
+  <ng-container filters>
+    <inbox-filters/>
+  </ng-container>
+
+  <ng-container content>
+    <table [ngClass]="{'h-100': inbox.length == 0 || loading}" class="table w-100 relative">
+      <thead class="bg-gray border-bottom">
+      <tr>
+        <th>#</th>
+        <th class="text-left">{{'task_name' | translate}}</th>
+        <th class="text-left">{{'creator' | translate}}</th>
+        <th>{{'remaining_time' | translate}}</th>
+        <th>{{'overdue' | translate}}</th>
+        <th>{{'rate' | translate}}</th>
+        <th>{{'repeat' | translate}}</th>
+        <th>{{'progress' | translate}}</th>
+        <th>{{'status' | translate}}</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="inbox.length > 0 && !loading">
+      <tr *ngFor="let task of inbox | paginate: {itemsPerPage: meta.pageSize, currentPage: meta.currentPage, totalItems: meta.totalItems}; trackBy: trackBy" class="border-bottom pointer"
+      (click)="openDetails(task)">
+
+        <!-- id -->
+        <td>
+          <p class="fs-13">{{task.taskId}}</p>
+        </td>
+
+        <!--    title    -->
+        <td>
+          <div class="flex aic bold">
+            <priority [priority]="task.priority" class="mr-1"></priority>
+            <!-- title -->
+            <span class="text-left fs-13" *ngIf="task.title.length! <= 70">{{task.title}}</span>
+
+            <!-- trimmed title -->
+            <span class="text-left fs-13" *ngIf="task.title.length! > 70" [matTooltip]="task.title">{{task.title | slice:0:70}}...</span>
+          </div>
+        </td>
+
+
+        <!-- creator -->
+        <td class="text-left">
+          <div class="flex aic gap-x-1">
+            <user-image (click)="$event.stopImmediatePropagation()" [id]="task.creatorId" [img]="task.creatorProfilePicture" [matTooltip]="task.creatorName"></user-image>
+            <div>
+              <p class="fs-14">
+                <!-- title -->
+                <span class="text-left" *ngIf="task.creatorName.length! <= 12">{{task.creatorName}}</span>
+
+                <!-- trimmed creatorName -->
+                <span class="text-left" *ngIf="task.creatorName.length! > 12" [matTooltip]="task.creatorName">{{task.creatorName | slice:0:12}}...</span>
+              </p>
+              <p class="fs-12 muted">{{task.creatorjob}}</p>
+            </div>
+          </div>
+        </td>
+
+        <!-- remaining -->
+        <td>
+          <div class="flex-center">
+            <time-left *ngIf="task.timeLeft && task.taskStateId != 2 && task.taskStateId != 6" [bullet]="task.bullet" [label]="task.timeLeftLabel" [timeLeft]="task.timeLeft"></time-left>
+            <span *ngIf="!task.timeLeft || task.taskStateId == 2 || task.taskStateId == 6">-</span>
+          </div>
+        </td>
+
+
+        <!-- overdue -->
+        <td>
+          <div class="flex-center">
+            <task-overdue [endedTaskRepeatedCounter]="task.endedTaskRepeatedCounter"></task-overdue>
+            <span *ngIf="!task.endedTaskRepeatedCounter">-</span>
+          </div>
+        </td>
+
+        <!-- rate -->
+        <td>
+          <div class="flex-center">
+            <rate *ngIf="task.taskStateId == 2" [rate]="task.rate" type="small"></rate>
+            <span *ngIf="task.taskStateId != 2">-</span>
+          </div>
+        </td>
+
+        <!-- repeat -->
+        <td>
+          <repetition [isRepeated]="task.isRepeated || (task.parentTaskGroupId && !task.isSubTasks)" [repeatedPeriod]="task.taskRepeatedPeriod"></repetition>
+        </td>
+
+        <!-- progress -->
+        <td>
+          <div class="flex-center">
+            <task-vote-progress *ngIf="task.percentage || task.percentage == 0" [progress]="task.percentage"></task-vote-progress>
+            <p *ngIf="!task.percentage && task.percentage != 0">-</p>
+          </div>
+        </td>
+
+        <!-- state -->
+        <td>
+          <div class="flex-center">
+            <task-status [state]="task.taskStateId"></task-status>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+      <not-found *ngIf="inbox.length == 0 && !loading" class="a-center"></not-found>
+      <loading *ngIf="loading"></loading>
+    </table>
+
+  </ng-container>
+</layout-with-filters>

@@ -1,0 +1,49 @@
+<layout>
+    <div class="hierarchy relative h-100">
+        <ng-container *ngIf="!loading && hierarchy.length > 0">
+            <div class="top-section border-bottom py-2 px-3 flex aic jcsb">
+                <h2 class="title">{{projectTitle}}</h2>
+                <button mat-raised-button color="primary" (click)="createMainTask()">{{'create_task' | translate}}</button>
+            </div>
+            <div class="tasks py-3" magicScroll="">
+                <div class="task flex aic" [ngStyle]="{'margin-inline-start': task.margin != '5rem' && task.margin}"
+                     *ngFor="let task of hierarchy; let i = index">
+                    <div class="actions flex-10">
+                        <div class="buttons" *ngIf="task.haveSubTasks">
+                            <button *ngIf="task.expand" [disabled]="task.disabled"
+                                    class="expand clickable-btn px-75 pt-75 pb-75 flex-center rounded-50 bg-primary white"
+                                    (click)="expand(task.id, i)">
+                                <i class='bx bx-plus fs-20'></i>
+                            </button>
+                            <button *ngIf="!task.expand"
+                                    class="collapse clickable-btn px-75 pt-75 pb-75 flex-center rounded-50 bg-primary white"
+                                    (click)="collapse(task.depthLevel, i)">
+                                <i class='bx bx-minus fs-20'></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card pointer relative rounded bg-gray py-1 px-2 flex-auto"
+                         (click)="selectedTask = task; openSidebar()">
+                        <div class="task-title primary">{{task.title}}</div>
+                        <div class="date flex aic jcsb w-100 mt-50">
+                            <p class="fs-12">{{task.startDate | arabicDate}} - {{task.endDate | arabicDate}}</p>
+                            <button class="clickable-btn bg-primary white rounded px-1 pt-50 pb-50"
+                                    (click)="$event.stopImmediatePropagation(); createTask(task.id, i, task.title)">{{'add_task' | translate}}</button>
+                        </div>
+                        <div class="task-state">
+                            <div class="w-100 h-100 bg-success" *ngIf="task.taskGroupStateType == 1"></div>
+                            <div class="w-100 h-100 bg-archived" *ngIf="task.taskGroupStateType == 2"></div>
+                            <div class="w-100 h-100 bg-danger" *ngIf="task.taskGroupStateType == 3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <loading *ngIf="loading"></loading>
+        <not-found *ngIf="hierarchy.length == 0 && !loading"></not-found>
+    </div>
+</layout>
+
+
+<task-group-details *ngIf="open" [open]="open" [task]="selectedTask" [isProject]="true" [reporters]="reporters"></task-group-details>
+

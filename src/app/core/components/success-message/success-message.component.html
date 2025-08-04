@@ -1,0 +1,71 @@
+<div class="success-message-content h-100" dir="auto">
+  <div class="success-message h-100 flex-column-center relative" *ngIf="!print">
+    <div class="img">
+      <img src="assets/images/icons/success-message.svg" alt="success message">
+    </div>
+    <p class="bold mt-3 fs-18">{{data_.message | translate}}</p>
+
+    <p class="primary fs-24 mt-3">{{'total_amount' | translate}}</p>
+    <h2 class="fs-40 primary money-amount">{{data.amount | arabicNumbers}} {{'egp' | translate}}</h2>
+
+    <div class="flex aic jcsb w-100 mt-3">
+      <p>{{'to' | translate}}:</p>
+      <p>{{data.walletToName}}</p>
+    </div>
+
+    <div class="flex aic jcsb w-100 mt-1">
+      <p>{{'mobile' | translate}}:</p>
+      <p>{{data.walletToMobile}}</p>
+    </div>
+
+    <div class="flex aic jcsb w-100 mt-1">
+      <p>{{'date' | translate}}:</p>
+      <p>{{data.creationDate | arabicDate}}</p>
+    </div>
+
+    <div class="flex aic jcsb mt-1 w-100">
+      <p>{{'reference' | translate}}:</p>
+      <p>{{data.transactionId}}</p>
+    </div>
+
+    <i class='bx bx-x danger fs-30 pointer' (click)="closeDialog()"></i>
+    <!--<div class="flex aic gap-x-2 jcfe w-100 mt-2">
+      <button (click)="callPrint()" class="img clickable-btn">
+        <img src="assets/images/icons/printer.svg" alt="printer icon">
+      </button>
+      <a [href]="pdf" [download]="pdf" class="img">
+        <img src="assets/images/icons/download.svg" alt="download icon">
+      </a>
+    </div>-->
+  </div>
+  <div class="success-message h-100 flex-column-center relative print" *ngIf="print">
+    <div class="img">
+      <img src="assets/images/icons/success-message.svg" alt="success message">
+    </div>
+    <p class="bold mt-3 fs-18">{{data_.message | translate}}</p>
+
+    <h2 class="fs-36 primary mt-3 money-amount">{{data.amount | arabicNumbers}} {{'egp' | translate}}</h2>
+    <p class="primary">{{'total_amount' | translate}}</p>
+
+    <div class="box border-bottom border-right border-left rounded p-2 shadow w-100 mt-2">
+      <p class="mb-1 inline-block">{{'to' | translate}}</p>
+      <div class="flex aic gap-x-1">
+        <user-image [imageUrl]="environment.publicImageUrl" [img]="data.walletToPic"/>
+        <div>
+          <p class="mb-25">{{data.walletToName}}</p>
+          <p>{{data.walletToMobile}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex aic jcsb w-100 mt-2">
+      <p>{{'date' | translate}}:</p>
+      <p>{{data.creationDate | arabicDate}}</p>
+    </div>
+
+    <div class="flex aic jcsb mt-1 w-100">
+      <p>{{'reference' | translate}}:</p>
+      <p>{{data.transactionId}}</p>
+    </div>
+  </div>
+</div>

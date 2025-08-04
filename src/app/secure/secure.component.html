@@ -1,0 +1,49 @@
+<router-outlet></router-outlet>
+
+<div id="container-floating" class="flex jcc aic" *ngIf="!rolesSer.taskedinSuperAdmin.value">
+
+  <!-- Example of a hidden item, uncomment if needed -->
+  <!-- <div class="nd9 nds flex-center" (click)="createContract()" *ngIf="rolesSer.canAccessAdmin.value">
+    <img src="assets/images/sub-sidebar/contracts.svg" alt="contract icon" class="convert-image-color">
+  </div> -->
+
+  <div class="nd7 nds flex-center" (click)="createLeave()" [matTooltipPosition]="'after'" [matTooltip]="'leave' | translate" *ngIf="spaceSer.spaceConfiguration$.value.leaveSystem">
+    <img src="assets/images/sub-sidebar/leave.svg" alt="leave icon" class="convert-image-color">
+  </div>
+
+  <!-- <div class="nd7 nds flex-center" (click)="createEmail()" [matTooltipPosition]="'after'" [matTooltip]="'email' | translate">
+    <img src="assets/images/main-sidebar/email.svg" alt="email icon" class="convert-image-color">
+  </div> -->
+
+  <!-- <div class="nd6 nds flex-center" (click)="createShift()" [matTooltipPosition]="'after'" [matTooltip]="'shift' | translate">
+    <img src="assets/images/sub-sidebar/shifts.svg" alt="shift icon" class="convert-image-color">
+  </div> -->
+  <div class="nd6 nds flex-center" (click)="rateEmployee()" [matTooltipPosition]="'after'" [matTooltip]="'rate' | translate">
+    <i class="bx bx-star white fs-20"></i>
+  </div>
+
+  <div class="nd5 nds flex-center" (click)="createOvertime()" [matTooltipPosition]="'after'" [matTooltip]="'overtime' | translate">
+    <img src="assets/images/sub-sidebar/overtime.svg" alt="overtime icon" class="convert-image-color">
+  </div>
+
+  <div class="nd4 nds flex-center" (click)="createMeeting()" [matTooltipPosition]="'after'" [matTooltip]="'meeting' | translate">
+    <img src="assets/images/main-sidebar/meeting.svg" alt="meeting icon" class="convert-image-color">
+  </div>
+
+  <div class="nd3 nds flex-center" (click)="createProject()" [matTooltipPosition]="'after'" [matTooltip]="'project' | translate">
+    <img src="assets/images/main-sidebar/project.svg" alt="project icon" class="convert-image-color">
+  </div>
+
+  <div class="nd2 nds flex-center" (click)="createVote()" [matTooltipPosition]="'after'" [matTooltip]="'vote' | translate">
+    <img src="assets/images/main-sidebar/voting.svg" alt="vote icon" class="convert-image-color">
+  </div>
+
+  <div class="nd1 nds flex-center" (click)="createTask()" [matTooltipPosition]="'after'" [matTooltip]="'task' | translate">
+    <img src="assets/images/main-sidebar/tasks.svg" alt="tasks icon" class="convert-image-color">
+  </div>
+
+  <div id="floating-button" class="flex aic jcc">
+    <i class="bx bx-plus plus plus-add-icon fs-25 white"></i>
+    <i class="bx bx-edit edit fs-20 white"></i>
+  </div>
+</div>

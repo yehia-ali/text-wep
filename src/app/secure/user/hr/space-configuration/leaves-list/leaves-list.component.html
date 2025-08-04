@@ -1,0 +1,96 @@
+
+<div class="py-1">
+  <div class="filters flex-grid mb-2 aie jcsb w-100 mx-0">
+    <div class="col-md-6">
+      <div class="d-flex align-items-center gap-x-1">
+        <img src="assets/images/icons/eye.svg" alt="eye icon">
+        <p class="fs-18 black">{{ 'enable_leaves_module' | translate }}</p>
+        <toggle-switch
+        id="leaveSystem"
+        [labelPosition]="'after'"
+        [showLabel]="false"
+        [(ngModel)]="leaveSystem"
+        (ngModelChange)="updateLeaveSystem($event)"
+      ></toggle-switch>
+        </div>
+    </div>
+    <div class="col-md-6 text-right" *ngIf="leaveSystem">
+      <a (click)="addLeave()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14 mr-2">
+        {{'add_leave_type' | translate}}
+      </a>
+      <a (click)="assignLeave()" style="display: inline-block;" class="btn rounded bg-primary white py-75 px-1 fs-14">
+        {{'assign_leave' | translate}}
+      </a>
+    </div>
+  </div>
+  <div class="px-50">
+    <div class="aic flex jcc py-5 h-50v" *ngIf="loading">
+      <loading ></loading>
+    </div>
+
+    <div class="table-container mx-1" *ngIf="leaveTypes.length > 0 && !loading &&leaveSystem">
+      <table class="w-100 rounded">
+        <thead>
+          <tr class="border-bottom fs-12 simibold">
+            <th class="text-left py-1">{{ 'type' | translate }}</th>
+            <th class="text-left py-1">{{ 'paid' | translate }}</th>
+            <th class="text-left py-1">{{ 'required_approval' | translate }}</th>
+            <th class="text-left py-1">{{ 'days_vacation' | translate }}</th>
+            <th class="text-left py-1">{{ 'max_days_number' | translate }}</th>
+            <th class="text-right py-1">{{ 'action' | translate }}</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody class="table-body">
+          <tr class="border-bottom fs-12" *ngFor="let item of leaveTypes" >
+            <td class="text-left">{{ item.name }}</td>
+            <td class="text-left">{{ item.isPaid ? ('yes' | translate) : ('no' | translate) }}</td>
+            <td class="text-left">{{ item.needApprove ? ('yes' | translate) : ('no' | translate) }}</td>
+            <td class="text-left">{{ item.automaticAssignDaysCount || '-' }}</td>
+            <td class="text-left">{{ item.requestLimit }}</td>
+            <td class="text-right">
+              <div class="img pointer" (click)="addLeave(item)">
+                <img src="assets/images/icons/edit1.svg" alt="edit icon">
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="py-5 text-center" *ngIf="leaveTypes.length == 0 && !loading">
+      <not-found></not-found>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- <div class="leaves h-100">
+  <table [ngClass]="{'h-100': leaveTypes.length == 0 || loading}" class="table w-100 relative">
+    <thead class="bg-gray border-bottom">
+    <tr>
+      <th class="text-left">{{ 'type' | translate }}</th>
+      <th>{{ 'paid' | translate }}</th>
+      <th>{{ 'required_approval' | translate }}</th>
+      <th>{{ 'days_limit_per_request' | translate }}</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody *ngIf="leaveTypes.length > 0 && !loading">
+    <tr *ngFor="let item of leaveTypes; trackBy: trackBy" class="border-bottom pointer">
+      <td class="text-left">{{ item.name }}</td>
+      <td>{{ item.isPaid ? ('yes' | translate) : ('no' | translate) }}</td>
+      <td>{{ item.needApprove ? ('yes' | translate) : ('no' | translate) }}</td>
+      <td>{{ item.requestLimit }}</td>
+    </tr>
+    </tbody>
+    <not-found *ngIf="leaveTypes.length == 0 && !loading" class="a-center"></not-found>
+    <loading *ngIf="loading"></loading>
+  </table>
+
+</div> -->

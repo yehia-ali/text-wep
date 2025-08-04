@@ -1,0 +1,402 @@
+@use "assets/styles/aio.css";
+@use "assets/styles/dark-mode";
+@use "assets/styles/global";
+@use "assets/styles/dim";
+@use "assets/styles/pagination";
+@use "assets/styles/chips";
+@use "assets/styles/material";
+@use "assets/styles/dialogs";
+@use "assets/styles/theme";
+@use "assets/styles/ng-select";
+@use "assets/styles/filters";
+@use "assets/styles/inputs";
+@use "assets/styles/audio";
+@use "assets/styles/progress";
+@use "assets/styles/rate";
+@use "assets/styles/editor";
+@use "assets/styles/attachments";
+@use "assets/styles/time-picker";
+@use "assets/styles/date-time";
+@use "assets/styles/primeng-styles";
+@use "assets/styles/helper";
+@use "assets/styles/calendar" as *;
+@use "assets/styles/vars" as *;
+@use "../node_modules/intl-tel-input/build/css/intlTelInput.css";
+@import "@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
+@import url("assets/styles/primeng-styles/primeng.css");
+@import url("assets/styles/primeng-styles/theme.css");
+@import 'ckeditor5/ckeditor5.css';
+// @import "../node_modules/primeng/resources/themes/bootstrap4-light-purple/theme.css";
+// @import "../node_modules/primeng/resources/primeng.css";
+/* Order */
+@layer reset, primeng;
+
+/* Reset CSS */
+@layer reset {
+    // button,
+    // input {
+    //     /* CSS to Reset */
+    // }
+}
+body {
+  font-family: $font !important;
+  font-weight: 400 !important;
+  background: var(--gray) !important;
+  color: $dark-color !important;
+  overflow: hidden;
+  min-width: 360px !important;
+  *::placeholder{
+    font-size: 12px;
+  }
+}
+
+[dir=ltr] body,
+button,
+.mat-mdc-raised-button,
+.mdc-dialog__title,
+.mdc-dialog__content,
+.mdc-tooltip__surface,
+.mdc-form-field > label,
+.mat-stepper-vertical,
+.mat-stepper-horizontal,
+.mat-date-range-input-inner,
+.mdc-floating-label,
+.mat-step-label,
+*::placeholder {
+  font-family: $font !important;
+}
+.mat-mdc-tab-labels{
+  display: block;
+  .mdc-tab{
+    display: inline-block;
+    letter-spacing: 0 !important;
+  }
+}
+
+[dir=rtl] body,
+button,
+.mat-mdc-raised-button,
+.mdc-dialog__title,
+.mdc-dialog__content,
+.mdc-tooltip__surface,
+.mdc-form-field > label,
+.mat-stepper-vertical,
+.mat-stepper-horizontal,
+.mat-date-range-input-inner,
+.mdc-floating-label,
+.mat-step-label {
+  font-family: $font !important;
+  font-weight: 400;
+  line-height: 1.6;
+}
+.date-picker-card {
+  .mat-mdc-form-field-flex {
+    height: 28px;
+  }
+ .mat-mdc-form-field-infix {
+      padding: 2px !important;
+      height: 28px;
+  }
+
+}
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-height: 8px !important;
+  --mdc-linear-progress-track-height: 9px !important;
+  --mdc-linear-progress-track-shape: 0 !important;
+  .mdc-linear-progress__buffer-bar {
+    background-color: #ECECED !important;
+  }
+}
+
+
+.scrolling, body, .ng-dropdown-panel .scroll-host, .fc-scroller, .mat-mdc-tab-body-content, .mat-mdc-dialog-content, .user-card-menu {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4rem;
+    background: $primary;
+  }
+
+  &::-webkit-scrollbar-track-piece {
+    background: rgb(206 206 206 / 45%);
+  }
+}
+.my-calendar{
+  .fc-popover{
+    margin-inline: -10px;
+    z-index: 999;
+  }
+  .fc-popover-body {
+    max-height: 300px;
+    overflow: auto;
+  }
+
+}
+/* The entire scrollbar */
+*{
+  scrollbar-width: thin !important;
+  // scrollbar-color: $primary #f7f7f7;
+  scrollbar-color: #adb3bd #f7f7f7;
+}
+.dark-mode{
+  *{
+    scrollbar-width: thin !important;
+    // scrollbar-color: $primary #f7f7f7;
+    scrollbar-color: #7B58CA #161D31;
+  }
+}
+*::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-color: #ccc; /* Background color */
+  height: 8px;
+  width:8px;
+  display: block;
+  background-image:c;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba($color: #ccc, $alpha: 0.3);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba($color: #7C5CCB, $alpha: 1);
+  border-radius: 10px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba($color: #7C5CCB, $alpha: 1);
+}
+/* The entire scrollbar */
+owl-date-time-container {
+  position: fixed !important;      /* Fixes the element to the viewport */
+  left: calc(50% - 137px) !important;             /* Positions the top of the element at 50% of the viewport height */
+  top: calc(50% - 235px) !important;             /* Positions the top of the element at 50% of the viewport height */
+  z-index: 9999 !important;        /* Ensures the element is on top of other content */
+  opacity: 1 !important;
+  max-width: 277px !important;
+  max-width: 475px !important;    /* Optional: Makes sure the element is fully visible */
+}
+
+.simibold{
+  font-weight: 600 !important;
+}
+.fw-500{
+  font-weight: 500 !important;
+}
+.input-icon{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .bx{
+    margin-inline-end: -40px;
+    font-size: 16px;
+    color: #a9a9a9;
+    padding-inline: 10px;
+    position: relative;
+    z-index: 999;
+  }
+  input{
+    padding-inline-start: 30px;
+  }
+}
+
+.mdc-tab
+{
+  font-family: $font !important;
+}
+.visible-dialog-container
+{
+  overflow: visible;
+}
+
+/* LTR Configuration */
+html[dir="ltr"] {
+  .new-filter .ng-input::after{right: 0;}
+  .nds,
+  #container-floating,
+  #floating-button {
+    right: 15px; // For LTR, position on the right
+    left: auto; // Reset the opposite side
+  }
+  .dashboard-calendar{
+    right: 75px;
+    .mat-mdc-button-touch-target{margin-left: -2px;}
+  }
+
+}
+.more-tasks{
+  inset-inline-end: 75px !important;
+}
+
+/* RTL Configuration */
+html[dir="rtl"] {
+  .new-filter .ng-input::after{left: 0;}
+  .nds,
+  #container-floating,
+  #floating-button {
+    left: 15px; // For RTL, position on the left
+    right: auto; // Reset the opposite side
+  }
+  .dashboard-calendar,.more-tasks{
+    left: 75px;
+    .mat-mdc-button-touch-target{margin-left: 3px;}
+  }
+}
+.mdc-snackbar{
+  border-radius: 27px;
+  *{
+    font-size: 16px !important;
+    font-family: $font !important;
+  }
+}
+
+.card-shadow {
+  -webkit-box-shadow: 0px 1px 15px 3px rgba(88, 88, 88, 0.2);
+  -moz-box-shadow: 0px 1px 15px 3px rgba(88, 88, 88, 0.2);
+  box-shadow: 0px 1px 15px 3px rgba(88, 88, 88, 0.2);
+}
+// cdk-overlay-pane
+.no-click{
+  cursor: no-drop;
+}
+.m-auto
+{
+  margin-inline:auto ;
+}
+.overflow-visible
+{
+  *{
+    overflow: visible !important;
+  }
+  overflow: visible !important;
+}
+.task-details-dialog{
+  width: 90vw;
+  max-width: 90vw !important;
+  height: 85vh;
+}
+.cdk-overlay-container{
+  z-index: 1111;
+}
+.acs{
+  align-content: stretch;
+}
+.disabeld
+{
+  filter: grayscale(1);
+  cursor: no-drop;
+  opacity: 0.8;
+}
+.table-container{
+  border: 1px solid #e7e7e7;
+  th{
+    background-color: rgba($color: $primary, $alpha: 0.055);
+  }
+  th,td{
+    font-size:14px
+  }
+}
+.h-70vh {
+  height: 70vh;
+}
+.h-40{
+  height: 40px;
+}
+.dark-mode .table-container{
+  border-color: #404656
+}
+.jce{
+  justify-content: end !important;
+}
+.aie{
+  align-items: end !important;
+}
+.absolute
+{
+  position: absolute;
+}
+
+.inline-flex
+{
+  display: inline-flex !important;
+}
+
+.position-relative {
+  position: relative;
+}
+.input-suffix {
+  position: absolute;
+  inset-inline-end: 12px;
+  inset-block-end: 10px;
+}
+input[readonly] {
+  background-color: #f9f9f9;
+}
+.date-form-field {
+  width: 65%;
+  background: #F4F4F4;
+}
+.badge {
+  padding: 2px 4px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  &.badge-success {
+    background: rgba(41, 204, 153, 0.15);
+    color: #29CC99;
+  }
+  &.badge-danger {  
+    background: rgba(211, 47, 47, 0.25);
+    color: #D32F2F;
+  }
+}
+.custom-time-picker {
+  .bs-timepicker-field{
+    height: 72px;
+    padding: 20px 16px;
+    border-radius: 8px;
+    border: 0.5px solid rgba(157, 157, 157, 0.40);
+  }
+  .btn-default{
+    border-radius: 8px;
+    border: 0.5px solid rgba(157, 157, 157, 0.40);
+    background: rgba(123, 85, 211, 0.08);
+    padding: 4px 8px;
+    font-size: 16px;
+  }
+  .bs-chevron {
+    width: 15px;
+    height: 15px;
+    inset-inline-start: 25px;
+  }
+}
+@keyframes spinner-border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-container {
+  min-height: 2rem;
+  width: 100%;
+  
+  .spinner-border {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    vertical-align: -.125em;
+    border: .25em solid #7b58ca;
+    border-right-color: transparent;
+    border-radius: 50%;
+    -webkit-animation: .75s linear infinite spinner-border;
+    animation: .75s linear infinite spinner-border;
+    }
+}

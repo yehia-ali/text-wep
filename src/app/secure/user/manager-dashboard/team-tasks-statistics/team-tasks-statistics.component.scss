@@ -1,0 +1,23 @@
+.bullet {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+
+  &.big {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.top-1 {
+  position: relative;
+  top: 2px;
+}
+
+.bg-warning-light {
+  background-color: #FBDEC3;
+}
+
+.bg-success-light {
+  background-color: #B0ECD9;
+}

@@ -1,0 +1,50 @@
+<layout>
+    <div class="project-details h-100" *ngIf="details">
+        <div class="top-section px-3 py-2 border-bottom flex aic jcsb">
+            <div class="flex aic gap-x-2">
+                <priority [priority]="details.priority" [size]="17"></priority>
+                <h3>{{details.title}}</h3>
+            </div>
+            <div class="status pointer">
+                <project-status [matMenuTriggerFor]="(isCreator || null) && status" [state]="details.projectState"></project-status>
+            </div>
+        </div>
+        <div class="content p-3" magicScroll="">
+            <div class="flex-grid">
+                <div class="col-lg-6">
+                    <div class="creator">
+                        <h3>{{'created_by' | translate}}</h3>
+                        <div class="flex aic gap-x-1 mt-1">
+                            <div class="img">
+                                <user-image [img]="details.creatorImageUrl"></user-image>
+                            </div>
+                            <div>
+                                <h4>{{details.creatorName}}</h4>
+                                <p class="muted">{{details.creatorJobTitle}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-2" *ngIf="details.description">
+                        <h3>{{'description' | translate}}</h3>
+                        <p class="mt-75" [innerHTML]="details.description"></p>
+                    </div>
+                    <div class="mt-2" *ngIf="details.definitionOfDone">
+                        <h3>{{'dod' | translate}}</h3>
+                        <p class="mt-75" [innerHTML]="details.definitionOfDone"></p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <details-timeline [details]="details"/>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</layout>
+
+<mat-menu #status="matMenu">
+    <button mat-menu-item (click)="changeStatue(2)">{{'hold' | translate}}</button>
+    <button mat-menu-item (click)="changeStatue(1)">{{'open' | translate}}</button>
+    <button mat-menu-item (click)="changeStatue(3)">{{'completed' | translate}}</button>
+    <button mat-menu-item (click)="changeStatue(4)">{{'closed' | translate}}</button>
+</mat-menu>

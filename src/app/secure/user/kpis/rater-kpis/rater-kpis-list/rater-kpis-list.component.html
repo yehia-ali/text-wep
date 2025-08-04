@@ -1,0 +1,79 @@
+<layout class="dir pt-1">
+  <div class="flex aic mb-2">
+    <p class="fw-500 px-2 pt-2 pb-1 pointer fs-14 {{!ratedKpis ? 'primary border-bottom rate-active-btn' : '' }}" (click)="ratedKpis = false ; getKpisList()">{{'unrated_kpis' | translate}}</p>
+    <p class="fw-500 px-2 pt-2 pb-1 pointer fs-14 {{ratedKpis ? 'primary border-bottom rate-active-btn' : '' }}" (click)="ratedKpis = true ; getKpisList()">{{'rated_kpis' | translate}}</p>
+  </div>
+  <div class="h-100">
+    <div class="kpis-bank-list">
+      <div class="px-2 flex aic jcsb mb-1">
+        <div class="flex aic gap-x-1">
+          <search [width]="'w-15r'" [classes]="'py-50'" [newSearch]="true" [hideLabel]="true" (valueChanged)="search($event)"/>
+        </div>
+      </div>
+      <div class="table-container border-0">
+        <table class="table table-bordered " *ngIf="!loading && itemsList.length > 0">
+          <thead>
+            <tr class="bg-gray">
+              <th class="text-left kpis-1-col-width">
+                {{'name' | translate}}
+              </th>
+              <th class="text-left kpis-4-col-width">{{'weight' | translate}}</th>
+              <th class="text-left kpis-5-col-width">{{'target' | translate}}</th>
+              <th *ngIf="ratedKpis" class="text-left kpis-5-col-width">{{'achieved' | translate}}</th>
+              <th class="text-left kpis-4-col-width">{{'start_date' | translate}}</th>
+              <th class="text-left kpis-4-col-width">{{'end_date' | translate}}</th>
+              <th class="text-left kpis-4-col-width">{{'repeat' | translate}}</th>
+              <th class="text-left kpis-4-col-width">{{'employee' | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let row of itemsList | paginate: {itemsPerPage: limit, currentPage: page, totalItems: totalItems}">
+              <tr class="border-bottom pointer" [routerLink]="'./' + row.id">
+                <td class="text-left" >
+                  <div class="flex aic">
+                    <span>
+                      {{ row.kpiName }}
+                    </span>
+                  </div>
+                </td>
+                <td class="text-left">{{row.weight | arabicNumbers}}</td>
+                <td class="text-left">{{row.target | arabicNumbers}}</td>
+                <td *ngIf="ratedKpis" class="text-left">{{row.value | arabicNumbers}}</td>
+                <td class="text-left">{{row.dateFrom | arabicDate}}</td>
+                <td class="text-left">{{row.dateTo | arabicDate}}</td>
+                <td class="text-left">{{row.evaluationfrequency > 0 ? evaluationfrequency[row.evaluationfrequency - 1].name  : '-'}}</td>
+                <td class="text-left" (click)="$event.stopPropagation()">
+                  <app-img-title [imgSrc]="row.employeePic"  [title]="row.employeeName" [subTitle]="row.employeeJobTitle" [userId]="row.employeeId" />
+                </td>
+              </tr>
+
+            </ng-container>
+          </tbody>
+        </table>
+        <div class="flex aic jcc py-5" *ngIf="loading || itemsList.length == 0">
+          <loading *ngIf="loading" [centerd]="true"/>
+          <not-found *ngIf="!loading && itemsList.length == 0" />
+        </div>
+      </div>
+      <div class="pagination-content flex aic jcsb py-1 bg-white border-top border-bottom px-2" >
+        <div class="flex aic">
+          <p class="fs-12 simibold">{{ 'pagination_per_page' | translate }} </p>
+          <input type="number" style="width:50px" class="input ml-75 limit text-center py-50 px-0" min="1" [(ngModel)]="limit" (ngModelChange)="changeLimit()">
+          <p class="ml-50 primary fs-12" >{{ 'record' | translate }}</p>
+        </div>
+        <pagination-controls
+          (pageChange)="pageChanged($event)"
+          [maxSize]="7"
+          [directionLinks]="true"
+          [previousLabel]="'previous' | translate"
+          [nextLabel]="'next' | translate"
+                             >
+        </pagination-controls>
+        <p class="fs-12 simibold pr-3">{{ 'pagination_total_records' | translate }} <span
+          class="primary">{{ totalItems | arabicNumbers }} {{ 'record' | translate }}</span>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</layout>
