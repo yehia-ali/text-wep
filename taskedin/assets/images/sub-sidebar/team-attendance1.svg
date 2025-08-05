@@ -1,0 +1,18 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+	<title>team-attendance-svg</title>
+	<defs>
+		<clipPath clipPathUnits="userSpaceOnUse" id="cp1">
+			<path d="m14.05 5.72v4.56c0 0.75-0.4 1.44-1.04 1.82l-3.96 2.29c-0.65 0.37-1.45 0.37-2.1 0l-3.96-2.29c-0.65-0.37-1.05-1.07-1.05-1.82v-4.56c0-0.75 0.4-1.44 1.05-1.82l3.96-2.29c0.64-0.37 1.44-0.37 2.1 0l3.96 2.29c0.64 0.38 1.04 1.07 1.04 1.82zm-6.05 1.61c0.86 0 1.55-0.69 1.55-1.55 0-0.86-0.69-1.55-1.55-1.55-0.86 0-1.55 0.69-1.55 1.55 0 0.86 0.69 1.55 1.55 1.55zm2.67 3.78c0-1.2-1.2-2.18-2.67-2.18-1.47 0-2.67 0.98-2.67 2.18z"/>
+		</clipPath>
+		<image  width="14" height="16" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAMAAAARSr4IAAAAAXNSR0IB2cksfwAAAPxQTFRFl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eX7Kr5IQAAAFR0Uk5TAAdXUgFk6P/nYUHStzA1uc8/BKDYRhFfWxBM25qAcALhdP54wL00Z8G60LD8wyazzXvchQaqq3YPvunX2b9JclTCu379cS2hLp7WRUucQLUiJ2VV9srUuAAAAMBJREFUeJxjZAABRkbGf//BDCBmAfKAIt8hXC7GP6xAgR+cjO8ZGIUYv/AyQsAb0ReMsq/EGR+yMTJIPhDiBwqpMN5mUHsoIPCA7TODBiOjFuNVBjGxP6y31C8x6EO4DIaMV3XOMsC4Jp/5gNpOQLnyUueMGT8KHP0P5Nr+OW530uLBQ4fjws8cGRmdQTbuBDrInfH9BRlGIfN9zoxbgVyfD6fdtgMd6bf3jwcj4417nHabIF7w24LkBRAZtAHiQQBYsDmKUN39HgAAAABJRU5ErkJggg=="/>
+	</defs>
+	<style>
+		.s0 { fill: none;stroke: #606060;stroke-linecap: round;stroke-linejoin: round;stroke-width: 1.5 } 
+	</style>
+	<g id="Folder 1">
+	</g>
+	<g clip-path="url(#cp1)">
+		<path id="Layer" fill-rule="evenodd" class="s0" d="m14.1 5.7v4.6c0 0.7-0.4 1.4-1.1 1.8l-4 2.3c-0.6 0.4-1.4 0.4-2.1 0l-3.9-2.3c-0.7-0.4-1.1-1.1-1.1-1.8v-4.6c0-0.7 0.4-1.4 1.1-1.8l3.9-2.3c0.7-0.4 1.5-0.4 2.1 0l4 2.3c0.7 0.4 1.1 1.1 1.1 1.8zm-6.1 1.6c0.9 0 1.6-0.7 1.6-1.5 0-0.9-0.7-1.6-1.6-1.6-0.9 0-1.6 0.7-1.6 1.6 0 0.8 0.7 1.5 1.6 1.5zm2.7 3.8c0-1.2-1.2-2.2-2.7-2.2-1.5 0-2.7 1-2.7 2.2z"/>
+		<use id="Layer 1" href="#img1" x="1" y="0"/>
+	</g>
+</svg>

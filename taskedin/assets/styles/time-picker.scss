@@ -1,0 +1,22 @@
+@use 'vars' as *;
+
+.timepicker {
+  direction: ltr !important;
+}
+.timepicker-backdrop-overlay {
+  z-index: 9999999999999999 !important
+}
+
+.timepicker-overlay {
+  z-index: 9999999999999999 !important
+}
+
+.timepicker__header,
+.clock-face__number>span.active,
+.clock-face__clock-hand {
+  background: $primary !important;
+}
+
+.timepicker-button {
+  color: $primary !important;
+}

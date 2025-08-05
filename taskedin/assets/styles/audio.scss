@@ -1,0 +1,41 @@
+@use "vars" as *;
+
+[dir=ltr] .audio audio {
+  width: 123% !important;
+  transform: translateX(-10px);
+}
+
+[dir=rtl] .audio audio {
+  width: 123% !important;
+  transform: translateX(50px);
+}
+
+// audio
+audio::-webkit-media-controls-mute-button, audio::-webkit-media-controls-volume-slider, audio::-webkit-media-controls-volume-slider-container {
+  display: none;
+}
+
+audio {
+  height: 40px;
+  border-radius: 1px;
+}
+
+audio::-webkit-media-controls-enclosure {
+  max-width: 100%;
+  height: 40px;
+  border-radius: .5rem;
+}
+
+audio::-webkit-media-controls-panel, .sounded-description {
+  background-color: #FAF9FD;
+}
+
+audio::-webkit-media-controls-current-time-display,
+audio::-webkit-media-controls-time-remaining-display {
+  color: $primary;
+}
+
+audio::-webkit-media-controls-volume-control-container {
+  display: none !important;
+}
+

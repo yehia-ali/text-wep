@@ -1,0 +1,42 @@
+@use "vars" as *;
+
+// phone number input
+.iti {
+  width: 100%;
+}
+
+.input:not(.disabled-input), .ng2-flatpickr-input.form-control {
+  font-size: 15px !important;
+
+  &:focus {
+    border: 1px solid $primary !important;
+  }
+
+  &:focus-visible {
+    outline: none !important;
+  }
+
+  &:focus + .icon {
+    border-color: $primary;
+  }
+}
+
+// for password type icon border
+.password:focus + .border-left {
+  border-color: $primary !important;
+}
+
+input.ng-invalid.ng-touched, .password.ng-invalid.ng-touched + .border-left, .phone .ng-invalid.ng-touched input, .ng-touched.ng-invalid > .ng-select-container, .input.ng-invalid.ng-touched {
+  border-color: $danger !important;
+}
+
+.input[type=number] {
+  /* Chrome, Safari, Edge, Opera */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  -moz-appearance: textfield;
+}

@@ -61,12 +61,12 @@ export class TeamBalanceComponent implements OnInit {
     this.service.hasChanged.pipe(debounceTime(400), switchMap(() => {
       this.service.loading.next(true)
       return this.service.getBalances().pipe(map((res: any) => {
-        this.balances = res.pagedModel.items;
-        this.balances.forEach((balance: any) => {
-          balance.balanceDetails.forEach((detail: any) => {
-            this.leaveTypes.add(detail.leaveTypeName);
-          });
-        });
+        this.balances = res.items;
+        // this.balances.forEach((balance: any) => {
+        //   balance.forEach((detail: any) => {
+        //     this.leaveTypes.add(detail.leaveTypeName);
+        //   });
+        // });
         this.service.loading.next(false)
       }))
     })).subscribe();

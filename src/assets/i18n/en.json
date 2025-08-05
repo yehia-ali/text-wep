@@ -1548,5 +1548,9 @@
   "manual_penalties":"Manual Penalties",
   "attendance_penalties":"Attendance Penalties",
   "social_insurance":"Social insurance",
-  "gross_salary_details":"Gross Salary Details"
+  "gross_salary_details":"Gross Salary Details",
+  "remaining_paid_leaves":"Remaining Paid Leaves",
+  "used_paid_leaves":"Used Paid Leaves",
+  "remaining_unpaid_leaves":"Remaining unpaid leaves",
+  "used_unpaid_leaves":"Used unpaid leaves"
 } 

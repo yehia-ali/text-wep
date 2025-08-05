@@ -109,13 +109,11 @@ export class TeamKpisComponent implements OnInit {
     let params = filterParams || new HttpParams();
     params = params.set('page', this.page.toString())
                   .set('limit', this.limit.toString());
-  if (this.selectedDate) {
     if(this.selectedDate.startDate && this.selectedDate.endDate) { 
       params = params.set('from', this.selectedDate.startDate) 
       params = params.set('To', this.selectedDate.endDate) 
     }    
  
-    }
               
     this.service.getTeamKpi(params).subscribe({
       next: (res: any) => {
@@ -149,20 +147,18 @@ export class TeamKpisComponent implements OnInit {
 
   loadFilteredData(): void {
     let params = new HttpParams();
-
     if (this.searchValue) {
-      
-      params = params.append('Search', this.searchValue);
+      params = params.set('Search', this.searchValue);
     }
     if (this.selectedDepartment) {
       params = params.set('DepartmentId', this.selectedDepartment);
     }
-    if (this.selectedDate) {
-      if(this.selectedDate.startDate && this.selectedDate.endDate) { 
-        params = params.set('from', this.selectedDate.startDate)
-        params = params.set('To', this.selectedDate.endDate)
-      }    
-    }
+    if(this.selectedDate.startDate && this.selectedDate.endDate) { 
+      params = params.set('from', this.selectedDate.startDate)
+      params = params.set('To', this.selectedDate.endDate)
+    } else {
+      return;
+    }   
 
     this.getUsersKpi(params);
   }

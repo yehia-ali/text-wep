@@ -1,0 +1,138 @@
+.large-dialog {
+  width: min(85rem, 95%);
+  max-width: 100% !important;
+}
+
+.display-map-dialog {
+  width: min(100rem, 95%);
+  max-width: 100% !important;
+}
+
+.large-form-dialog {
+  width: min(80rem, 95%);
+  max-width: 100% !important;
+}
+
+.task-details-dialog {
+  width: min(70rem, 95%);
+}
+
+
+.success-dialog {
+  width: min(70rem, 95%);
+  max-width: 100% !important;
+  height: min(81rem, 95%);
+}
+
+.dialog-message {
+  width: min(40rem, 95%);
+  max-width: 100% !important;
+}
+
+.create-group-chat-dialog {
+  width: min(50rem, 95%);
+}
+
+.mat-mdc-dialog-surface.mdc-dialog__surface {
+  padding: 0 !important;
+  border-radius: 1.5rem !important;
+  overflow: visible !important;
+
+  h2, h3, h4, h5 {
+    padding: 15px 24px 0 24px !important;
+  }
+}
+
+.mat-mdc-dialog-surface.mdc-dialog__surface h2.title {
+  padding: 0 24px !important;
+}
+
+.mat-mdc-dialog-content.mdc-dialog__content, .mat-mdc-dialog-actions.mdc-dialog__actions {
+  padding: 15px 24px 15px 24px !important;
+}
+
+.mdc-dialog__actions {
+  min-height: unset !important;
+  padding: 0 !important;
+}
+
+.create-task-dialog, .manage-subscription-dialog {
+  width: min(85rem, 95%);
+  max-width: 100% !important;
+}
+.create-task-dialog.show-more {
+  width: 95vw !important;
+  height: 95vh !important;
+  .mat-mdc-dialog-content{
+    max-height: calc(92vh - 105px);
+  }
+}
+
+.book-session-dialog {
+  width: min(80rem, 95%);
+}
+
+.small-dialog {
+  width: min(35rem, 95%);
+}
+
+.add-roles-dialog, .configure-space-dialog {
+  width: min(60rem, 95%);
+}
+
+.medium-dialog {
+  width: min(50rem, 95%);
+}
+
+.confirmation-dialog {
+  width: min(34rem, 95%);
+  line-height: 1.6;
+}
+
+.select-users-dialog {
+  width: min(85rem, 95%);
+  max-width: 100% !important;
+
+  .mat-mdc-dialog-content {
+    min-height: 45vh;
+    max-height: 45vh;
+  }
+}
+
+.vote-assignees-dialog {
+  width: min(50rem, 95%);
+  max-width: 100% !important;
+
+  .mat-mdc-dialog-content {
+    min-height: 25rem;
+  }
+}
+
+
+.shift-users-dialog {
+  width: min(60rem, 95%);
+
+  .mat-mdc-dialog-content {
+    min-height: 25rem;
+  }
+}
+
+
+.confirm-password-dialog {
+  width: min(38rem, 95%);
+  line-height: 1.6;
+}
+
+
+.order-details-dialog {
+  width: min(100rem, 95%);
+  max-width: 100% !important;
+
+  .mat-mdc-dialog-content {
+    min-height: 16rem !important;
+  }
+}
+
+.manage-users-dialog {
+  width: min(80rem, 95%);
+}

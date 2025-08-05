@@ -1,0 +1,192 @@
+@use "vars" as *;
+
+[dir=ltr] {
+  .mat-mdc-menu-item-text, .mat-checkbox, .mat-tab-label, .mat-tab-link, .mat-dialog-title, .mat-tab-body-content, .mdc-label {
+    font-family: 'Tajawal', sans-serif !important;
+    font-weight: 300 !important;
+  }
+}
+
+[dir=rtl] {
+  .mat-mdc-menu-item-text, .mat-checkbox, .mat-tab-label, .mat-tab-link, .mat-dialog-title, .mat-tab-body-content, .mdc-label {
+    font-family: 'Tajawal', sans-serif !important;
+    font-weight: 400;
+  }
+}
+
+[dir=rtl] {
+  .mat-calendar, .mat-mdc-menu-item {
+    direction: rtl !important;
+  }
+}
+
+/* Year-only picker global styles */
+.year-only-picker {
+  .mat-calendar-period-button {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  .mat-calendar-arrow {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  .mat-calendar-body-cell:not(.mat-calendar-body-year) {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  .mat-calendar-body-label {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  .mat-calendar-table-header {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  .mat-calendar-controls {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  .mat-calendar-body-year {
+    display: block !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+  }
+
+  .mat-calendar-body {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    padding: 16px !important;
+  }
+}
+
+.mat-mdc-raised-button.mat-mdc-button-base {
+  min-height: 36px !important;
+  height: auto !important;
+}
+
+.user-card-menu {
+  max-width: 45rem !important;
+  max-height: 85vh;
+  border-radius: 2rem !important;
+  //overflow-x: hidden;
+  .mat-mdc-menu-content {
+    width: 43rem !important;
+  }
+}
+
+.select-date .mat-mdc-text-field-wrapper {
+  padding-block: .8rem
+}
+
+.mdc-button.flex.aic {
+  .mdc-button__label {
+    display: flex !important;
+    align-items: center !important;
+  }
+}
+
+/* global menu style */
+.mat-mdc-menu-item {
+  color: $dark-color;
+
+  &:hover:not([disabled]), &.active {
+    background: rgba($primary, .1) !important;
+    color: $primary !important;
+  }
+}
+
+// to change image color to primary
+.navbar-menu-items .mat-menu-item, .all-spaces .actions .mat-menu-item {
+  &:hover:not([disabled]), &.active {
+    img {
+      filter: invert(39%) sepia(56%) saturate(717%) hue-rotate(217deg) brightness(91%) contrast(89%) !important;
+    }
+  }
+}
+
+/* end global menu style */
+
+
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  background-color: inherit !important;
+}
+
+[dir=rtl] body .mat-mdc-snack-bar-label {
+  direction: rtl !important;
+}
+
+.mat-mdc-tab-body-wrapper {
+  height: 100%;
+}
+
+
+// start date input
+.mdc-icon-button {
+  line-height: 1.5;
+}
+
+.mat-mdc-button-persistent-ripple {
+  display: none !important;
+}
+
+// end date input
+
+
+.mat-horizontal-stepper-header::before, .mat-horizontal-stepper-header::after, .mat-stepper-horizontal-line {
+  border-top-color: $primary !important;
+}
+
+
+.mat-mdc-tab-header {
+  position: sticky !important;
+  top: -1px !important;
+  background-color: #fff !important;
+  z-index: 999;
+  border-bottom: 1px solid #e0e0e0 !important;
+}
+
+.mat-mdc-form-field-subscript-wrapper, .mdc-line-ripple {
+  display: none !important;
+}
+
+.leaves-group {
+  height: calc(100% - 102px) !important;
+}
+
+
+.meeting .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+  border-color: #F46850 !important;
+  background-color: #F46850 !important;
+}
+
+.vote .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+  border-color: #29CC99 !important;
+  background-color: #29CC99 !important;
+}
+
+.holiday .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+  border-color: #557FDE !important;
+  background-color: #557FDE !important;
+}
+
+.leave .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+  border-color: #8DC8C8 !important;
+  background-color: #8DC8C8 !important;
+}
+.shift .mdc-checkbox__background {
+  border: 1px solid #7B55D3 !important;
+}
+.shift .mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background {
+  border-color: #7B55D3 !important;
+}
+.form-menu {
+  width: 25rem !important;
+}
+

@@ -70,7 +70,7 @@ if (dir === 'rtl') {
 })
 export class UserAttendanceComponent implements OnInit {
   now: any = new Date();
-  month: any;
+  month: any = new Date().getMonth() + 1;
   startDate: any | Date = this.datePipe.transform(new Date(), 'yyyy-MM-01');
   endDate: any | Date = this.datePipe.transform(new Date(), 'yyyy-MM-30');
   crossMonth = 0;
@@ -297,13 +297,15 @@ export class UserAttendanceComponent implements OnInit {
           this.updateStartEndDates(currentDate, month);
 
           if(this.crossMonth){
-            if(new Date(this.endDate) > currentDate){
+            if(currentDate < new Date(this.startDate)){
               this.now = new Date();
-              this.month = currentDate.getMonth()+1;
-            }else{
+              this.month = currentDate.getMonth();
+            }else if(currentDate > new Date(this.startDate)){
               this.now = new Date(currentDate.getFullYear(), currentDate.getMonth()+1 , 1);
-              this.month = currentDate.getMonth()+2;
+              this.month = currentDate.getMonth()+1;
             }
+          } else {
+            this.month = currentDate.getMonth() + 1;
           }
           this.getAttendance();
         } else {

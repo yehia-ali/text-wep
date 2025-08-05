@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <g id="vuesax_linear_repeate-music" data-name="vuesax/linear/repeate-music" transform="translate(-684 -514)">
+    <g id="repeate-music" transform="translate(684 514)">
+      <path id="Vector" d="M8.007,0,9.633,1.56l-5.3-.013A4.342,4.342,0,0,0,1.273,8.96" transform="translate(1.327 2)" fill="none" stroke="#cf4747" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Vector-2" data-name="Vector" d="M1.627,8.96,0,7.4l5.3.013A4.342,4.342,0,0,0,8.36,0" transform="translate(5.04 5.04)" fill="none" stroke="#cf4747" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Vector-3" data-name="Vector" d="M0,0H16V16H0Z" fill="none" opacity="0"/>
+    </g>
+  </g>
+</svg>

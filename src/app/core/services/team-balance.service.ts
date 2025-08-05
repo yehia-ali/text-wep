@@ -18,7 +18,7 @@ export class TeamBalanceService extends FiltersService {
     this.params(url,'team-balance');
     return this.http.get(`${url}`).pipe(map((res: any) => {
       this.loading.next(false);
-      this.setBalanceMeta(res);
+      this.setMeta(res);
       return res.data
     }))
   }

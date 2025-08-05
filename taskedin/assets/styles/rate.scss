@@ -1,0 +1,28 @@
+// start ngx-rating
+label.star {
+  font-size: 25px !important;
+  padding: 3px !important;
+  color: #707070;
+}
+
+input.star:checked ~ label.star:before {
+  color: #FFA95C !important;
+}
+
+[dir=rtl] .add-rate, [dir=rtl] .rate {
+  form {
+    display: flex !important;
+    flex-direction: row-reverse !important;
+  }
+}
+
+.rate label.star {
+  padding: 2px !important;
+  font-size: 22px !important;
+}
+
+input.star-5:checked ~ label.star:before {
+  text-shadow: unset !important;
+}
+
+// end ngx-rating

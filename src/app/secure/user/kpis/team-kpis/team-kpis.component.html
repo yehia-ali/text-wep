@@ -51,7 +51,7 @@
                   </td>
                   <td class="text-left">{{ row?.kpisCount || 0 }}</td>
                   <td class="text-left">
-                    <span class="fw-600">{{ row?.totalAchive || 0 }}%</span>
+                    <span class="fw-600">{{ (row?.totalAchive ? row.totalAchive.toFixed(2) : 0) }}%</span>
                   </td>
                 </tr>
                 <tr *ngIf="row.isExpand">
@@ -60,8 +60,8 @@
                       <thead class="bg-gray">
                         <tr class="border-bottom">
                           <th class="text-left"></th>
-                          <th class="text-left">{{ 'teamKpis.performance_name' | translate }}</th>
-                          <th class="text-left">{{ 'teamKpis.performance_category' | translate }}</th>
+                          <th class="text-left">{{ 'kpi_name' | translate }}</th>
+                          <th class="text-left">{{ 'kpi_category' | translate }}</th>
                           <th class="text-left">{{ 'teamKpis.start_date' | translate }}</th>
                           <th class="text-left">{{ 'teamKpis.end_date' | translate }}</th>
                           <th class="text-left">{{ 'teamKpis.repetition' | translate }}</th>
@@ -102,15 +102,15 @@
                               </div>
                             </div>
                           </td>
-                          <td class="text-left">{{ employee?.weight }}</td>
+                          <td class="text-left">{{ employee?.weight }} {{employee?.weight ? '%' : ''}}</td>
                           <td class="text-left">{{ employee?.target }}</td>
                           <td class="text-left">
-                            <span [ngClass]="getAchievementColor(employee?.value || 0)">{{ employee?.value }}</span>
+                            <span [ngClass]="getAchievementColor(employee?.value || 0)">{{ employee?.value?.toFixed(2) }}</span>
                           </td>
                           <td class="text-left">
-                            <span [ngClass]="getAchievementColor(employee?.actual_on_target || 0)">{{ employee?.actual_on_target }}</span>
+                            <span [ngClass]="getAchievementColor(employee?.actual_on_target || 0)">{{ employee?.actual_on_target?.toFixed(2) }}</span>
                           </td>
-                          <td class="text-left">{{ employee?.actual_on_Weight }}</td>
+                          <td class="text-left">{{ employee?.actual_on_Weight?.toFixed(2) }}</td>
                         </tr>
                       </tbody>
                     </table>

@@ -75,7 +75,7 @@ export class CreatePayslipComponent implements OnInit {
   deduction = 0;
   stopTimeout: any;
   now: any = new Date();
-  month: any;
+  month: any = new Date().getMonth() + 1; // Initialize with current month
   startDate: any | Date = this.datePipe.transform(new Date(), 'yyyy-MM-01');
   endDate: any | Date = this.datePipe.transform(new Date(), 'yyyy-MM-30');
   crossMonth = 0;
@@ -140,7 +140,10 @@ export class CreatePayslipComponent implements OnInit {
       this.joinDate = user[0].creationDate;
       this.selectedUser.isActivated = user[0].isActivated;
     }
-    this.calcDetails();
+    // Only call calcDetails if we have both user and month
+    if (this.selectedUser && this.month) {
+      this.calcDetails();
+    }
   }
 
   allowanceChange() {
@@ -165,25 +168,26 @@ export class CreatePayslipComponent implements OnInit {
 
 
   calcDetails() {
+
     let params = new HttpParams()
       .set('Month', this.month)
       .set('ExtraAllowance', this.allowance || 0)
       .set('ExtraDeductions', this.deduction || 0)
       .set('UserId', this.selectedUser.id)
-      if(this.monthlyWorkingHours){
-        params = params.set('WorkedHours', this.monthlyWorkingHours);
-      }
-      if (this.selectedUser.id) {
-      this.service.generatePayslip(params).subscribe((res: any) => {
-        if (res.success) {
-          this.details = res.data;
-          this.details.date = this.endDate;
-        } else {
-          this.details = null;
-          this.openAllInfoDialog(this.selectedUser);
-        }
-      });
+      
+    if(this.monthlyWorkingHours){
+      params = params.set('WorkedHours', this.monthlyWorkingHours);
     }
+    
+    this.service.generatePayslip(params).subscribe((res: any) => {
+      if (res.success) {
+        this.details = res.data;
+        this.details.date = this.endDate;
+      } else {
+        this.details = null;
+        this.openAllInfoDialog(this.selectedUser);
+      }
+    });
   }
   openAllInfoDialog(users: any) {
     if (!Array.isArray(users)) {
@@ -243,13 +247,15 @@ export class CreatePayslipComponent implements OnInit {
           const month = (this.fromDay <= 15 && this.crossMonth) ? currentDate.getMonth()+1 : currentDate.getMonth();
           this.updateStartEndDates(currentDate, month, checkCrossMonth);
           if(this.crossMonth){
-            if(new Date(this.endDate) > currentDate){
+            if(currentDate < new Date(this.startDate)){
               this.now = new Date();
-              this.month = currentDate.getMonth()+1;
-            } else{
+              this.month = currentDate.getMonth();
+            }else if(currentDate > new Date(this.startDate)){
               this.now = new Date(currentDate.getFullYear(), currentDate.getMonth()+1 , 1);
-              this.month = currentDate.getMonth()+2;
+              this.month = currentDate.getMonth()+1;
             }
+          } else {
+            this.month = currentDate.getMonth() + 1;
           }
   
         } else {

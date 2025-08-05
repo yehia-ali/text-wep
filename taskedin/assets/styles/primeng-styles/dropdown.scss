@@ -1,0 +1,184 @@
+.app-dropdown {
+  &.app-dropdown-small {
+    .p-dropdown , .p-treeselect , .p-multiselect {
+      padding: 5px;
+      background-color: transparent;
+      border-color: #e7e7e7;
+      .p-dropdown-label{
+        font-size: 11px;
+        margin-inline-end: 10px;
+      }
+      .p-dropdown-clear-icon,.p-treeselect-clear-icon,.p-multiselect-clear-icon {
+        inset-inline-end: 19px;
+        width: 8px;
+        top: 9px;
+      }
+      .p-dropdown-trigger,.p-treeselect-trigger,.p-multiselect-trigger {
+        width: 15px;
+      }
+    }
+    &.app-dropdown-large {
+      .p-dropdown , .p-treeselect , .p-multiselect {
+        padding: 5px;
+        padding-inline-start: 30px;
+        .p-dropdown-label{
+          font-size: 11px;
+          margin-inline-end: 10px;
+        }
+      }
+    }
+  }
+
+  &.app-dropdown-icon{
+    .p-dropdown , .p-treeselect , .p-multiselect {
+      padding-inline-start: 25px;
+      width: 100%;
+    }
+    .dropdown-icon{
+      position: absolute;
+      font-size: 16px;
+      padding: 3px 5px;
+    }
+  }
+
+  &.end-drop-down{
+      .p-overlay , .p-treenode{
+        inset-inline-start: auto !important;
+        inset-inline-end: 0 !important;
+      }
+    }
+  &.start-drop-down{
+      .p-overlay , .p-treenode{
+        inset-inline-start: 0 !important;
+        inset-inline-end: auto !important;
+      }
+    }
+  .p-overlay{
+    top: 25px !important;
+    .p-dropdown-panel , .p-multiselect-panel , .p-treeselect-panel{
+      min-width: 200px;
+      width: 250px;
+      position: fixed;
+      .p-dropdown-items-wrapper , .p-multiselect-items-wrapper , .p-treeselect-items-wrapper{
+        max-height: 150px !important;
+      }
+      .p-dropdown-header , .p-treeselect-header , .p-multiselect-header{
+        .p-checkbox{
+          margin-inline-end:5px ;
+          .p-checkbox-box{
+            height: 15px;
+            width: 15px;
+          }
+        }
+        padding: 5px;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        grid-column-gap:5px;
+        width: 100%;
+        position: relative;
+        .p-dropdown-filter-container{
+          display: flex;
+          align-items: center;
+          justify-content: start;
+          width: 100%;
+          position: relative;
+
+        }
+        input{
+          height: 25px;
+        }
+        searchicon{
+          position: absolute;
+          inset-inline-end: 2px;
+          top: 10px;
+        }
+      }
+      .p-dropdown-items , .p-multiselect-items{
+        .p-dropdown-item , .p-multiselect-item{
+          padding: 5px 5px;
+          .p-checkbox{
+            margin-inline-end:5px ;
+            .p-checkbox-box{
+              height: 15px;
+              width: 15px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .p-tree-container {
+    .p-treenode{
+      .p-treenode-content.p-treenode-selectable{
+        padding: 5px;
+        .p-checkbox{
+          margin-inline-end:5px ;
+          .p-checkbox-box{
+            height: 15px;
+            width: 15px;
+          }
+        }
+        .p-treenode-label{
+          margin-inline-start:5px
+        }
+      }
+    }
+    .p-treenode-children{
+      .p-treenode{
+        padding-inline-start:10px;
+      }
+    }
+  }
+  .p-treeselect-header{
+    padding: 5px;
+    background-color: transparent;
+    .p-treeselect-filter-container{
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      width: 100%;
+      position: relative;
+      input{
+        height: 25px;
+      }
+      searchicon{
+        position: absolute;
+        inset-inline-end: 2px;
+        top: 10px;
+      }
+    }
+  }
+  .p-treeselect-close , .p-multiselect-close{display: none;}
+  .p-treeselect-label-container{
+    .p-treeselect-label{font-size: 11px;}
+    .p-treeselect-token {
+      padding: 0.3px 3px;
+      margin-inline: 1px;
+      border-radius: 5px;
+    }
+  }
+}
+
+.dark-mode{
+  .app-dropdown {
+    .dropdown-icon {
+      color: #A8A8A9 !important;
+    }
+
+      .p-dropdown , .p-treeselect , .p-multiselect {
+        border-color: #404656;
+        .p-dropdown-label{
+          color: #fff;
+        }
+      }
+      .p-multiselect-panel ,.p-treeselect-panel ,.p-dropdown-panel {
+        &,*{
+          background-color: #2D324D;
+          border-color: #404656;
+          color: #fff;
+        }
+    }
+  }
+}

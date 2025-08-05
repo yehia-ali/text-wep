@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g id="ic_project" transform="translate(-492 -188)">
+    <g id="hierarchy-square-2" transform="translate(492 188)">
+      <path id="Vector" d="M0,0V3.5" transform="translate(6.5 8.5)" fill="none" stroke="#999999" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      <path id="Vector-2" data-name="Vector" d="M3.25,1.625A1.625,1.625,0,1,1,1.625,0,1.625,1.625,0,0,1,3.25,1.625Z" transform="translate(5 5)" fill="none" stroke="#999999" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      <path id="Vector-3" data-name="Vector" d="M3,1.5A1.5,1.5,0,1,1,1.5,0,1.5,1.5,0,0,1,3,1.5Z" transform="translate(5 12)" fill="none" stroke="#999999" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      <path id="Vector-4" data-name="Vector" d="M3,1.5A1.5,1.5,0,1,1,1.5,0,1.5,1.5,0,0,1,3,1.5Z" transform="translate(12 12)" fill="none" stroke="#999999" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      <path id="Vector-5" data-name="Vector" d="M0,0A2.021,2.021,0,0,0,1.967,1.517l1.717-.008A2.984,2.984,0,0,1,6.517,3.517" transform="translate(6.567 8.5)" fill="none" stroke="#999999" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      <path id="Vector-6" data-name="Vector" d="M5.833,16.667h5c4.167,0,5.833-1.667,5.833-5.833v-5C16.667,1.667,15,0,10.833,0h-5C1.667,0,0,1.667,0,5.833v5C0,15,1.667,16.667,5.833,16.667Z" transform="translate(1.667 1.667)" fill="none" stroke="#999999" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      <path id="Vector-7" data-name="Vector" d="M0,0H20V20H0Z" fill="none" opacity="0"/>
+    </g>
+  </g>
+</svg>

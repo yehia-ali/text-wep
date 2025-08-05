@@ -1,0 +1,114 @@
+.filters-menu {
+  position: absolute;
+  z-index: 55000000;
+  max-height: 25rem;
+  top: calc(100% + 5px);
+  inset-inline-end: 0;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
+  min-width: 15rem;
+  width: max-content;
+}
+
+.no-label {
+  padding-top: 2.2rem;
+}
+
+.icon-input .ng-select-container:not(.ng-has-value) {
+  background-repeat: no-repeat;
+  background-position: left 10px center;
+  padding-inline-start: 30px;
+}
+.ng-arrow-wrapper {
+  display: none;
+}
+
+.new-filter {
+  .ng-select.ng-select-focused .ng-select-container{
+    border: 0 !important;
+  }
+  .ng-select {
+    width: 20px !important;
+  }
+  height: 30px;
+  .count {
+    height: 20px;
+    width: 20px;
+  }
+  .ng-clear-wrapper {
+    display: none;
+  }
+  display: flex !important;
+  align-items: center !important;
+  .ng-value {
+    display: none !important;
+  }
+  .ng-value-container {
+    padding: 0 !important;
+  }
+
+  .ng-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    input {
+      width: 0 !important;
+    }
+  }
+  .ng-select.ng-select-opened,
+  .ng-select.ng-select-opened * {
+    border: 0 !important;
+  }
+
+  .ng-select-container {
+    max-width: 65px !important;
+    min-width: 35px !important;
+    background-color: transparent !important;
+    position: relative;
+    border: 0;
+    &::after {
+      position: absolute;
+      content: "▼";
+      font-size: 10px;
+      color: #777;
+      padding-top: 7px;
+      padding-inline: 10px;
+      margin: auto;
+      cursor: pointer;
+      z-index: 10;
+    }
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+.ng-dropdown-panel-items {
+  min-width: 130px !important;
+  background-color: #fff;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: 500;
+
+}
+
+// .priority-filter .ng-select-container:not(.ng-has-value) {
+//   background-image: url('../../assets/images/filters/priority.svg');
+// }
+
+// .task-status-filter .ng-select-container:not(.ng-has-value) {
+//   background-image: url('../../assets/images/filters/type.svg');
+// }
+
+// .project-filter .ng-select-container:not(.ng-has-value) {
+//   background-image: url('../../assets/images/filters/project.svg');
+// }
+
+// .departments-filter .ng-select-container:not(.ng-has-value) {
+//   background-image: url('../../assets/images/filters/department.svg');
+// }

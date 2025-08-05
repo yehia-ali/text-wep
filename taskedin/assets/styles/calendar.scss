@@ -1,0 +1,55 @@
+//.fc-h-event {
+//}
+//
+//.fc-today-button:disabled {
+//  border: none !important;
+//}
+@use "vars" as *;
+
+.fc-h-event {
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+}
+
+.calendar-chip {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc .fc-button-primary {
+  background-color: $primary !important;
+  border-color: $primary !important;
+  color: white !important;
+}
+
+// [dir=rtl] .clock-face__container {
+//   margin-left: 100px !important;
+// }
+
+//
+//.fc-day-past {
+//  background-color: $gray !important;
+//}
+// primeng
+.p-calendar-w-btn .p-inputtext {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  border-start-start-radius: 4px;
+  border-end-start-radius: 4px;
+}
+
+.p-calendar-w-btn .p-datepicker-trigger {
+  border-start-end-radius: 4px;
+  border-end-end-radius: 4px;
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
+
+.p-datepicker {
+  table {
+    th,td{
+      padding: 3px !important;
+    }
+  }
+}

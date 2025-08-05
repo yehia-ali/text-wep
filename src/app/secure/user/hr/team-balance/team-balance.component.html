@@ -44,9 +44,10 @@
       <tr>
         <th class="text-left">{{ 'employeeName' | translate }}</th>
         <th class="text-left">{{ 'job_title' | translate }}</th>
-        <th class="text-left">{{ 'annual_leaves_balance' | translate }}</th>
-        <th class="text-left">{{ 'annual_leaves_balance_used' | translate }}</th>
-        <th class="text-left">{{ 'unpaid_leaves_balance' | translate }}</th>
+        <th class="text-left">{{ 'remaining_paid_leaves' | translate }}</th>
+        <th class="text-left">{{ 'used_paid_leaves' | translate }}</th>
+        <th class="text-left">{{ 'remaining_unpaid_leaves' | translate }}</th>
+        <th class="text-left">{{ 'used_unpaid_leaves' | translate }}</th>
         <th>{{ 'action' | translate }}</th>
 
         <!-- <ng-container *ngIf="leaveTypes && leaveTypes.size > 0">
@@ -60,9 +61,10 @@
             <app-img-title [userId]="balance.userId" [imgSrc]="balance.userPic" [title]="balance.userName"></app-img-title>
         </td>
         <td><div class="text-left">{{ balance.jobTitle || '-' }}</div></td>
-        <td class="text-left">{{ balance.total }}</td>
-        <td class="text-left">{{ balance.balance }}</td>
-        <td class="text-left">{{ balance.used }}</td>
+        <td class="text-left">{{ balance.paidRemain }}</td>
+        <td class="text-left">{{ balance.paidUsed }}</td>
+        <td class="text-left">{{ balance.unpaidRemain }}</td>
+        <td class="text-left">{{ balance.unpaidUsed }}</td>
         <td>
           <div class="img pointer" (click)="viewBalance(balance)">
             <img src="assets/images/icons/eye-view.svg" alt="view icon">
